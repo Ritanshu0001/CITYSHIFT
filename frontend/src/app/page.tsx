@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Database, MapPin, Radar, Route } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight, Database, MapPin, Radar, Route } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
@@ -61,45 +61,85 @@ export default function Home() {
     };
   }, [cities.length]);
 
+  // Mouse drag-to-scroll. Touch and trackpads already scroll natively, and the vertical wheel is
+  // left alone so it scrolls the page instead of being captured by the carousel.
   useEffect(() => {
     const carousel = carouselRef.current;
     if (!carousel || cities.length < 2) return;
 
-    let gestureActive = false;
-    let gestureTimer: number | undefined;
+    let pointerId: number | null = null;
+    let startX = 0;
+    let startLeft = 0;
+    let lastX = 0;
+    let lastT = 0;
+    let velocity = 0; // px per ms, positive = pointer moving right
+    let dragged = false;
+    let settleTimer: number | undefined;
 
-    const handleWheel = (event: WheelEvent) => {
-      if (event.ctrlKey) return;
-
-      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-      if (Math.abs(delta) < 2) return;
-
-      window.clearTimeout(gestureTimer);
-      gestureTimer = window.setTimeout(() => {
-        gestureActive = false;
-      }, 180);
-
-      if (gestureActive) {
-        event.preventDefault();
-        return;
-      }
-
-      const { step, lastIndex } = getCarouselMetrics(carousel);
-      const currentIndex = Math.round(carousel.scrollLeft / Math.max(step, 1));
-      const nextIndex = Math.min(Math.max(currentIndex + (delta > 0 ? 1 : -1), 0), lastIndex);
-
-      if (nextIndex === currentIndex) return;
-
-      event.preventDefault();
-      gestureActive = true;
-      carousel.scrollTo({ left: step * nextIndex, behavior: "smooth" });
-      setActiveSlide(nextIndex);
+    const onDown = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      pointerId = event.pointerId;
+      startX = lastX = event.clientX;
+      startLeft = carousel.scrollLeft;
+      lastT = event.timeStamp;
+      velocity = 0;
+      dragged = false;
     };
 
-    carousel.addEventListener("wheel", handleWheel, { passive: false });
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerId !== pointerId) return;
+      const dx = event.clientX - startX;
+      if (!dragged) {
+        if (Math.abs(dx) < 6) return; // a click, not a drag
+        dragged = true;
+        window.clearTimeout(settleTimer);
+        carousel.setPointerCapture(event.pointerId);
+        carousel.classList.add("is-dragging");
+      }
+      carousel.scrollLeft = startLeft - dx;
+      const dt = event.timeStamp - lastT;
+      if (dt > 0) velocity = 0.8 * ((event.clientX - lastX) / dt) + 0.2 * velocity;
+      lastX = event.clientX;
+      lastT = event.timeStamp;
+    };
+
+    const onUp = (event: PointerEvent) => {
+      if (event.pointerId !== pointerId) return;
+      pointerId = null;
+      if (!dragged) return;
+      // Carry the fling ~250 ms forward, then settle on the nearest card.
+      const { step, lastIndex } = getCarouselMetrics(carousel);
+      const projected = carousel.scrollLeft - velocity * 250;
+      const index = Math.min(Math.max(Math.round(projected / Math.max(step, 1)), 0), lastIndex);
+      carousel.scrollTo({ left: index * step, behavior: "smooth" });
+      setActiveSlide(index);
+      // Snapping stays off until the settle animation lands, or it would fight it.
+      settleTimer = window.setTimeout(() => carousel.classList.remove("is-dragging"), 450);
+    };
+
+    // A drag that ends over a card must not also open that city.
+    const onClick = (event: MouseEvent) => {
+      if (!dragged) return;
+      event.preventDefault();
+      event.stopPropagation();
+      dragged = false;
+    };
+    const onDragStart = (event: DragEvent) => event.preventDefault(); // no ghost-image link drags
+
+    carousel.addEventListener("pointerdown", onDown);
+    carousel.addEventListener("pointermove", onMove);
+    carousel.addEventListener("pointerup", onUp);
+    carousel.addEventListener("pointercancel", onUp);
+    carousel.addEventListener("click", onClick, true);
+    carousel.addEventListener("dragstart", onDragStart);
     return () => {
-      window.clearTimeout(gestureTimer);
-      carousel.removeEventListener("wheel", handleWheel);
+      window.clearTimeout(settleTimer);
+      carousel.removeEventListener("pointerdown", onDown);
+      carousel.removeEventListener("pointermove", onMove);
+      carousel.removeEventListener("pointerup", onUp);
+      carousel.removeEventListener("pointercancel", onUp);
+      carousel.removeEventListener("click", onClick, true);
+      carousel.removeEventListener("dragstart", onDragStart);
     };
   }, [cities.length]);
 
@@ -209,17 +249,27 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="city-dots" aria-label="City slide navigation">
-              {cities.slice(0, maxSlide + 1).map((city, index) => (
-                <button
-                  key={city.slug}
-                  type="button"
-                  className={index === activeSlide ? "is-active" : ""}
-                  aria-label={`Show ${city.name}`}
-                  aria-current={index === activeSlide ? "true" : undefined}
-                  onClick={() => scrollToSlide(index)}
-                />
-              ))}
+            <div className="city-carousel-nav">
+              <button type="button" className="city-step" aria-label="Previous cities"
+                disabled={activeSlide === 0} onClick={() => scrollToSlide(activeSlide - 1)}>
+                <ChevronLeft size={18} />
+              </button>
+              <div className="city-dots" aria-label="City slide navigation">
+                {cities.slice(0, maxSlide + 1).map((city, index) => (
+                  <button
+                    key={city.slug}
+                    type="button"
+                    className={index === activeSlide ? "is-active" : ""}
+                    aria-label={`Show ${city.name}`}
+                    aria-current={index === activeSlide ? "true" : undefined}
+                    onClick={() => scrollToSlide(index)}
+                  />
+                ))}
+              </div>
+              <button type="button" className="city-step" aria-label="Next cities"
+                disabled={activeSlide >= maxSlide} onClick={() => scrollToSlide(activeSlide + 1)}>
+                <ChevronRight size={18} />
+              </button>
             </div>
           </>
         ) : (

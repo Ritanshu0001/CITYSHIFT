@@ -7,6 +7,11 @@ interface ScenarioCardsProps {
   onHighlight: (scenario: Scenario | null) => void;
 }
 
+// A scenario's areas show on the map only while its card is hovered or focused. Leaving a card
+// falls back to whichever card still holds the other one; with neither, the map clears.
+const scenarioOf = (scenarios: Scenario[], el: Element | null | undefined) =>
+  scenarios.find((s) => s.id === (el as HTMLElement | null)?.dataset?.scenarioId) ?? null;
+
 export function ScenarioCards({ scenarios, activeScenario, onHighlight }: ScenarioCardsProps) {
   return (
     <div className="scenario-list">
@@ -14,10 +19,16 @@ export function ScenarioCards({ scenarios, activeScenario, onHighlight }: Scenar
       {scenarios.map((scenario, index) => (
         <article
           key={scenario.id}
+          data-scenario-id={scenario.id}
           className={`scenario-card${activeScenario === scenario.id ? " is-active" : ""}`}
           tabIndex={0}
           onMouseEnter={() => onHighlight(scenario)}
+          onMouseLeave={() => onHighlight(scenarioOf(scenarios, document.activeElement))}
           onFocus={() => onHighlight(scenario)}
+          onBlur={(event) => {
+            if (scenarioOf(scenarios, event.relatedTarget)) return; // the next card's onFocus takes over
+            onHighlight(scenarioOf(scenarios, event.currentTarget.parentElement?.querySelector(".scenario-card:hover")));
+          }}
           onClick={() => onHighlight(scenario)}
         >
           <div className="scenario-rank"><span>{String(index + 1).padStart(2, "0")}</span><small>Priority {scenario.priority.toFixed(1)}</small></div>

@@ -120,6 +120,7 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, crashes, showCrashes 
   }), [hexes]);
   const overlay = useMemo(() => new GoogleMapsOverlay({ layers: [], interleaved: false }), []);
   const attachmentGeneration = useRef(0);
+  const arrowCursor = useRef(false);
 
   useEffect(() => {
     if (!map) return;
@@ -238,8 +239,18 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, crashes, showCrashes 
       onClick: ({ object, x, y }) => onCrashHover(object ? { point: object, x, y } : null),
     }) : null;
 
-    overlay.setProps({ layers: [fillLayer, glowLayer, outlineLayer, novelLayer, ...(crashLayer ? [crashLayer] : [])] });
-  }, [crashes, highlighted, highlightedIds, onCrashHover, onSelect, overlay, polygonHexes, selectedHex, showCrashes]);
+    overlay.setProps({
+      layers: [fillLayer, glowLayer, outlineLayer, novelLayer, ...(crashLayer ? [crashLayer] : [])],
+      // Google Maps owns the cursor and shows its grab hand everywhere; over a hex or crash dot,
+      // show the normal arrow instead. Dragging still shows Google's grabbing hand.
+      onHover: ({ object }) => {
+        const overHex = Boolean(object);
+        if (overHex === arrowCursor.current) return;
+        arrowCursor.current = overHex;
+        map?.setOptions({ draggableCursor: overHex ? "default" : null });
+      },
+    });
+  }, [crashes, highlighted, highlightedIds, map, onCrashHover, onSelect, overlay, polygonHexes, selectedHex, showCrashes]);
 
   return null;
 }

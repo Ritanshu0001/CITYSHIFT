@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, Bot, Check, MessageCircle, X } from "lucide-react";
+import { ArrowRight, ArrowUp, Bot, Check, MessageCircle, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { postChat } from "@/lib/api";
@@ -26,6 +26,22 @@ const STARTERS = [
   "Download the briefing",
 ];
 
+/**
+ * The panel a reply prepared behind the chat, as a link the rider can follow when ready. The chat
+ * never closes itself; the link does, so the conversation isn't pulled away mid-read.
+ */
+function followUp(actions: ChatAction[] | undefined): string | null {
+  if (!actions) return null;
+  if (actions.some((a) => a.type === "select_hex" || (a.type === "open_panel" && a.panel === "why"))) return "See the expanded explanation";
+  if (actions.some((a) => a.type === "highlight_scenario")) return "See this scenario on the map";
+  const panel = actions.find((a) => a.type === "open_panel");
+  if (panel?.type === "open_panel") return panel.panel === "comparison" ? "See the full comparison" : "See all scenarios";
+  return null;
+}
+
+// Following an older link restores that reply's view; downloads and city changes aren't replayed.
+const replayable = (actions: ChatAction[]) => actions.filter((a) => a.type !== "download_briefing" && a.type !== "open_city");
+
 function actionLabel(action: ChatAction) {
   switch (action.type) {
     case "select_hex": return "Selected an area";
@@ -49,9 +65,17 @@ export function ChatPanel({ cityName, slug, uiState, onActions }: ChatPanelProps
 
   // Scroll only the message list. scrollIntoView would also scroll .evidence-panel sideways toward the
   // closed (off-panel) drawer, hiding the tabs.
+  // A new reply is read from its first line, so it scrolls to the reply's top rather than the list's end.
   useEffect(() => {
     const list = messagesRef.current;
-    list?.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
+    if (!list) return;
+    const last = list.querySelector<HTMLElement>(".chat-message:last-of-type");
+    if (!waiting && !error && last?.classList.contains("is-model")) {
+      const top = list.scrollTop + last.getBoundingClientRect().top - list.getBoundingClientRect().top - 12;
+      list.scrollTo({ top, behavior: "smooth" });
+    } else {
+      list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
+    }
   }, [entries, waiting, error]);
 
   async function send(text: string) {
@@ -124,6 +148,18 @@ export function ChatPanel({ cityName, slug, uiState, onActions }: ChatPanelProps
             <article key={entry.id} className={`chat-message is-${entry.role}`}>
               <small>{entry.role === "user" ? "You" : "CityShift"}</small>
               <div className="chat-markdown"><ReactMarkdown skipHtml>{entry.text}</ReactMarkdown></div>
+              {entry.role === "model" && followUp(entry.actions) && (
+                <button
+                  type="button"
+                  className="chat-followup"
+                  onClick={() => {
+                    onActions(replayable(entry.actions ?? []));
+                    setOpen(false);
+                  }}
+                >
+                  {followUp(entry.actions)} <ArrowRight size={13} />
+                </button>
+              )}
               {entry.role === "model" && entry.actions && entry.actions.length > 0 && (
                 <div className="chat-action-trace">
                   {entry.actions.map((action, index) => (

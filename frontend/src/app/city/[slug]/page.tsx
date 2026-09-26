@@ -28,6 +28,15 @@ function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const NO_HIGHLIGHT: string[] = []; // stable identity, so the map doesn't rebuild its layers each render
+
+/** Chat may only move the map inside this city's study area (mirrors the backend's fly_to check). */
+function withinCity(summary: CityResult["summary"], lat: number, lng: number) {
+  const dLat = (lat - summary.center.lat) * 110.54;
+  const dLng = (lng - summary.center.lng) * 111.32 * Math.cos((summary.center.lat * Math.PI) / 180);
+  return Math.hypot(dLat, dLng) <= summary.radius_km * 1.5;
+}
+
 export default function CityPage() {
   const { slug } = useParams<{ slug: string }>();
   const searchParams = useSearchParams();
@@ -191,6 +200,7 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
               Number.isFinite(action.lat) && action.lat >= -90 && action.lat <= 90
               && Number.isFinite(action.lng) && action.lng >= -180 && action.lng <= 180
               && Number.isFinite(action.zoom) && action.zoom >= 3 && action.zoom <= 20
+              && result && withinCity(result.summary, action.lat, action.lng)
             ) {
               flyCommandId.current += 1;
               setFlyTo({ lat: action.lat, lng: action.lng, zoom: action.zoom, key: flyCommandId.current });
@@ -211,6 +221,8 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
     }
   }, [crashes, downloadBriefing, result, router, slug]);
 
+  // Scenario areas are a Scenarios-tab view: leaving the tab clears the blue (cards unmount without blurring).
+  const mapHighlightIds = activeTab === "scenarios" ? highlightedIds : NO_HIGHLIGHT;
   const cityLabel = useMemo(() => slug.replaceAll("-", " "), [slug]);
   const cityCrashes = crashes?.slug === slug ? crashes : null;
   const chatUiState = useMemo<UiState>(() => ({
@@ -275,13 +287,13 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
       <div className="analysis-workspace">
         <section className="map-column">
           <div className="map-toolbar">
-            <div><Layers3 size={15} /><b>Shift surface</b><span>{highlightedIds.length ? `${highlightedIds.length} scenario areas highlighted` : "Select an area for evidence"}</span></div>
+            <div><Layers3 size={15} /><b>Shift surface</b><span>{mapHighlightIds.length ? `${mapHighlightIds.length} scenario areas highlighted` : "Select an area for evidence"}</span></div>
           </div>
           <HexMap
             center={summary.center}
             hexes={hexes}
             selectedHex={selectedHex}
-            highlightedIds={highlightedIds}
+            highlightedIds={mapHighlightIds}
             crashes={cityCrashes}
             showCrashes={showCrashes}
             flyTo={flyTo}

@@ -53,7 +53,11 @@ export function WhyPanel({
         {topFeatures.map((feature) => (
           <div className="feature-row" key={feature.name}>
             <div className="feature-name"><b>{featureLabel(feature.name)}</b><small>{feature.pct.toFixed(1)}th percentile</small></div>
-            <div className="feature-values"><b>{compactNumber(feature.value)}</b><small>Reference {compactNumber(feature.ref_median)}</small></div>
+            <div className="feature-values">
+              <b>{compactNumber(feature.value)}</b>
+              {/* A zero median means most reference areas have none of this (schools, bars, tunnels). */}
+              <small>{feature.ref_median > 0 ? `Reference ${compactNumber(feature.ref_median)}` : "Reference: usually none"}</small>
+            </div>
             <span className={feature.z >= 0 ? "z-score positive" : "z-score negative"}>{feature.z >= 0 ? "+" : ""}{feature.z.toFixed(1)}σ</span>
           </div>
         ))}
