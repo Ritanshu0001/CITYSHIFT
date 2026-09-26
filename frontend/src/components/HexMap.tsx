@@ -4,7 +4,7 @@ import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { PolygonLayer, ScatterplotLayer } from "@deck.gl/layers";
 import { APILoadingStatus, Map, RenderingType, useApiLoadingStatus, useMap } from "@vis.gl/react-google-maps";
 import { cellToBoundary } from "h3-js";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BAND_COLORS, CRASH_COUNT_COLORS, MAPS_API_KEY } from "@/lib/constants";
 import type { Center, CityHex, CrashPoint, CrashesResponse } from "@/lib/types";
 import { Legend } from "./Legend";
@@ -118,13 +118,22 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, crashes, showCrashes 
     ] as [number, number]);
     return { hex, polygon, fillPolygon };
   }), [hexes]);
-  const overlay = useMemo(() => new GoogleMapsOverlay({ layers: [], interleaved: true }), []);
+  const overlay = useMemo(() => new GoogleMapsOverlay({ layers: [], interleaved: false }), []);
+  const attachmentGeneration = useRef(0);
 
   useEffect(() => {
     if (!map) return;
+    const generation = ++attachmentGeneration.current;
     overlay.setMap(map);
     return () => {
-      overlay.setMap(null);
+      // React development mode immediately replays effects. Detaching synchronously
+      // leaves a queued Google Maps draw with no projection, so only detach if this
+      // attachment was not replaced by the replayed effect.
+      queueMicrotask(() => {
+        // Read the latest generation intentionally; copying it would reintroduce the race.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (attachmentGeneration.current === generation) overlay.setMap(null);
+      });
     };
   }, [map, overlay]);
 
@@ -357,7 +366,7 @@ export function HexMap(props: HexMapProps) {
           gestureHandling="greedy"
           disableDefaultUI
           zoomControl
-          renderingType={RenderingType.VECTOR}
+          renderingType={RenderingType.RASTER}
           styles={DARK_MAP_STYLES}
           className="google-map"
         >
