@@ -17,6 +17,38 @@ interface HexMapProps {
   onSelect: (hex: CityHex) => void;
 }
 
+const FALLBACK_ZOOM = 12;
+const TILE_SIZE = 256;
+const FALLBACK_WIDTH = 1000;
+const FALLBACK_HEIGHT = 700;
+
+function projectToWorld(lat: number, lng: number, zoom: number) {
+  const scale = TILE_SIZE * 2 ** zoom;
+  const sinLat = Math.sin((Math.max(-85.0511, Math.min(85.0511, lat)) * Math.PI) / 180);
+  return {
+    x: ((lng + 180) / 360) * scale,
+    y: (0.5 - Math.log((1 + sinLat) / (1 - sinLat)) / (4 * Math.PI)) * scale,
+  };
+}
+
+const DARK_MAP_STYLES = [
+  { elementType: "geometry", stylers: [{ color: "#111629" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#78829c" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#111629" }] },
+  { featureType: "administrative", elementType: "geometry.stroke", stylers: [{ color: "#343c56" }] },
+  { featureType: "landscape", elementType: "geometry", stylers: [{ color: "#151b30" }] },
+  { featureType: "poi", elementType: "geometry", stylers: [{ color: "#1a2138" }] },
+  { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
+  { featureType: "road", elementType: "geometry", stylers: [{ color: "#303950" }] },
+  { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#111629" }] },
+  { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#46516e" }] },
+  { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#64708c" }] },
+  { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#171d31" }] },
+  { featureType: "transit", elementType: "geometry", stylers: [{ color: "#222a43" }] },
+  { featureType: "water", elementType: "geometry", stylers: [{ color: "#080c18" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#59637c" }] },
+];
+
 function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexMapProps, "center">) {
   const map = useMap();
   const overlayRef = useRef<GoogleMapsOverlay | null>(null);
@@ -42,11 +74,11 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
       getHexagon: (hex) => hex.h3,
       getFillColor: (hex) => {
         const [r, g, b] = BAND_COLORS[hex.band].rgb;
-        if (selectedHex?.h3 === hex.h3) return [16, 35, 56, 235];
-        if (highlighted.has(hex.h3)) return [238, 99, 50, 225];
-        return [r, g, b, 164];
+        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 238];
+        if (highlighted.has(hex.h3)) return [31, 111, 255, 235];
+        return [r, g, b, 184];
       },
-      getLineColor: [248, 247, 243, 210],
+      getLineColor: [10, 14, 28, 220],
       lineWidthMinPixels: 1,
       stroked: true,
       filled: true,
@@ -60,8 +92,8 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
       data: hexes.filter((hex) => hex.novel.length > 0),
       getHexagon: (hex) => hex.h3,
       getFillColor: [0, 0, 0, 0],
-      getLineColor: [11, 36, 59, 255],
-      lineWidthMinPixels: 4,
+      getLineColor: [255, 255, 255, 245],
+      lineWidthMinPixels: 3,
       stroked: true,
       filled: false,
       pickable: false,
@@ -73,35 +105,48 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
   return null;
 }
 
-function FallbackMap({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexMapProps, "center">) {
+function FallbackMap({ center, hexes, selectedHex, highlightedIds, onSelect }: HexMapProps) {
   const highlighted = useMemo(() => new Set(highlightedIds), [highlightedIds]);
+  const centerPoint = useMemo(() => projectToWorld(center.lat, center.lng, FALLBACK_ZOOM), [center]);
+  const tiles = useMemo(() => {
+    const startX = Math.floor((centerPoint.x - FALLBACK_WIDTH / 2) / TILE_SIZE);
+    const endX = Math.floor((centerPoint.x + FALLBACK_WIDTH / 2) / TILE_SIZE);
+    const startY = Math.floor((centerPoint.y - FALLBACK_HEIGHT / 2) / TILE_SIZE);
+    const endY = Math.floor((centerPoint.y + FALLBACK_HEIGHT / 2) / TILE_SIZE);
+    const visible = [];
+
+    for (let y = startY; y <= endY; y += 1) {
+      for (let x = startX; x <= endX; x += 1) {
+        visible.push({
+          key: `${FALLBACK_ZOOM}-${x}-${y}`,
+          href: `https://tile.openstreetmap.org/${FALLBACK_ZOOM}/${x}/${y}.png`,
+          x: x * TILE_SIZE - centerPoint.x + FALLBACK_WIDTH / 2,
+          y: y * TILE_SIZE - centerPoint.y + FALLBACK_HEIGHT / 2,
+        });
+      }
+    }
+
+    return visible;
+  }, [centerPoint]);
   const shapes = useMemo(() => {
-    const cells = hexes.map((hex) => ({ hex, boundary: cellToBoundary(hex.h3) }));
-    const points = cells.flatMap((cell) => cell.boundary);
-    const lats = points.map(([lat]) => lat);
-    const lngs = points.map(([, lng]) => lng);
-    const minLat = Math.min(...lats);
-    const maxLat = Math.max(...lats);
-    const minLng = Math.min(...lngs);
-    const maxLng = Math.max(...lngs);
-    const latSpan = maxLat - minLat || 1;
-    const lngSpan = maxLng - minLng || 1;
-    return cells.map(({ hex, boundary }) => ({
+    return hexes.map((hex) => ({
       hex,
-      points: boundary
-        .map(([lat, lng]) => `${60 + ((lng - minLng) / lngSpan) * 880},${55 + ((maxLat - lat) / latSpan) * 590}`)
+      points: cellToBoundary(hex.h3)
+        .map(([lat, lng]) => {
+          const point = projectToWorld(lat, lng, FALLBACK_ZOOM);
+          return `${FALLBACK_WIDTH / 2 + point.x - centerPoint.x},${FALLBACK_HEIGHT / 2 + point.y - centerPoint.y}`;
+        })
         .join(" "),
     }));
-  }, [hexes]);
+  }, [centerPoint, hexes]);
 
   return (
     <div className="fallback-map">
       <svg viewBox="0 0 1000 700" role="group" aria-label="Interactive H3 city shift map">
-        <g className="fallback-streets" aria-hidden="true">
-          <path d="M-20 180 C160 80 245 280 430 200 S710 120 1040 300" />
-          <path d="M120 -20 C180 210 390 265 350 720" />
-          <path d="M650 -20 C590 160 790 260 720 720" />
-          <path d="M-20 520 C220 460 390 610 1020 470" />
+        <g className="fallback-tiles" aria-hidden="true">
+          {tiles.map((tile) => (
+            <image key={tile.key} href={tile.href} x={tile.x} y={tile.y} width={TILE_SIZE} height={TILE_SIZE} />
+          ))}
         </g>
         <g>
           {shapes.map(({ hex, points }, index) => (
@@ -121,7 +166,10 @@ function FallbackMap({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
           ))}
         </g>
       </svg>
-      <div className="map-mode"><span /> Cartographic preview · add a Maps key for live streets</div>
+      <div className="map-mode"><span /> Live OSM streets · add Google key for Places + Street View</div>
+      <div className="map-attribution">
+        © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
+      </div>
     </div>
   );
 }
@@ -136,6 +184,7 @@ export function HexMap(props: HexMapProps) {
           gestureHandling="greedy"
           disableDefaultUI
           zoomControl
+          styles={DARK_MAP_STYLES}
           className="google-map"
         >
           <DeckOverlay {...props} />

@@ -26,9 +26,9 @@ export const JOB_STEP_LABELS: Record<JobStep, string> = {
 };
 
 export const BAND_COLORS: Record<Band, { hex: string; rgb: [number, number, number] }> = {
-  green: { hex: "#49A078", rgb: [73, 160, 120] },
-  yellow: { hex: "#F2B134", rgb: [242, 177, 52] },
-  red: { hex: "#E05252", rgb: [224, 82, 82] },
+  green: { hex: "#18C6A3", rgb: [24, 198, 163] },
+  yellow: { hex: "#F8BF47", rgb: [248, 191, 71] },
+  red: { hex: "#FF5262", rgb: [255, 82, 98] },
 };
 
 export const FEATURE_LABELS: Record<string, string> = {
