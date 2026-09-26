@@ -283,6 +283,40 @@ def test_roundabout_or_tunnel_is_quiet_when_neither_feature_is_modeled():
                for item in result["hexes"])
 
 
+def test_steep_grade_fires_on_unusual_slope_and_reports_the_real_max():
+    """CR-011: terrain_slope_pct z > 2, with the steepest raw grade in triggered_by."""
+    phoenix, target, city = _fixtures()
+    _use_fixture_reference(phoenix, city)
+    assert "terrain_slope_pct" in reference.cached_reference()["feature_order"]
+
+    hilly = target.copy()
+    hilly.loc[0:3, "terrain_slope_pct"] = 14.5
+
+    result = _full_result(hilly, _target_city(city))
+    card = next(c for c in result["scenarios"] if c["id"] == "steep_grade")
+    expected = {str(value) for value in hilly.loc[z_matrix(hilly)["terrain_slope_pct"] > 2, "h3"]}
+    assert expected and set(card["hex_ids"]) == expected
+    assert card["title"] == "Steep grade with a limited sight line over the crest"
+    trigger = card["triggered_by"][0]
+    assert trigger.startswith(f"terrain_slope_pct z > 2 in {len(expected)} hexes")
+    # The max is the real steepest grade, not a placeholder or the z value.
+    assert "14.5%" in trigger
+
+
+def test_steep_grade_is_quiet_when_slope_is_not_modeled():
+    """A reference pool with no elevation coverage makes the feature rare."""
+    phoenix, target, city = _fixtures()
+    flat = phoenix.copy()
+    flat["terrain_slope_pct"] = 0.0
+    _use_fixture_reference(flat, city)
+    assert "terrain_slope_pct" in reference.cached_reference()["rare_features"]
+
+    hilly = target.copy()
+    hilly.loc[0:3, "terrain_slope_pct"] = 14.5
+    cards = _full_result(hilly, _target_city(city))["scenarios"]
+    assert not any(card["id"] == "steep_grade" for card in cards)
+
+
 def test_rain_rule_needs_a_genuinely_rainier_city():
     phoenix, target, city = _fixtures()
     _use_fixture_reference(phoenix, city)

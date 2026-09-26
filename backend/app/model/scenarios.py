@@ -21,6 +21,7 @@ TITLES = {
     "snow_traction": "Reduced traction + hidden lane markings",
     "left_hand_traffic": "Mirrored turn logic; turns across oncoming traffic",
     "roundabout_or_tunnel": "Multi-lane roundabout entry; GPS loss and lighting change in a tunnel",
+    "steep_grade": "Steep grade with a limited sight line over the crest",
 }
 
 
@@ -222,9 +223,35 @@ def roundabout_or_tunnel(features: pd.DataFrame, city: dict, hexes: list[dict], 
                  ids, float(triggering_z[mask].abs().mean()))
 
 
+def steep_grade(features: pd.DataFrame, city: dict, hexes: list[dict], summary: dict, z_values: pd.DataFrame) -> dict | None:
+    """Hexes whose grade is unusual against the reference pool (CR-011).
+
+    Guarded on the feature being modeled: a reference pool with no elevation
+    coverage makes terrain_slope_pct rare, and the rule then goes quiet rather
+    than raising on a missing z column.
+    """
+    if not _modeled(z_values, "terrain_slope_pct"):
+        return None
+    mask = z_values["terrain_slope_pct"] > 2
+    ids = _ids(features, mask)
+    if not ids:
+        return None
+    slope_z = _mean_abs(z_values, "terrain_slope_pct", mask)
+    # The raw percent grade of the steepest triggering hex. z alone is unitless,
+    # and "z > 2" reads very differently at 3% than at 15%, so the card carries
+    # the real number a reader can judge.
+    steepest = float(pd.to_numeric(features.loc[mask, "terrain_slope_pct"], errors="coerce").max())
+    return _card("steep_grade", TITLES["steep_grade"],
+                 [f"terrain_slope_pct z > 2 in {len(ids)} hexes (max {steepest:.1f}%)"],
+                 f"{len(ids)} hexes have a grade above z = 2 against {REFERENCE_LABEL}, "
+                 f"the steepest at {steepest:.1f}%.",
+                 ids, slope_z)
+
+
 def build_scenarios(features: pd.DataFrame, city: dict, hexes: list[dict], summary: dict) -> list[dict]:
     z_values = z_matrix(features)
     rules = (movable_bridge, rain_dense_intersection, crosswalk_wide_arterial, cyclist_complex_intersection,
-             late_night_pedestrians, stadium_event, bus_in_lane, snow_traction, left_hand_traffic, roundabout_or_tunnel)
+             late_night_pedestrians, stadium_event, bus_in_lane, snow_traction, left_hand_traffic, roundabout_or_tunnel,
+             steep_grade)
     cards = [card for rule in rules if (card := rule(features, city, hexes, summary, z_values)) is not None]
     return sorted(cards, key=lambda card: card["priority"], reverse=True)
