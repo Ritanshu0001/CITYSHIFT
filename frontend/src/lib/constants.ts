@@ -1,6 +1,6 @@
 import type { Band, JobStep } from "./types";
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api/backend";
 export const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "1";
 export const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? "";
 

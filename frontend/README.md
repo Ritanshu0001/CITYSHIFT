@@ -19,11 +19,12 @@ Open [http://localhost:3000](http://localhost:3000). The live FastAPI service at
 
 ```dotenv
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=
-NEXT_PUBLIC_API_BASE=http://localhost:8000
+NEXT_PUBLIC_API_BASE=/api/backend
 NEXT_PUBLIC_USE_MOCK=0
+CITYSHIFT_BACKEND_URL=http://127.0.0.1:8000
 ```
 
-Set `NEXT_PUBLIC_USE_MOCK=1` only to use the bundled deterministic mock. The Google key needs Maps JavaScript API, Places API (New), and Geocoding API access.
+The same-origin `/api/backend` proxy keeps the app working from both `localhost:3000` and `127.0.0.1:3000`; `CITYSHIFT_BACKEND_URL` is its server-side target. Set `NEXT_PUBLIC_USE_MOCK=1` only to use the bundled deterministic mock. The Google key needs Maps JavaScript API, Places API (New), and Geocoding API access.
 
 ## Commands
 

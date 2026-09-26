@@ -47,11 +47,12 @@ The live stack is the default. Configure `.env.local` like this:
 
 ```dotenv
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=your_key_here
-NEXT_PUBLIC_API_BASE=http://localhost:8000
+NEXT_PUBLIC_API_BASE=/api/backend
 NEXT_PUBLIC_USE_MOCK=0
+CITYSHIFT_BACKEND_URL=http://127.0.0.1:8000
 ```
 
-The Google key must have Maps JavaScript API, Places API (New), and Geocoding API enabled. `.env.local` is ignored and must never be committed.
+The same-origin `/api/backend` rewrite avoids browser CORS differences between `localhost` and `127.0.0.1`; `CITYSHIFT_BACKEND_URL` controls the server-side target. The Google key must have Maps JavaScript API, Places API (New), and Geocoding API enabled. `.env.local` is ignored and must never be committed.
 
 ## What is implemented
 
