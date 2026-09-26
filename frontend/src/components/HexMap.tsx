@@ -1,9 +1,8 @@
 "use client";
 
-import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
-import { ScatterplotLayer } from "@deck.gl/layers";
-import { APILoadingStatus, Map, useApiLoadingStatus, useMap } from "@vis.gl/react-google-maps";
+import { PolygonLayer, ScatterplotLayer } from "@deck.gl/layers";
+import { APILoadingStatus, Map, RenderingType, useApiLoadingStatus, useMap } from "@vis.gl/react-google-maps";
 import { cellToBoundary } from "h3-js";
 import { useEffect, useMemo, useState } from "react";
 import { BAND_COLORS, CRASH_COUNT_COLORS, MAPS_API_KEY } from "@/lib/constants";
@@ -28,6 +27,12 @@ interface CrashHover {
   y: number;
 }
 
+interface HexPolygon {
+  hex: CityHex;
+  polygon: [number, number][];
+  fillPolygon: [number, number][];
+}
+
 const FALLBACK_ZOOM = 12;
 const TILE_SIZE = 256;
 const FALLBACK_WIDTH = 1000;
@@ -44,6 +49,11 @@ function crashRingColor(point: CrashPoint): [number, number, number, number] {
   if (point.cyclist) return [24, 198, 163, 255];
   if (point.pedestrian) return [255, 255, 255, 255];
   return [255, 255, 255, 105];
+}
+
+function hexEdgeColor(hex: CityHex, alpha = 255): [number, number, number, number] {
+  const [r, g, b] = BAND_COLORS[hex.band].rgb;
+  return [r, g, b, alpha];
 }
 
 function crashTime(hour: number | null) {
@@ -95,65 +105,104 @@ type DeckOverlayProps = Omit<HexMapProps, "center" | "onToggleCrashes"> & {
 function DeckOverlay({ hexes, selectedHex, highlightedIds, crashes, showCrashes = false, onCrashHover, onSelect }: DeckOverlayProps) {
   const map = useMap();
   const highlighted = useMemo(() => new Set(highlightedIds), [highlightedIds]);
-  const overlay = useMemo(() => new GoogleMapsOverlay({ layers: [], interleaved: false }), []);
+  const polygonHexes = useMemo<HexPolygon[]>(() => hexes.map((hex) => {
+    const polygon = cellToBoundary(hex.h3).map(([lat, lng]) => [lng, lat] as [number, number]);
+    const center = polygon.reduce(
+      ([lngSum, latSum], [lng, lat]) => [lngSum + lng, latSum + lat],
+      [0, 0],
+    ).map((value) => value / polygon.length) as [number, number];
+    const fillInset = 0.965;
+    const fillPolygon = polygon.map(([lng, lat]) => [
+      center[0] + (lng - center[0]) * fillInset,
+      center[1] + (lat - center[1]) * fillInset,
+    ] as [number, number]);
+    return { hex, polygon, fillPolygon };
+  }), [hexes]);
+  const overlay = useMemo(() => new GoogleMapsOverlay({ layers: [], interleaved: true }), []);
 
   useEffect(() => {
     if (!map) return;
-    const listener = google.maps.event.addListenerOnce(map, "idle", () => {
-      overlay.setMap(map);
-    });
+    overlay.setMap(map);
     return () => {
-      listener.remove();
       overlay.setMap(null);
     };
   }, [map, overlay]);
 
   useEffect(() => {
-    const fillLayer = new H3HexagonLayer<CityHex>({
+    const fillLayer = new PolygonLayer<HexPolygon>({
       id: "city-shift-hexes",
-      data: hexes,
-      getHexagon: (hex) => hex.h3,
-      getFillColor: (hex) => {
+      data: polygonHexes,
+      getPolygon: (item) => item.fillPolygon,
+      getFillColor: ({ hex }) => {
         const [r, g, b] = BAND_COLORS[hex.band].rgb;
         if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 135];
         if (highlighted.has(hex.h3)) return [31, 111, 255, 145];
-        const alpha = hex.band === "red" ? 122 : hex.band === "yellow" ? 108 : 82;
+        const alpha = hex.band === "red" ? 78 : hex.band === "yellow" ? 66 : 52;
         return [r, g, b, alpha];
       },
       stroked: false,
       filled: true,
+      lineAntialiasing: true,
       pickable: true,
-      onClick: ({ object }) => object && onSelect(object),
+      onClick: ({ object }) => object && onSelect(object.hex),
       updateTriggers: { getFillColor: [selectedHex?.h3, highlightedIds.join("|")] },
     });
 
-    const outlineLayer = new H3HexagonLayer<CityHex>({
-      id: "city-shift-boundaries",
-      data: hexes,
-      getHexagon: (hex) => hex.h3,
+    const glowLayer = new PolygonLayer<HexPolygon>({
+      id: "city-shift-boundary-glow",
+      data: polygonHexes,
+      getPolygon: (item) => item.polygon,
       getFillColor: [0, 0, 0, 0],
-      getLineColor: (hex) => {
-        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 255];
-        if (highlighted.has(hex.h3)) return [118, 166, 255, 255];
-        return [3, 6, 16, 255];
+      getLineColor: ({ hex }) => {
+        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 72];
+        if (highlighted.has(hex.h3)) return [122, 174, 255, 76];
+        return hexEdgeColor(hex, 24);
       },
-      lineWidthMinPixels: 3.5,
-      lineWidthMaxPixels: 5.5,
+      getLineWidth: 2.2,
+      lineWidthUnits: "pixels",
+      lineWidthMinPixels: 2,
+      lineWidthMaxPixels: 2.8,
       stroked: true,
       filled: false,
+      lineAntialiasing: true,
       pickable: false,
       updateTriggers: { getLineColor: [selectedHex?.h3, highlightedIds.join("|")] },
     });
 
-    const novelLayer = new H3HexagonLayer<CityHex>({
-      id: "novel-hexes",
-      data: hexes.filter((hex) => hex.novel.length > 0),
-      getHexagon: (hex) => hex.h3,
+    const outlineLayer = new PolygonLayer<HexPolygon>({
+      id: "city-shift-boundaries",
+      data: polygonHexes,
+      getPolygon: (item) => item.polygon,
       getFillColor: [0, 0, 0, 0],
-      getLineColor: [255, 255, 255, 255],
-      lineWidthMinPixels: 4,
+      getLineColor: ({ hex }) => {
+        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 225];
+        if (highlighted.has(hex.h3)) return [156, 193, 255, 215];
+        return hexEdgeColor(hex, 135);
+      },
+      getLineWidth: 1,
+      lineWidthUnits: "pixels",
+      lineWidthMinPixels: 1,
+      lineWidthMaxPixels: 1.35,
       stroked: true,
       filled: false,
+      lineAntialiasing: true,
+      pickable: false,
+      updateTriggers: { getLineColor: [selectedHex?.h3, highlightedIds.join("|")] },
+    });
+
+    const novelLayer = new PolygonLayer<HexPolygon>({
+      id: "novel-hexes",
+      data: polygonHexes.filter(({ hex }) => hex.novel.length > 0),
+      getPolygon: (item) => item.polygon,
+      getFillColor: [0, 0, 0, 0],
+      getLineColor: [255, 255, 255, 255],
+      getLineWidth: 1,
+      lineWidthUnits: "pixels",
+      lineWidthMinPixels: 1,
+      lineWidthMaxPixels: 1.5,
+      stroked: true,
+      filled: false,
+      lineAntialiasing: true,
       pickable: false,
     });
 
@@ -180,8 +229,8 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, crashes, showCrashes 
       onClick: ({ object, x, y }) => onCrashHover(object ? { point: object, x, y } : null),
     }) : null;
 
-    overlay.setProps({ layers: [fillLayer, outlineLayer, novelLayer, ...(crashLayer ? [crashLayer] : [])] });
-  }, [crashes, hexes, highlighted, highlightedIds, onCrashHover, onSelect, overlay, selectedHex, showCrashes]);
+    overlay.setProps({ layers: [fillLayer, glowLayer, outlineLayer, novelLayer, ...(crashLayer ? [crashLayer] : [])] });
+  }, [crashes, highlighted, highlightedIds, onCrashHover, onSelect, overlay, polygonHexes, selectedHex, showCrashes]);
 
   return null;
 }
@@ -267,7 +316,7 @@ function FallbackMap({
           ))}
         </g>
       </svg>
-      <div className="map-mode"><span /> {offline ? "Offline H3 surface · cached city data" : "Live OSM streets · add Google key for Places + Street View"}</div>
+      <div className="map-mode"><span /> {offline ? "Offline map" : "Street map preview"}</div>
       {!offline && (
         <div className="map-attribution">
           © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
@@ -308,6 +357,7 @@ export function HexMap(props: HexMapProps) {
           gestureHandling="greedy"
           disableDefaultUI
           zoomControl
+          renderingType={RenderingType.VECTOR}
           styles={DARK_MAP_STYLES}
           className="google-map"
         >

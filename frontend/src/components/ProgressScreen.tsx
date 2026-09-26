@@ -10,8 +10,7 @@ export function ProgressScreen({ cityName, job }: { cityName: string; job: JobSt
   return (
     <main className="progress-page">
       <div className="progress-card">
-        <div className="progress-orbit" aria-hidden="true"><span /><span /><span /></div>
-        <p className="eyebrow"><span>{hasError ? "!" : isCancelled ? "↗" : "LIVE"}</span> Public data analysis</p>
+        <p className="progress-label">Public data analysis</p>
         <h1>{hasError ? "Analysis stopped" : isCancelled ? "Analysis replaced" : isQueued ? `${cityName.replaceAll("-", " ")} is queued` : `Reading ${cityName.replaceAll("-", " ")}`}</h1>
         <p className="progress-lede">
           {isCancelled

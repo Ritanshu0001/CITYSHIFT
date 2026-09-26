@@ -27,16 +27,11 @@ export default function Home() {
     <main className="landing-page">
       <nav className="site-nav">
         <BrandMark />
-        <div className="nav-status">
-          <span className="status-pulse" />
-          Public data pipeline online
-        </div>
         <a className="nav-link" href="#method">Method <ArrowUpRight size={14} /></a>
       </nav>
 
       <section className="hero-section">
         <div className="hero-copy">
-          <p className="eyebrow"><span>01</span> City intelligence for simulation teams</p>
           <h1>Every city has a different <em>driving fingerprint.</em></h1>
           <p className="hero-lede">
             Enter any city. CityShift finds where its roads, weather, and street life depart from {REFERENCE_LABEL}—then turns the gaps into candidate test scenarios.
@@ -44,29 +39,26 @@ export default function Home() {
           <SearchBox hero />
           <div className="hero-note">
             <Database size={15} />
-            OpenStreetMap + Open-Meteo · Elevation: Copernicus DEM GLO-90 via Open-Meteo · 8 km study area · H3 resolution 8
+            Data from OpenStreetMap, Open-Meteo, and Copernicus DEM.
           </div>
         </div>
         <HexFingerprint />
       </section>
 
       <section className="proof-strip" aria-label="How CityShift works">
-        <div><span>01</span><MapPin /><p><b>Pick a city</b>Anywhere public data reaches.</p></div>
-        <div><span>02</span><Radar /><p><b>Find the shift</b>Every area scored against {REFERENCE_LABEL}.</p></div>
-        <div><span>03</span><Route /><p><b>Prioritize tests</b>Evidence-backed scenarios, ranked.</p></div>
-        <blockquote>“Waymax tests the scenario.<br /><strong>CityShift finds the scenario worth testing.</strong>”</blockquote>
+        <div><MapPin /><p><b>Pick a city</b>Anywhere public data reaches.</p></div>
+        <div><Radar /><p><b>Find the shift</b>Every area scored against {REFERENCE_LABEL}.</p></div>
+        <div><Route /><p><b>Prioritize tests</b>Evidence-backed scenarios, ranked.</p></div>
       </section>
 
       <section className="cached-section" id="method">
         <div className="section-heading">
-          <p className="eyebrow"><span>02</span> Ready now</p>
           <h2>Cities we’ve already mapped</h2>
           <p>Open a cached analysis instantly—the reliable path when live data is still processing.</p>
         </div>
         <div className="city-list">
-          {cities.map((city, index) => (
+          {cities.map((city) => (
             <Link href={`/city/${city.slug}`} className="city-row" key={city.slug}>
-              <span className="city-index">{String(index + 1).padStart(2, "0")}</span>
               <span className="city-name"><b>{city.name}</b><small>{city.n_hexes} mapped areas</small></span>
               <span className="city-meter" aria-label={`${city.pct_red}% strongly different`}>
                 <span style={{ width: `${Math.max(5, city.pct_red)}%` }} />
@@ -80,7 +72,7 @@ export default function Home() {
       </section>
 
       <footer className="site-footer">
-        <BrandMark compact />
+        <BrandMark />
         <p>Public signals. Comparable cities. Testable scenarios.</p>
         <span>Reference · {REFERENCE_LABEL}<br />Crash data: NHTSA FARS 2020-2024 (2024 preliminary)</span>
       </footer>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Crosshair, MapPin } from "lucide-react";
+import { ArrowUpRight, Crosshair } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCity } from "@/lib/api";
@@ -29,7 +29,6 @@ export function HexFingerprint() {
     <section className="city-preview" aria-label="New York city shift preview">
       <header className="city-preview-header">
         <div>
-          <span className="city-preview-kicker"><MapPin size={13} /> Default city</span>
           <h2>{result?.summary.city ?? "New York, NY, USA"}</h2>
         </div>
         <Link href={`/city/${DEFAULT_CITY_SLUG}`}>Open analysis <ArrowUpRight size={15} /></Link>
@@ -52,7 +51,7 @@ export function HexFingerprint() {
       <footer className="city-preview-footer">
         <div><small>{selectedHex ? "Selected area" : "Strong shift"}</small><b>{selectedHex ? selectedHex.shift_score.toFixed(1) : `${result?.summary.pct_red.toFixed(1) ?? "30.4"}%`}</b></div>
         <div><small>Mapped areas</small><b>{result?.summary.n_hexes ?? "—"}</b></div>
-        <p>{selectedHex ? "Area percentile against the pooled reference." : (topScenario?.title ?? "Real cached data—not an illustration.")}</p>
+        <p>{selectedHex ? "Area percentile against the pooled reference." : (topScenario?.title ?? "Open the full city analysis.")}</p>
       </footer>
     </section>
   );

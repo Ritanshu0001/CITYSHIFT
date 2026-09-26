@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, Bot, Check, MessageCircle, Sparkles, X } from "lucide-react";
+import { ArrowUp, Bot, Check, MessageCircle, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { postChat } from "@/lib/api";
@@ -101,8 +101,8 @@ export function ChatPanel({ cityName, slug, uiState, onActions }: ChatPanelProps
 
       <section id="cityshift-chat-drawer" className="chat-drawer" aria-label={`Ask CityShift about ${cityName}`} aria-hidden={!open}>
         <header className="chat-header">
-          <div className="chat-mark"><Sparkles size={16} /></div>
-          <div><small>City data assistant</small><h2>Ask CityShift</h2></div>
+          <div className="chat-mark"><MessageCircle size={16} /></div>
+          <h2>Ask CityShift</h2>
           <button type="button" aria-label="Close assistant" onClick={() => setOpen(false)}><X size={18} /></button>
         </header>
 

@@ -47,16 +47,13 @@ export function WhyPanel({
         <span>/ 100</span>
       </div>
       <p className="score-explainer">More unusual than <b>{hex.shift_score.toFixed(1)}%</b> of areas across {REFERENCE_LABEL}.</p>
-      <p className="hex-id">H3 · {hex.h3}</p>
-
       <div className="panel-rule" />
       <div className="mini-heading"><span>Strongest signals</span><small>Target vs reference</small></div>
       <div className="feature-table">
-        {topFeatures.map((feature, index) => (
+        {topFeatures.map((feature) => (
           <div className="feature-row" key={feature.name}>
-            <span className="feature-rank">0{index + 1}</span>
             <div className="feature-name"><b>{featureLabel(feature.name)}</b><small>{feature.pct.toFixed(1)}th percentile</small></div>
-            <div className="feature-values"><b>{compactNumber(feature.value)}</b><small>REF {compactNumber(feature.ref_median)}</small></div>
+            <div className="feature-values"><b>{compactNumber(feature.value)}</b><small>Reference {compactNumber(feature.ref_median)}</small></div>
             <span className={feature.z >= 0 ? "z-score positive" : "z-score negative"}>{feature.z >= 0 ? "+" : ""}{feature.z.toFixed(1)}σ</span>
           </div>
         ))}

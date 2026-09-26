@@ -4,12 +4,12 @@ import { BAND_COLORS, CRASH_COUNT_COLORS, REFERENCE_LABEL } from "@/lib/constant
 export function Legend({ showCrashes = false }: { showCrashes?: boolean }) {
   return (
     <div className="map-legend">
-      <div className="legend-title"><span>Shift score</span><small>vs reference</small></div>
+      <div className="legend-title"><span>Shift score</span></div>
       <div className="legend-scale">
         <span style={{ background: BAND_COLORS.green.hex }} /><span style={{ background: BAND_COLORS.yellow.hex }} /><span style={{ background: BAND_COLORS.red.hex }} />
       </div>
       <div className="legend-labels"><span>&lt; 80</span><span>80–95</span><span>≥ 95</span></div>
-      <p>More unusual than X% of areas across {REFERENCE_LABEL}</p>
+      <p>Area percentile relative to {REFERENCE_LABEL}.</p>
       <div className="legend-novel"><AlertTriangle size={13} /> Novel feature present</div>
       {showCrashes && (
         <div className="legend-crashes">

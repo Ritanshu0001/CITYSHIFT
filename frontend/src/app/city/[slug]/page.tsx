@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, CircleHelp, Download, FileJson, FileText, GitCompareArrows, Layers3, ListChecks, Search, Sparkles } from "lucide-react";
+import { ArrowLeft, CircleHelp, Download, FileJson, FileText, GitCompareArrows, Layers3, ListChecks, Search } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import { ProgressScreen } from "@/components/ProgressScreen";
 import { ScenarioCards } from "@/components/ScenarioCards";
 import { WhyPanel } from "@/components/WhyPanel";
 import { ApiError, briefingUrl, clearActiveJob, getCity, getCrashes, getJob } from "@/lib/api";
-import { MAPS_API_KEY, POLL_MS, REFERENCE_LABEL, REFERENCE_SLUGS } from "@/lib/constants";
+import { MAPS_API_KEY, POLL_MS, REFERENCE_LABEL } from "@/lib/constants";
 import { getLiveTerrain, type LiveTerrain } from "@/lib/terrain";
 import type { ChatAction, CityHex, CityResult, CrashesResponse, JobStatus, Scenario, UiState } from "@/lib/types";
 
@@ -242,22 +242,19 @@ export default function CityPage() {
   return (
     <main className="analysis-page">
       <header className="analysis-nav">
-        <BrandMark compact />
-        <div className="analysis-breadcrumb"><span>City atlas</span><b>/</b><strong>{summary.city}</strong></div>
+        <BrandMark />
         <Link href="/" className="new-search"><Search size={15} /> New city</Link>
       </header>
 
       <section className="summary-strip">
         <div className="summary-title">
-          <p className="eyebrow"><span>LIVE</span> Compared with {REFERENCE_LABEL}</p>
+          <p className="summary-context">Compared with {REFERENCE_LABEL}</p>
           <h1>{summary.city}</h1>
         </div>
-        <div className="summary-metric"><small>Study area</small><b>{summary.radius_km} km</b><span>fixed radius</span></div>
-        <div className="summary-metric"><small>Mapped areas</small><b>{summary.n_hexes}</b><span>road-bearing H3 cells</span></div>
-        <div className="summary-metric summary-alert"><small>Strong shift</small><b>{summary.pct_red.toFixed(1)}%</b><span>of areas differ strongly</span></div>
-        <div className="summary-reference">
-          <Sparkles size={16} />
-          <div className="summary-reference-copy"><b>{REFERENCE_LABEL}</b><span>{REFERENCE_SLUGS.length}-city pooled baseline</span></div>
+        <div className="summary-metric"><small>Study area</small><b>{summary.radius_km} km</b></div>
+        <div className="summary-metric"><small>Mapped areas</small><b>{summary.n_hexes}</b></div>
+        <div className="summary-metric summary-alert"><small>Strong shift</small><b>{summary.pct_red.toFixed(1)}%</b><span>of mapped areas</span></div>
+        <div className="summary-actions">
           <div className="briefing-download" title="City readiness briefing: candidate test plan from public data.">
             <span><Download size={13} /> Download briefing</span>
             <button type="button" onClick={() => downloadBriefing("md")} aria-label="Download Markdown briefing"><FileText size={12} /> .md</button>
@@ -270,7 +267,6 @@ export default function CityPage() {
         <section className="map-column">
           <div className="map-toolbar">
             <div><Layers3 size={15} /><b>Shift surface</b><span>{highlightedIds.length ? `${highlightedIds.length} scenario areas highlighted` : "Select an area for evidence"}</span></div>
-            <span className="map-coordinate">{summary.center.lat.toFixed(4)}° N · {Math.abs(summary.center.lng).toFixed(4)}° W</span>
           </div>
           <HexMap
             center={summary.center}

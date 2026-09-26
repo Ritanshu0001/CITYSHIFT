@@ -53,11 +53,10 @@ export function ComparisonView({ summary }: { summary: Summary }) {
       <section className="comparison-section shift-section">
         <div className="mini-heading"><span>Biggest shifts</span><small>Median signal ratio</small></div>
         <div className="shift-list">
-          {shifts.map((row, index) => {
+          {shifts.map((row) => {
             const isUp = row.ratio >= 1;
             return (
               <div className="shift-row" key={row.name}>
-                <span className="feature-rank">0{index + 1}</span>
                 <div><b>{featureLabel(row.name)}</b><small>{compactNumber(row.target)} city · {compactNumber(row.reference)} reference</small></div>
                 <span className={isUp ? "ratio-up" : "ratio-down"}>
                   {isUp ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}{row.ratio.toFixed(1)}×
