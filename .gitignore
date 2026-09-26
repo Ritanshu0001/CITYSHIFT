@@ -19,3 +19,7 @@ frontend/out/
 # OS
 .DS_Store
 Thumbs.db
+
+# Planning docs stay out of git (team decision): ignore markdown except the README.
+*.md
+!README.md
