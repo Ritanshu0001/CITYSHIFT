@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 from pathlib import Path
 import sys
 
@@ -59,12 +60,56 @@ def _row(summary: dict, cards: list[dict]) -> str:
             f"| {novel} | {len(cards)} | {title} |")
 
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _baseline_result(ref: str, slug: str) -> dict | None:
+    """The committed result.json for a slug at a git ref, or None if absent.
+
+    Reads from git rather than re-scoring with the old artifact on purpose: a
+    pre-CR-011 artifact no longer covers HEX_FEATURES, so loading it raises. The
+    committed result.json is also the more honest "before" - it is what the team
+    actually shipped at that point.
+    """
+    done = subprocess.run(["git", "show", f"{ref}:cache/{slug}/result.json"],
+                          cwd=REPO_ROOT, capture_output=True, text=True)
+    if done.returncode != 0:
+        return None
+    return json.loads(done.stdout)
+
+
+def _before_after(ref: str, cache: Path, slugs: list[str], recompute: bool) -> None:
+    print()
+    print()
+    print(f"### Before/after vs `{ref}`")
+    print()
+    print("| City | Red before | Red after | Change | Cards added | Cards removed |")
+    print("|---|---:|---:|---:|---|---|")
+    for slug in slugs:
+        before = _baseline_result(ref, slug)
+        after, _ = _result(cache, slug, recompute)
+        name = after["summary"]["city"]
+        if before is None:
+            print(f"| {name} | -- | {after['summary']['pct_red']:.1f}% | new city | -- | -- |")
+            continue
+        was, now = before["summary"]["pct_red"], after["summary"]["pct_red"]
+        old_ids = {card["id"] for card in before.get("scenarios", [])}
+        new_ids = {card["id"] for card in after.get("scenarios", [])}
+        added = ", ".join(f"+{i}" for i in sorted(new_ids - old_ids)) or "--"
+        removed = ", ".join(f"-{i}" for i in sorted(old_ids - new_ids)) or "--"
+        delta = now - was
+        print(f"| {name} | {was:.1f}% | {now:.1f}% | {delta:+.1f} | {added} | {removed} |")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("slugs", nargs="+", help="cache slugs to validate")
     parser.add_argument("--cache", type=Path, default=Path(__file__).resolve().parents[2] / "cache")
     parser.add_argument("--recompute", action="store_true",
                         help="ignore any cached result.json and score from features.csv")
+    parser.add_argument("--baseline", metavar="GIT_REF",
+                        help="also print a before/after table against the committed "
+                             "result.json at this git ref, e.g. v1-phoenix-reference")
     args = parser.parse_args()
 
     print("| City | Hexes | Red | Top median shifts | Novel | Scenarios | Top card |")
@@ -96,6 +141,9 @@ def main() -> None:
         print("Per reference city: " + ", ".join(per_city))
 
     # Provenance goes to stderr so stdout stays a paste-ready Markdown table.
+    if args.baseline:
+        _before_after(args.baseline, args.cache, args.slugs, args.recompute)
+
     for slug, source in sources:
         print(f"{slug}: {source}", file=sys.stderr)
 
