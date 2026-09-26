@@ -134,3 +134,20 @@ Status: open
   (Phoenix 4.8, Tucson 5.9, Atlanta 8.4, LA 9.4, Austin 12.1, SF 32.9, Miami 34.3,
   Boston 36.1, Chicago 37.1, Tokyo 38.4, NY 58.1 +snow, London 73.0 +left_hand_traffic).
 Status: info
+
+## CR-010  (all, sync)  Multi-city reference: Waymo's established cities
+(Proposed as "CR-008"; renumbered because CR-008 is the crosswalk trigger.)
+Why: One 8 km Phoenix circle understates what the car knows. Waymo's longest-running
+paid markets are Phoenix, San Francisco, Los Angeles, Austin and Atlanta, all already cached.
+Decision:
+- Reference = phoenix-az-usa, san-francisco-ca-usa, los-angeles-ca-usa, austin-tx-usa,
+  atlanta-ga-usa, pooled: ~1,153 hexes, equal weight per hex (no mileage weighting in v1).
+- Rare = present in < 1% of pooled hexes. Percentile, z, pct, ref_median all use the pooled hexes.
+- Climate reference = per-metric MAX across the 5 cities (the car already drives in Atlanta's rain).
+  "Much rainier" = target rain_days_per_year > max reference (replaces 2x Phoenix).
+  Snow novel = target snow >= 2 AND max reference snow < 1. Left-hand traffic unchanged.
+- CityResult JSON shape unchanged. summary.climate.reference now holds the per-metric max.
+- UI label: "Waymo's established cities" replaces "Phoenix".
+- New constants: REFERENCE_SLUGS (list of 5), REFERENCE_LABEL. REFERENCE_SLUG stays for compatibility.
+- Phoenix-only results are tagged v1-phoenix-reference (3644f92) for the before/after slide.
+Status: approved at sync

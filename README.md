@@ -1,6 +1,6 @@
 # CityShift
 
-Enter any city. CityShift shows where its driving environment differs from Phoenix and turns those differences into prioritized test scenarios, using only public data.
+Enter any city. CityShift shows where its driving environment differs from Waymo's established cities (Phoenix, San Francisco, Los Angeles, Austin, Atlanta) and turns those differences into prioritized test scenarios, using only public data.
 
 *Waymax tests the scenario. CityShift finds the scenario worth testing.*
 

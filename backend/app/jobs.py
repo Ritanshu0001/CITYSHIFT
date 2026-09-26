@@ -17,7 +17,7 @@ STEP_MESSAGES = {
     "roads": "Downloading the road network",
     "infrastructure": "Downloading signals, crossings, transit and places",
     "weather": "Fetching five years of weather",
-    "scoring": "Scoring hexes against Phoenix",
+    "scoring": "Scoring hexes against Waymo's established cities",
     "scenarios": "Building test scenarios",
 }
 

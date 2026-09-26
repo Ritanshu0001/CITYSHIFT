@@ -30,8 +30,19 @@ TOP_FEATURES_N = 3
 
 JOB_STEPS = ["roads", "infrastructure", "weather", "scoring", "scenarios"]
 
-REFERENCE_SLUG = "phoenix-az-usa"
+REFERENCE_SLUG = "phoenix-az-usa"  # kept for compatibility; the reference is REFERENCE_SLUGS (CR-010)
 REFERENCE_CENTER = {"lat": 33.4484, "lng": -112.0740}
+
+# CR-010 (approved at sync): the reference is Waymo's established cities, pooled
+# with equal weight per hex. Climate reference is the per-metric max across them.
+REFERENCE_SLUGS = [
+    "phoenix-az-usa",
+    "san-francisco-ca-usa",
+    "los-angeles-ca-usa",
+    "austin-tx-usa",
+    "atlanta-ga-usa",
+]
+REFERENCE_LABEL = "Waymo's established cities"
 
 ISOFOREST_SEED = 42
 NOVEL_Z_EQUIVALENT = 3.0  # z magnitude used for novel triggers in scenario priority
