@@ -2,9 +2,9 @@
 
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
-import { Map, useMap } from "@vis.gl/react-google-maps";
+import { APILoadingStatus, Map, useApiLoadingStatus, useMap } from "@vis.gl/react-google-maps";
 import { cellToBoundary } from "h3-js";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BAND_COLORS, MAPS_API_KEY } from "@/lib/constants";
 import type { Center, CityHex } from "@/lib/types";
 import { Legend } from "./Legend";
@@ -124,7 +124,14 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
   return null;
 }
 
-function FallbackMap({ center, hexes, selectedHex, highlightedIds, onSelect }: HexMapProps) {
+function FallbackMap({
+  center,
+  hexes,
+  selectedHex,
+  highlightedIds,
+  onSelect,
+  offline = false,
+}: HexMapProps & { offline?: boolean }) {
   const highlighted = useMemo(() => new Set(highlightedIds), [highlightedIds]);
   const centerPoint = useMemo(() => projectToWorld(center.lat, center.lng, FALLBACK_ZOOM), [center]);
   const tiles = useMemo(() => {
@@ -162,11 +169,13 @@ function FallbackMap({ center, hexes, selectedHex, highlightedIds, onSelect }: H
   return (
     <div className="fallback-map">
       <svg viewBox="0 0 1000 700" role="group" aria-label="Interactive H3 city shift map">
-        <g className="fallback-tiles" aria-hidden="true">
-          {tiles.map((tile) => (
-            <image key={tile.key} href={tile.href} x={tile.x} y={tile.y} width={TILE_SIZE} height={TILE_SIZE} />
-          ))}
-        </g>
+        {!offline && (
+          <g className="fallback-tiles" aria-hidden="true">
+            {tiles.map((tile) => (
+              <image key={tile.key} href={tile.href} x={tile.x} y={tile.y} width={TILE_SIZE} height={TILE_SIZE} />
+            ))}
+          </g>
+        )}
         <g>
           {shapes.map(({ hex, points }, index) => (
             <polygon
@@ -185,18 +194,39 @@ function FallbackMap({ center, hexes, selectedHex, highlightedIds, onSelect }: H
           ))}
         </g>
       </svg>
-      <div className="map-mode"><span /> Live OSM streets · add Google key for Places + Street View</div>
-      <div className="map-attribution">
-        © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
-      </div>
+      <div className="map-mode"><span /> {offline ? "Offline H3 surface · cached city data" : "Live OSM streets · add Google key for Places + Street View"}</div>
+      {!offline && (
+        <div className="map-attribution">
+          © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a>
+        </div>
+      )}
     </div>
   );
 }
 
 export function HexMap(props: HexMapProps) {
+  const apiStatus = useApiLoadingStatus();
+  const [online, setOnline] = useState(true);
+
+  useEffect(() => {
+    const update = () => setOnline(navigator.onLine);
+    update();
+    window.addEventListener("online", update);
+    window.addEventListener("offline", update);
+    return () => {
+      window.removeEventListener("online", update);
+      window.removeEventListener("offline", update);
+    };
+  }, []);
+
+  const googleReady = Boolean(MAPS_API_KEY) && online && apiStatus === APILoadingStatus.LOADED;
+  const googleUnavailable = Boolean(MAPS_API_KEY) && (
+    !online || apiStatus === APILoadingStatus.FAILED || apiStatus === APILoadingStatus.AUTH_FAILURE
+  );
+
   return (
     <div className="map-wrap">
-      {MAPS_API_KEY ? (
+      {googleReady ? (
         <Map
           defaultCenter={props.center}
           defaultZoom={12}
@@ -209,7 +239,7 @@ export function HexMap(props: HexMapProps) {
           <DeckOverlay {...props} />
         </Map>
       ) : (
-        <FallbackMap {...props} />
+        <FallbackMap {...props} offline={!online || googleUnavailable || Boolean(MAPS_API_KEY)} />
       )}
       <Legend />
     </div>

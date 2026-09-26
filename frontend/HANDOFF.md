@@ -8,7 +8,7 @@ The P3 frontend is implemented through the contract's Phase 5 UI validation pass
 - Branch: `main`
 - Frontend: Next.js App Router, TypeScript, Tailwind CSS 4
 - Runtime target: Node 20 (`.nvmrc` and `package.json#engines`)
-- Default mode: local mock data (`NEXT_PUBLIC_USE_MOCK` defaults to enabled)
+- Default mode: live FastAPI data (`NEXT_PUBLIC_USE_MOCK=0`; mock mode is opt-in)
 - API contract: implemented in `src/lib/types.ts` and `src/lib/api.ts`
 - Local contract and plan folders are intentionally ignored by Git and remain in the existing checkout.
 
@@ -43,7 +43,7 @@ npm run dev
 
 Open `http://localhost:3000`.
 
-Mock mode works without credentials. For the live stack, edit `.env.local`:
+The live stack is the default. Configure `.env.local` like this:
 
 ```dotenv
 NEXT_PUBLIC_GOOGLE_MAPS_KEY=your_key_here
@@ -81,7 +81,9 @@ The production build uses webpack explicitly because Turbopack stalled while bun
 Manual browser checks passed for:
 
 - Homepage layout and cached-city navigation.
-- Search → mock progress → result transition.
+- Live API listing of all 12 cached cities and instant cached-city navigation.
+- Google Places formatted-address selection (`Paris, France`) and API-returned slug navigation.
+- Contract-order progress and the readable backend error screen under a controlled Overpass failure.
 - Hex selection and evidence rendering.
 - Novel feature warning, real no-key street basemap, and no-key Street View fallback.
 - Comparison rendering including a zero-value Phoenix snow baseline.
@@ -89,15 +91,9 @@ Manual browser checks passed for:
 - Desktop at 1440 × 900.
 - Mobile at 390 × 844 with `scrollWidth === innerWidth`.
 
-## External checks still required
+## Live demo status
 
-P1's API and feature caches for seven cities are now on `main`, but P2's model output is not: no `cache/*/result.json` files exist yet. The following checks therefore remain for the next account after P2 lands results and a Maps key is available:
-
-1. Start P1's FastAPI service on port 8000 and set `NEXT_PUBLIC_USE_MOCK=0`.
-2. After P2 produces `result.json`, run a cached Phoenix result, then one uncached city, confirming the API matches `src/lib/types.ts`.
-3. Add a valid Google Maps key and confirm Google basemap rendering, Places selection, and at least one Street View panorama.
-4. Validate cached Phoenix, Tucson, New York, and London once P1/P2 results exist. Expected qualitative pattern: Phoenix and Tucson mostly green; New York and London more yellow/red; London shows left-hand traffic.
-5. Record the final demo only after those live checks. The script is in `demo/DEMO-SCRIPT.md`.
+P1's FastAPI service and P2's model output are integrated. Twelve cached cities return instantly from `/cities`; use these during the demo because a new city can take 2–6 minutes when Overpass is slow. The browser-verified backup path opens New York from the home list and renders the H3 map, Why evidence, and all scenario cards from local cached data. If Google Maps is unavailable or the browser goes offline, the map now switches to the local dark H3 surface instead of leaving a blank map.
 
 ## Dependency note
 

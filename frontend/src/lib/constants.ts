@@ -1,7 +1,7 @@
 import type { Band, JobStep } from "./types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
-export const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK !== "0";
+export const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "1";
 export const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? "";
 
 export const POLL_MS = 1500;
