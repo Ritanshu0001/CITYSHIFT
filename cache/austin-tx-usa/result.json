@@ -6894,6 +6894,42 @@
       "scope": "hex"
     },
     {
+      "id": "roundabout_or_tunnel",
+      "priority": 86.0,
+      "title": "Multi-lane roundabout entry; GPS loss and lighting change in a tunnel",
+      "description": "23 hexes have a roundabout or tunnel concentration above z = 2.",
+      "triggered_by": [
+        "roundabout_count z > 2 in 21 hexes",
+        "tunnel_count z > 2 in 2 hexes"
+      ],
+      "hex_ids": [
+        "88489e3407fffff",
+        "88489e3429fffff",
+        "88489e3445fffff",
+        "88489e344dfffff",
+        "88489e3463fffff",
+        "88489e3465fffff",
+        "88489e3469fffff",
+        "88489e346bfffff",
+        "88489e346dfffff",
+        "88489e350bfffff",
+        "88489e3515fffff",
+        "88489e3519fffff",
+        "88489e351bfffff",
+        "88489e35c1fffff",
+        "88489e35c3fffff",
+        "88489e35c5fffff",
+        "88489e35ebfffff",
+        "88489e35edfffff",
+        "88489e3627fffff",
+        "88489e370bfffff",
+        "88489e3713fffff",
+        "88489e3743fffff",
+        "88489e374bfffff"
+      ],
+      "scope": "hex"
+    },
+    {
       "id": "stadium_event",
       "priority": 12.0,
       "title": "Event crowd leaving + rideshare pickup congestion",

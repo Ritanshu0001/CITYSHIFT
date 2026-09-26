@@ -8415,6 +8415,45 @@
   },
   "scenarios": [
     {
+      "id": "roundabout_or_tunnel",
+      "priority": 97.3,
+      "title": "Multi-lane roundabout entry; GPS loss and lighting change in a tunnel",
+      "description": "26 hexes have a roundabout or tunnel concentration above z = 2.",
+      "triggered_by": [
+        "roundabout_count z > 2 in 14 hexes",
+        "tunnel_count z > 2 in 13 hexes"
+      ],
+      "hex_ids": [
+        "8844c13241fffff",
+        "8844c1324dfffff",
+        "8844c1a127fffff",
+        "8844c1a815fffff",
+        "8844c1a819fffff",
+        "8844c1a823fffff",
+        "8844c1a82bfffff",
+        "8844c1a831fffff",
+        "8844c1a83bfffff",
+        "8844c1a88dfffff",
+        "8844c1a893fffff",
+        "8844c1a8a3fffff",
+        "8844c1a8abfffff",
+        "8844c1a8b5fffff",
+        "8844c1a8bdfffff",
+        "8844c1a8c7fffff",
+        "8844c1a8e3fffff",
+        "8844c1a8ebfffff",
+        "8844c1a8edfffff",
+        "8844c1a91bfffff",
+        "8844c1a987fffff",
+        "8844c1a9bdfffff",
+        "8844c1a9cbfffff",
+        "8844c1a9ebfffff",
+        "8844c1aa05fffff",
+        "8844c1af45fffff"
+      ],
+      "scope": "hex"
+    },
+    {
       "id": "late_night_pedestrians",
       "priority": 92.9,
       "title": "Late-night pedestrian activity",
