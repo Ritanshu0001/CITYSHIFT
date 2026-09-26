@@ -60,8 +60,11 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
 
   useEffect(() => {
     if (!map) return;
-    overlay.setMap(map);
+    const listener = google.maps.event.addListenerOnce(map, "idle", () => {
+      overlay.setMap(map);
+    });
     return () => {
+      listener.remove();
       overlay.setMap(null);
     };
   }, [map, overlay]);
