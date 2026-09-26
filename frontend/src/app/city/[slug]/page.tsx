@@ -11,7 +11,7 @@ import { ProgressScreen } from "@/components/ProgressScreen";
 import { ScenarioCards } from "@/components/ScenarioCards";
 import { WhyPanel } from "@/components/WhyPanel";
 import { ApiError, getCity, getJob } from "@/lib/api";
-import { POLL_MS } from "@/lib/constants";
+import { POLL_MS, REFERENCE_LABEL, REFERENCE_SLUGS } from "@/lib/constants";
 import type { CityHex, CityResult, JobStatus, Scenario } from "@/lib/types";
 
 type PanelTab = "why" | "compare" | "scenarios";
@@ -141,13 +141,13 @@ export default function CityPage() {
 
       <section className="summary-strip">
         <div className="summary-title">
-          <p className="eyebrow"><span>LIVE</span> Compared with Phoenix</p>
+          <p className="eyebrow"><span>LIVE</span> Compared with {REFERENCE_LABEL}</p>
           <h1>{summary.city}</h1>
         </div>
         <div className="summary-metric"><small>Study area</small><b>{summary.radius_km} km</b><span>fixed radius</span></div>
         <div className="summary-metric"><small>Mapped areas</small><b>{summary.n_hexes}</b><span>road-bearing H3 cells</span></div>
         <div className="summary-metric summary-alert"><small>Strong shift</small><b>{summary.pct_red.toFixed(1)}%</b><span>of areas differ strongly</span></div>
-        <div className="summary-reference"><Sparkles size={16} /><span><b>Phoenix baseline</b>Expected self-check ≈ 5% red</span></div>
+        <div className="summary-reference"><Sparkles size={16} /><span><b>{REFERENCE_LABEL}</b>{REFERENCE_SLUGS.length}-city pooled baseline</span></div>
       </section>
 
       <div className="analysis-workspace">

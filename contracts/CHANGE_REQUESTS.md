@@ -151,3 +151,15 @@ Decision:
 - New constants: REFERENCE_SLUGS (list of 5), REFERENCE_LABEL. REFERENCE_SLUG stays for compatibility.
 - Phoenix-only results are tagged v1-phoenix-reference (3644f92) for the before/after slide.
 Status: approved at sync
+
+## CR-011  (P3, hour 14)  P3 decisions on CR-004 and CR-008
+- CR-004: approved. Use the defensible fallback wording: the Waymo Open Dataset does
+  include roadgraph and infrastructure information, but it covers locations already
+  collected; CityShift uses public data to rank and prepare candidate cities before a
+  dedicated Waymo collection exists.
+- CR-008: approved. Change the trigger to `crosswalk_density z > 1 AND arterial_share
+  z > 1`. P3 rechecked the rule after CR-010 against the pooled five-city reference:
+  z > 2 still fires in 0 of 12 cached cities, while z > 1 fires in 11 of 12 and affects
+  only one Phoenix hex. P3 will verify the re-scored scenario cards in the UI after P2
+  ships the rule.
+Status: approved by P3

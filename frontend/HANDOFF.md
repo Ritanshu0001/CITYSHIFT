@@ -62,12 +62,12 @@ The same-origin `/api/backend` rewrite avoids browser CORS differences between `
 - Google Maps + deck.gl `H3HexagonLayer` when a key is present.
 - Interactive H3 overlay on real, dark-filtered OpenStreetMap tiles when no Google key is present; this is the local/demo fallback and Google Maps remains the contract-mandated production path.
 - Shift legend using the locked `<80`, `80–95`, and `≥95` bands.
-- Clickable hex evidence panel with top features, Phoenix medians, z-scores, percentiles, and novel-feature warnings.
+- Clickable hex evidence panel with top features, pooled reference medians, z-scores, percentiles, and novel-feature warnings.
 - Street View lookup within 100 m, isolated so failure cannot break the evidence panel.
-- City-vs-Phoenix climate, driving-side, OSM completeness, novel-city, and top-shift comparison.
+- City-vs-reference climate, driving-side, OSM completeness, novel-city, and top-shift comparison.
 - Ranked scenario cards with trigger evidence and persistent map highlighting.
 - Responsive layouts, keyboard focus states, reduced-motion support, and no horizontal overflow at 390 px.
-- A deterministic 61-cell New York mock generated from real H3 indexes.
+- An offline New York mock generated from the latest committed backend result.
 
 ## Verification already completed
 
@@ -87,7 +87,7 @@ Manual browser checks passed for:
 - Contract-order progress and the readable backend error screen under a controlled Overpass failure.
 - Hex selection and evidence rendering.
 - Novel feature warning, real no-key street basemap, and no-key Street View fallback.
-- Comparison rendering including a zero-value Phoenix snow baseline.
+- Comparison rendering against the pooled five-city reference, including its climate maxima.
 - Scenario selection and six-hex map highlighting.
 - Desktop at 1440 × 900.
 - Mobile at 390 × 844 with `scrollWidth === innerWidth`.

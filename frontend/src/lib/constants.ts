@@ -8,6 +8,14 @@ export const POLL_MS = 1500;
 export const BAND_YELLOW = 80;
 export const BAND_RED = 95;
 export const REFERENCE_SLUG = "phoenix-az-usa";
+export const REFERENCE_SLUGS = [
+  "phoenix-az-usa",
+  "san-francisco-ca-usa",
+  "los-angeles-ca-usa",
+  "austin-tx-usa",
+  "atlanta-ga-usa",
+] as const;
+export const REFERENCE_LABEL = "Waymo's established cities";
 
 export const JOB_STEPS: JobStep[] = [
   "roads",
@@ -21,7 +29,7 @@ export const JOB_STEP_LABELS: Record<JobStep, string> = {
   roads: "Pulling road network",
   infrastructure: "Reading infrastructure and places",
   weather: "Pulling five years of weather",
-  scoring: "Scoring against Phoenix",
+  scoring: `Scoring against ${REFERENCE_LABEL}`,
   scenarios: "Building candidate scenarios",
 };
 

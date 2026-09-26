@@ -7,6 +7,7 @@ import { BrandMark } from "@/components/BrandMark";
 import { HexFingerprint } from "@/components/HexFingerprint";
 import { SearchBox } from "@/components/SearchBox";
 import { getCities } from "@/lib/api";
+import { REFERENCE_LABEL } from "@/lib/constants";
 import type { CityListItem } from "@/lib/types";
 
 export default function Home() {
@@ -38,7 +39,7 @@ export default function Home() {
           <p className="eyebrow"><span>01</span> City intelligence for simulation teams</p>
           <h1>Every city has a different <em>driving fingerprint.</em></h1>
           <p className="hero-lede">
-            Enter any city. CityShift finds where its roads, weather, and street life depart from Phoenix—then turns the gaps into candidate test scenarios.
+            Enter any city. CityShift finds where its roads, weather, and street life depart from {REFERENCE_LABEL}—then turns the gaps into candidate test scenarios.
           </p>
           <SearchBox hero />
           <div className="hero-note">
@@ -51,7 +52,7 @@ export default function Home() {
 
       <section className="proof-strip" aria-label="How CityShift works">
         <div><span>01</span><MapPin /><p><b>Pick a city</b>Anywhere public data reaches.</p></div>
-        <div><span>02</span><Radar /><p><b>Find the shift</b>Every area scored against Phoenix.</p></div>
+        <div><span>02</span><Radar /><p><b>Find the shift</b>Every area scored against {REFERENCE_LABEL}.</p></div>
         <div><span>03</span><Route /><p><b>Prioritize tests</b>Evidence-backed scenarios, ranked.</p></div>
         <blockquote>“Waymax tests the scenario.<br /><strong>CityShift finds the scenario worth testing.</strong>”</blockquote>
       </section>
@@ -81,7 +82,7 @@ export default function Home() {
       <footer className="site-footer">
         <BrandMark compact />
         <p>Public signals. Comparable cities. Testable scenarios.</p>
-        <span>Reference city · Phoenix, AZ</span>
+        <span>Reference · {REFERENCE_LABEL}</span>
       </footer>
     </main>
   );

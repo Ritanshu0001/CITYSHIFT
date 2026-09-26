@@ -1,6 +1,6 @@
 # CityShift frontend
 
-CityShift compares an 8 km slice of any city with Phoenix and turns the strongest public-data differences into candidate driving-simulation scenarios.
+CityShift compares an 8 km slice of any city with Waymo's established cities—Phoenix, San Francisco, Los Angeles, Austin, and Atlanta—and turns the strongest public-data differences into candidate driving-simulation scenarios.
 
 ## Run locally
 

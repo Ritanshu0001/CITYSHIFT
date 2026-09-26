@@ -1,6 +1,6 @@
 import { ArrowLeft, Check, LoaderCircle, OctagonAlert } from "lucide-react";
 import Link from "next/link";
-import { JOB_STEPS, JOB_STEP_LABELS } from "@/lib/constants";
+import { JOB_STEPS, JOB_STEP_LABELS, REFERENCE_LABEL } from "@/lib/constants";
 import type { JobStatus } from "@/lib/types";
 
 export function ProgressScreen({ cityName, job }: { cityName: string; job: JobStatus | null }) {
@@ -11,7 +11,7 @@ export function ProgressScreen({ cityName, job }: { cityName: string; job: JobSt
         <div className="progress-orbit" aria-hidden="true"><span /><span /><span /></div>
         <p className="eyebrow"><span>{hasError ? "!" : "LIVE"}</span> Public data analysis</p>
         <h1>{hasError ? "Analysis stopped" : `Reading ${cityName.replaceAll("-", " ")}`}</h1>
-        <p className="progress-lede">Building a comparable 8 km driving fingerprint against the Phoenix reference.</p>
+        <p className="progress-lede">Building a comparable 8 km driving fingerprint against {REFERENCE_LABEL}.</p>
 
         <div className="progress-list">
           {JOB_STEPS.map((step, index) => {

@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { REFERENCE_LABEL, REFERENCE_SLUGS } from "@/lib/constants";
 
 const cells = [
   [2, 0, "quiet"], [3, 0, "quiet"], [4, 0, "warm"],
@@ -45,8 +46,8 @@ export function HexFingerprint() {
       <div className="fingerprint-callout callout-b"><span />Novel conditions</div>
       <div className="fingerprint-stamp">
         <small>SHIFT</small>
-        <b>97.4</b>
-        <span>NYC · PHX</span>
+        <b>30.4</b>
+        <span title={REFERENCE_LABEL}>NYC · {REFERENCE_SLUGS.length}-CITY REF</span>
       </div>
     </div>
   );

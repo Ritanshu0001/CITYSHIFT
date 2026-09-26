@@ -1,5 +1,5 @@
 import { ArrowDownRight, ArrowUpRight, CloudRain, Compass, Database, Snowflake } from "lucide-react";
-import { compactNumber, featureLabel } from "@/lib/constants";
+import { compactNumber, featureLabel, REFERENCE_LABEL } from "@/lib/constants";
 import type { Summary } from "@/lib/types";
 
 const climateRows = [
@@ -31,7 +31,7 @@ export function ComparisonView({ summary }: { summary: Summary }) {
                   <div><span style={{ width: `${(target / max) * 100}%` }} /><b>{compactNumber(target)}</b></div>
                   <div><span style={{ width: `${(reference / max) * 100}%` }} /><b>{compactNumber(reference)}</b></div>
                 </div>
-                <div className="pair-key"><span>City</span><span>Phoenix</span></div>
+                <div className="pair-key"><span>City</span><span>{REFERENCE_LABEL}</span></div>
               </div>
             );
           })}
@@ -58,7 +58,7 @@ export function ComparisonView({ summary }: { summary: Summary }) {
             return (
               <div className="shift-row" key={row.name}>
                 <span className="feature-rank">0{index + 1}</span>
-                <div><b>{featureLabel(row.name)}</b><small>{compactNumber(row.target)} city · {compactNumber(row.reference)} Phoenix</small></div>
+                <div><b>{featureLabel(row.name)}</b><small>{compactNumber(row.target)} city · {compactNumber(row.reference)} reference</small></div>
                 <span className={isUp ? "ratio-up" : "ratio-down"}>
                   {isUp ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}{row.ratio.toFixed(1)}×
                 </span>

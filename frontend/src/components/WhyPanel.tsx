@@ -1,5 +1,5 @@
 import { AlertTriangle, Crosshair, X } from "lucide-react";
-import { bandLabel, compactNumber, featureLabel } from "@/lib/constants";
+import { bandLabel, compactNumber, featureLabel, REFERENCE_LABEL } from "@/lib/constants";
 import type { CityHex } from "@/lib/types";
 import { StreetViewPanel } from "./StreetViewPanel";
 
@@ -9,7 +9,7 @@ export function WhyPanel({ hex, onClear }: { hex: CityHex | null; onClear: () =>
       <div className="panel-empty">
         <Crosshair size={28} strokeWidth={1.5} />
         <h3>Select an area on the map</h3>
-        <p>Pick any hex to see the three strongest differences from Phoenix and the evidence behind its score.</p>
+        <p>Pick any hex to see the three strongest differences from {REFERENCE_LABEL} and the evidence behind its score.</p>
       </div>
     );
   }
@@ -24,17 +24,17 @@ export function WhyPanel({ hex, onClear }: { hex: CityHex | null; onClear: () =>
         <strong>{hex.shift_score.toFixed(1)}</strong>
         <span>/ 100</span>
       </div>
-      <p className="score-explainer">More unusual than <b>{hex.shift_score.toFixed(1)}%</b> of Phoenix areas.</p>
+      <p className="score-explainer">More unusual than <b>{hex.shift_score.toFixed(1)}%</b> of areas across {REFERENCE_LABEL}.</p>
       <p className="hex-id">H3 · {hex.h3}</p>
 
       <div className="panel-rule" />
-      <div className="mini-heading"><span>Strongest signals</span><small>Target vs Phoenix</small></div>
+      <div className="mini-heading"><span>Strongest signals</span><small>Target vs reference</small></div>
       <div className="feature-table">
         {hex.top_features.map((feature, index) => (
           <div className="feature-row" key={feature.name}>
             <span className="feature-rank">0{index + 1}</span>
             <div className="feature-name"><b>{featureLabel(feature.name)}</b><small>{feature.pct.toFixed(1)}th percentile</small></div>
-            <div className="feature-values"><b>{compactNumber(feature.value)}</b><small>PHX {compactNumber(feature.ref_median)}</small></div>
+            <div className="feature-values"><b>{compactNumber(feature.value)}</b><small>REF {compactNumber(feature.ref_median)}</small></div>
             <span className={feature.z >= 0 ? "z-score positive" : "z-score negative"}>{feature.z >= 0 ? "+" : ""}{feature.z.toFixed(1)}σ</span>
           </div>
         ))}
@@ -43,7 +43,7 @@ export function WhyPanel({ hex, onClear }: { hex: CityHex | null; onClear: () =>
       {hex.novel.length > 0 && (
         <div className="novel-alert">
           <AlertTriangle size={18} />
-          <div><b>Novel infrastructure</b><p>{hex.novel.map(featureLabel).join(", ")} are rarely present in the Phoenix baseline.</p></div>
+          <div><b>Novel infrastructure</b><p>{hex.novel.map(featureLabel).join(", ")} are rarely present across {REFERENCE_LABEL}.</p></div>
         </div>
       )}
 
