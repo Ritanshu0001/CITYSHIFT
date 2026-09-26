@@ -21,5 +21,10 @@ frontend/out/
 Thumbs.db
 
 # Local team contracts and plans stay out of git.
-/contracts/
+# Exception: CHANGE_REQUESTS.md is tracked so the CR log has one shared history
+# instead of being passed between P1, P2 and P3 by hand. Directory-style
+# '/contracts/' would stop git descending, so the contents are excluded with a
+# wildcard and that one file is re-included.
+/contracts/*
+!/contracts/CHANGE_REQUESTS.md
 /plans/
