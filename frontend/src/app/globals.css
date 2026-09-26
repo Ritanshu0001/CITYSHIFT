@@ -533,11 +533,13 @@ body { background: var(--white); }
 .fallback-map::after { border-color: rgba(120,144,197,.13); box-shadow: 0 0 100px rgba(11,114,255,.12) inset; height: 88%; width: 64%; }
 .fallback-tiles { filter: invert(1) hue-rotate(180deg) brightness(.54) saturate(.52) contrast(1.12); opacity: .82; }
 .fallback-tiles image { image-rendering: auto; }
-.fallback-hex { stroke: #0c1121; stroke-width: 2; }
-.fallback-hex:hover { filter: brightness(1.2) drop-shadow(0 0 8px rgba(255,255,255,.22)); transform: scale(.93); }
-.fallback-hex.is-selected { fill: #fff; stroke: var(--blue); stroke-width: 4; }
-.fallback-hex.is-highlighted { fill: var(--blue); stroke: #fff; stroke-width: 3; }
-.fallback-hex.is-novel { stroke: #fff; stroke-dasharray: 6 4; stroke-width: 3; }
+.fallback-hex { fill-opacity: .52; paint-order: stroke fill; stroke: #050a18; stroke-linejoin: round; stroke-width: 4; vector-effect: non-scaling-stroke; }
+.fallback-hex.band-yellow { fill-opacity: .58; }
+.fallback-hex.band-red { fill-opacity: .64; }
+.fallback-hex:hover { fill-opacity: .78; filter: brightness(1.16) drop-shadow(0 0 8px rgba(255,255,255,.22)); transform: scale(.97); }
+.fallback-hex.is-selected { fill: #fff; fill-opacity: .7; stroke: var(--blue); stroke-width: 5; }
+.fallback-hex.is-highlighted { fill: var(--blue); fill-opacity: .7; stroke: #b8d2ff; stroke-width: 4; }
+.fallback-hex.is-novel { stroke: #fff; stroke-dasharray: 7 5; stroke-width: 4; }
 .map-mode { background: rgba(16,20,38,.88); border-color: rgba(255,255,255,.2); border-radius: 99px; color: #fff; padding: 9px 12px; backdrop-filter: blur(12px); }
 .map-mode span { background: var(--aqua); }
 .map-attribution { background: rgba(8,11,22,.74); bottom: 8px; color: #8992aa; font-family: var(--font-mono); font-size: 6px; padding: 4px 6px; position: absolute; right: 8px; z-index: 3; }

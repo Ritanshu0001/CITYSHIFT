@@ -4,7 +4,7 @@ import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { Map, useMap } from "@vis.gl/react-google-maps";
 import { cellToBoundary } from "h3-js";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { BAND_COLORS, MAPS_API_KEY } from "@/lib/constants";
 import type { Center, CityHex } from "@/lib/types";
 import { Legend } from "./Legend";
@@ -33,58 +33,74 @@ function projectToWorld(lat: number, lng: number, zoom: number) {
 
 const DARK_MAP_STYLES = [
   { elementType: "geometry", stylers: [{ color: "#111629" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#78829c" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#111629" }] },
+  { elementType: "labels.text.fill", stylers: [{ color: "#b8c4dc" }] },
+  { elementType: "labels.text.stroke", stylers: [{ color: "#080c18" }, { weight: 4 }] },
   { featureType: "administrative", elementType: "geometry.stroke", stylers: [{ color: "#343c56" }] },
+  { featureType: "administrative.locality", elementType: "labels.text.fill", stylers: [{ color: "#ffffff" }] },
+  { featureType: "administrative.neighborhood", elementType: "labels.text.fill", stylers: [{ color: "#c6d2e9" }] },
   { featureType: "landscape", elementType: "geometry", stylers: [{ color: "#151b30" }] },
   { featureType: "poi", elementType: "geometry", stylers: [{ color: "#1a2138" }] },
   { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
   { featureType: "road", elementType: "geometry", stylers: [{ color: "#303950" }] },
   { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#111629" }] },
+  { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#dbe2f1" }] },
   { featureType: "road.arterial", elementType: "geometry", stylers: [{ color: "#46516e" }] },
   { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#64708c" }] },
   { featureType: "road.highway", elementType: "geometry.stroke", stylers: [{ color: "#171d31" }] },
+  { featureType: "road.highway", elementType: "labels.text.fill", stylers: [{ color: "#ffffff" }] },
   { featureType: "transit", elementType: "geometry", stylers: [{ color: "#222a43" }] },
   { featureType: "water", elementType: "geometry", stylers: [{ color: "#080c18" }] },
-  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#59637c" }] },
+  { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#86ace0" }] },
 ];
 
 function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexMapProps, "center">) {
   const map = useMap();
-  const overlayRef = useRef<GoogleMapsOverlay | null>(null);
   const highlighted = useMemo(() => new Set(highlightedIds), [highlightedIds]);
+  const overlay = useMemo(() => new GoogleMapsOverlay({ layers: [], interleaved: false }), []);
 
   useEffect(() => {
     if (!map) return;
-    const overlay = new GoogleMapsOverlay({ layers: [] });
     overlay.setMap(map);
-    overlayRef.current = overlay;
     return () => {
       overlay.setMap(null);
-      overlay.finalize();
-      overlayRef.current = null;
     };
-  }, [map]);
+  }, [map, overlay]);
 
   useEffect(() => {
-    if (!overlayRef.current) return;
     const fillLayer = new H3HexagonLayer<CityHex>({
       id: "city-shift-hexes",
       data: hexes,
       getHexagon: (hex) => hex.h3,
       getFillColor: (hex) => {
         const [r, g, b] = BAND_COLORS[hex.band].rgb;
-        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 238];
-        if (highlighted.has(hex.h3)) return [31, 111, 255, 235];
-        return [r, g, b, 184];
+        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 155];
+        if (highlighted.has(hex.h3)) return [31, 111, 255, 175];
+        const alpha = hex.band === "red" ? 150 : hex.band === "yellow" ? 132 : 112;
+        return [r, g, b, alpha];
       },
-      getLineColor: [10, 14, 28, 220],
-      lineWidthMinPixels: 1,
-      stroked: true,
+      stroked: false,
       filled: true,
       pickable: true,
       onClick: ({ object }) => object && onSelect(object),
       updateTriggers: { getFillColor: [selectedHex?.h3, highlightedIds.join("|")] },
+    });
+
+    const outlineLayer = new H3HexagonLayer<CityHex>({
+      id: "city-shift-boundaries",
+      data: hexes,
+      getHexagon: (hex) => hex.h3,
+      getFillColor: [0, 0, 0, 0],
+      getLineColor: (hex) => {
+        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 255];
+        if (highlighted.has(hex.h3)) return [145, 190, 255, 255];
+        return [5, 10, 24, 242];
+      },
+      lineWidthMinPixels: 2.4,
+      lineWidthMaxPixels: 4,
+      stroked: true,
+      filled: false,
+      pickable: false,
+      updateTriggers: { getLineColor: [selectedHex?.h3, highlightedIds.join("|")] },
     });
 
     const novelLayer = new H3HexagonLayer<CityHex>({
@@ -92,15 +108,15 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
       data: hexes.filter((hex) => hex.novel.length > 0),
       getHexagon: (hex) => hex.h3,
       getFillColor: [0, 0, 0, 0],
-      getLineColor: [255, 255, 255, 245],
-      lineWidthMinPixels: 3,
+      getLineColor: [255, 255, 255, 255],
+      lineWidthMinPixels: 4,
       stroked: true,
       filled: false,
       pickable: false,
     });
 
-    overlayRef.current.setProps({ layers: [fillLayer, novelLayer] });
-  }, [hexes, highlighted, highlightedIds, onSelect, selectedHex]);
+    overlay.setProps({ layers: [fillLayer, outlineLayer, novelLayer] });
+  }, [hexes, highlighted, highlightedIds, onSelect, overlay, selectedHex]);
 
   return null;
 }
