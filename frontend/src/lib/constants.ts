@@ -3,7 +3,7 @@ import type { Band, JobStep } from "./types";
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api/backend";
 export const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "1";
 export const USE_CHAT_MOCK = process.env.NEXT_PUBLIC_USE_CHAT_MOCK !== "0";
-export const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? "";
+export const MAPS_API_KEY = process.env.GOOGLE_MAPS_KEY ?? ""; // mapped in next.config.ts
 
 export const POLL_MS = 1500;
 export const BAND_YELLOW = 80;

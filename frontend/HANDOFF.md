@@ -46,7 +46,7 @@ Open `http://localhost:3000`.
 The live stack is the default. Configure `.env.local` like this:
 
 ```dotenv
-NEXT_PUBLIC_GOOGLE_MAPS_KEY=your_key_here
+GOOGLE_MAPS_KEY=your_key_here
 NEXT_PUBLIC_API_BASE=/api/backend
 NEXT_PUBLIC_USE_MOCK=0
 CITYSHIFT_BACKEND_URL=http://127.0.0.1:8000

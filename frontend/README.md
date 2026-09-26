@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000). The live FastAPI service at
 ## Environment
 
 ```dotenv
-NEXT_PUBLIC_GOOGLE_MAPS_KEY=
+GOOGLE_MAPS_KEY=
 NEXT_PUBLIC_API_BASE=/api/backend
 NEXT_PUBLIC_USE_MOCK=0
 CITYSHIFT_BACKEND_URL=http://127.0.0.1:8000
