@@ -10,7 +10,7 @@ const climateRows = [
 
 export function ComparisonView({ summary }: { summary: Summary }) {
   const shifts = summary.feature_comparison
-    .filter((row) => row.reference > 0)
+    .filter((row) => row.name !== "terrain_slope_pct" && row.reference > 0)
     .map((row) => ({ ...row, ratio: row.target / row.reference }))
     .sort((a, b) => Math.abs(Math.log(b.ratio)) - Math.abs(Math.log(a.ratio)))
     .slice(0, 6);

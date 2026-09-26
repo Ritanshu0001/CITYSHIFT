@@ -1,9 +1,10 @@
-import { AlertTriangle, Crosshair, X } from "lucide-react";
+import { AlertTriangle, Crosshair, Mountain, X } from "lucide-react";
 import { bandLabel, compactNumber, featureLabel, REFERENCE_LABEL } from "@/lib/constants";
+import type { LiveTerrain } from "@/lib/terrain";
 import type { CityHex } from "@/lib/types";
 import { StreetViewPanel } from "./StreetViewPanel";
 
-export function WhyPanel({ hex, onClear }: { hex: CityHex | null; onClear: () => void }) {
+export function WhyPanel({ hex, terrain, onClear }: { hex: CityHex | null; terrain?: LiveTerrain | null; onClear: () => void }) {
   if (!hex) {
     return (
       <div className="panel-empty">
@@ -13,6 +14,9 @@ export function WhyPanel({ hex, onClear }: { hex: CityHex | null; onClear: () =>
       </div>
     );
   }
+
+  const topFeatures = hex.top_features.filter((feature) => feature.name !== "terrain_slope_pct");
+  const novelFeatures = hex.novel.filter((feature) => feature !== "terrain_slope_pct");
 
   return (
     <div className="why-panel">
@@ -30,7 +34,7 @@ export function WhyPanel({ hex, onClear }: { hex: CityHex | null; onClear: () =>
       <div className="panel-rule" />
       <div className="mini-heading"><span>Strongest signals</span><small>Target vs reference</small></div>
       <div className="feature-table">
-        {hex.top_features.map((feature, index) => (
+        {topFeatures.map((feature, index) => (
           <div className="feature-row" key={feature.name}>
             <span className="feature-rank">0{index + 1}</span>
             <div className="feature-name"><b>{featureLabel(feature.name)}</b><small>{feature.pct.toFixed(1)}th percentile</small></div>
@@ -40,10 +44,24 @@ export function WhyPanel({ hex, onClear }: { hex: CityHex | null; onClear: () =>
         ))}
       </div>
 
-      {hex.novel.length > 0 && (
+      {terrain && (
+        <section className="terrain-context">
+          <div className="mini-heading">
+            <span><Mountain size={14} /> {featureLabel("terrain_slope_pct")}</span>
+            <small>Live context · not scored</small>
+          </div>
+          <p>
+            Terrain (Google Elevation, for context, not part of the score):{" "}
+            <strong>{Math.round(terrain.centerElevationM)} m elevation, steepest grade about {Math.round(terrain.steepestGradePct)}% toward the {terrain.direction}</strong>
+            {terrain.coarse ? " (coarse data here)" : ""}
+          </p>
+        </section>
+      )}
+
+      {novelFeatures.length > 0 && (
         <div className="novel-alert">
           <AlertTriangle size={18} />
-          <div><b>Novel infrastructure</b><p>{hex.novel.map(featureLabel).join(", ")} are rarely present across {REFERENCE_LABEL}.</p></div>
+          <div><b>Novel infrastructure</b><p>{novelFeatures.map(featureLabel).join(", ")} are rarely present across {REFERENCE_LABEL}.</p></div>
         </div>
       )}
 

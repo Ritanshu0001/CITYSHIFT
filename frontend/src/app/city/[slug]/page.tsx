@@ -3,7 +3,7 @@
 import { ArrowLeft, CircleHelp, GitCompareArrows, Layers3, ListChecks, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import { ComparisonView } from "@/components/ComparisonView";
 import { HexMap } from "@/components/HexMap";
@@ -11,7 +11,8 @@ import { ProgressScreen } from "@/components/ProgressScreen";
 import { ScenarioCards } from "@/components/ScenarioCards";
 import { WhyPanel } from "@/components/WhyPanel";
 import { ApiError, getCity, getJob } from "@/lib/api";
-import { POLL_MS, REFERENCE_LABEL, REFERENCE_SLUGS } from "@/lib/constants";
+import { MAPS_API_KEY, POLL_MS, REFERENCE_LABEL, REFERENCE_SLUGS } from "@/lib/constants";
+import { getLiveTerrain, type LiveTerrain } from "@/lib/terrain";
 import type { CityHex, CityResult, JobStatus, Scenario } from "@/lib/types";
 
 type PanelTab = "why" | "compare" | "scenarios";
@@ -33,6 +34,8 @@ export default function CityPage() {
   const [activeTab, setActiveTab] = useState<PanelTab>("compare");
   const [activeScenario, setActiveScenario] = useState<string | null>(null);
   const [highlightedIds, setHighlightedIds] = useState<string[]>([]);
+  const [terrainByH3, setTerrainByH3] = useState<Record<string, LiveTerrain | null>>({});
+  const terrainRequests = useRef(new Set<string>());
 
   useEffect(() => {
     let active = true;
@@ -88,6 +91,17 @@ export default function CityPage() {
       active = false;
     };
   }, [jobId, slug]);
+
+  useEffect(() => {
+    const h3 = selectedHex?.h3;
+    if (!h3 || !MAPS_API_KEY || terrainRequests.current.has(h3)) return;
+
+    terrainRequests.current.add(h3);
+    void getLiveTerrain(h3).then(
+      (terrain) => setTerrainByH3((current) => ({ ...current, [h3]: terrain })),
+      () => setTerrainByH3((current) => ({ ...current, [h3]: null })),
+    );
+  }, [selectedHex]);
 
   const handleSelectHex = useCallback((hex: CityHex) => {
     setSelectedHex(hex);
@@ -179,7 +193,13 @@ export default function CityPage() {
             </button>
           </div>
           <div className="panel-scroll">
-            {activeTab === "why" && <WhyPanel hex={selectedHex} onClear={() => { setSelectedHex(null); setActiveTab("compare"); }} />}
+            {activeTab === "why" && (
+              <WhyPanel
+                hex={selectedHex}
+                terrain={selectedHex ? terrainByH3[selectedHex.h3] : undefined}
+                onClear={() => { setSelectedHex(null); setActiveTab("compare"); }}
+              />
+            )}
             {activeTab === "compare" && <ComparisonView summary={summary} />}
             {activeTab === "scenarios" && (
               <ScenarioCards scenarios={scenarios} activeScenario={activeScenario} onHighlight={handleScenarioHighlight} />

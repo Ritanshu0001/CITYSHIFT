@@ -274,6 +274,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, [role="button"]:focu
 .z-score { align-items: center; background: var(--paper); display: inline-flex; font-family: var(--font-mono); font-size: 7px; height: 24px; justify-content: center; min-width: 37px; }
 .z-score.positive { color: var(--red); }
 .z-score.negative { color: #3278a8; }
+.terrain-context { background: #eef5ff; border: 1px solid #cbdcff; border-radius: 12px; margin-top: 16px; padding: 14px; }
+.terrain-context .mini-heading { color: var(--blue); margin-bottom: 8px; }
+.terrain-context p { color: var(--ink-soft); font-size: 11px; line-height: 1.55; margin: 0; }
+.terrain-context strong { color: var(--ink); font-weight: 700; }
 .novel-alert { align-items: flex-start; background: var(--orange-soft); border-left: 3px solid var(--orange); display: flex; gap: 10px; margin-top: 15px; padding: 12px; }
 .novel-alert b { font-size: 9px; }
 .novel-alert p { color: var(--ink-soft); font-size: 8px; line-height: 1.5; margin: 3px 0 0; }
