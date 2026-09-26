@@ -1,10 +1,11 @@
 "use client";
 
-import { ArrowLeft, CircleHelp, Download, FileJson, FileText, GitCompareArrows, Layers3, ListChecks, Search } from "lucide-react";
+import { ArrowLeft, CircleHelp, GitCompareArrows, Layers3, ListChecks, Route, Search } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
+import { BriefingViewer } from "@/components/BriefingViewer";
 import { ChatPanel } from "@/components/ChatPanel";
 import { ComparisonView } from "@/components/ComparisonView";
 import { HexMap } from "@/components/HexMap";
@@ -252,7 +253,10 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
     <main className="analysis-page">
       <header className="analysis-nav">
         <BrandMark />
-        <Link href="/" className="new-search"><Search size={15} /> New city</Link>
+        <div className="analysis-actions">
+          <Link href="/ride" className="ride-access"><Route size={16} /> Plan a ride</Link>
+          <Link href="/" className="new-search"><Search size={15} /> <span>New city</span></Link>
+        </div>
       </header>
 
       <section className="summary-strip">
@@ -264,11 +268,7 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
         <div className="summary-metric"><small>Mapped areas</small><b>{summary.n_hexes}</b></div>
         <div className="summary-metric summary-alert"><small>Strong shift</small><b>{summary.pct_red.toFixed(1)}%</b><span>of mapped areas</span></div>
         <div className="summary-actions">
-          <div className="briefing-download" title="City readiness briefing: candidate test plan from public data.">
-            <span><Download size={13} /> Download briefing</span>
-            <button type="button" onClick={() => downloadBriefing("md")} aria-label="Download Markdown briefing"><FileText size={12} /> .md</button>
-            <button type="button" onClick={() => downloadBriefing("json")} aria-label="Download JSON briefing"><FileJson size={12} /> .json</button>
-          </div>
+          <BriefingViewer cityName={summary.city} slug={slug} onDownload={downloadBriefing} />
         </div>
       </section>
 

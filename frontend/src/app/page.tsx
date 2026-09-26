@@ -118,7 +118,10 @@ export default function Home() {
     <main className="landing-page">
       <nav className="site-nav">
         <BrandMark descriptor="Waymo Support system" />
-        <a className="nav-link" href="#saved-cities">Saved cities <ArrowUpRight size={14} /></a>
+        <div className="nav-actions">
+          <a className="nav-link nav-link-saved" href="#saved-cities">Saved cities <ArrowUpRight size={14} /></a>
+          <Link className="ride-access" href="/ride"><Route size={16} /> Plan a ride</Link>
+        </div>
       </nav>
 
       <section className="hero-section">
