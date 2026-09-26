@@ -13,6 +13,7 @@ import pandas as pd
 
 from app import cache
 from app.data import openmeteo
+from app.data.crashes import crashes_for
 from app.data.driving_side import country_for, driving_side
 from app.data.elevation import terrain_slopes
 from app.data.features import build_features
@@ -141,7 +142,19 @@ def build_city_data(
     cache.write_features(slug, df)
     cache.write_json(slug, "city.json", city)
     cache.write_json(slug, "meta.json", meta)
+    write_crashes(slug, lat, lng, country)
     return df, city, meta
+
+
+def write_crashes(slug: str, lat: float, lng: float, country_code: str | None) -> dict:
+    """cache/{slug}/crashes.json (CR-017). Display only, so a failure never fails the city."""
+    try:
+        crashes = crashes_for(slug, lat, lng, country_code)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("crash layer failed for %s: %s", slug, exc)
+        crashes = {"slug": slug, "available": False, "reason": f"crash layer failed: {exc}"}
+    cache.write_json(slug, "crashes.json", crashes)
+    return crashes
 
 
 def analyze_city(

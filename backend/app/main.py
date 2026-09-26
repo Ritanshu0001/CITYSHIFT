@@ -8,6 +8,7 @@ from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import cache, jobs
+from app.pipeline import write_crashes
 from app.schemas import AnalyzeRequest, AnalyzeResponse, CitiesResponse, JobStatus
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -48,3 +49,15 @@ def city_result(slug: str) -> Response:
     if not _SLUG_RE.match(slug) or not cache.has_result(slug):
         raise HTTPException(status_code=404, detail="not cached")
     return Response(content=(cache.city_dir(slug) / "result.json").read_bytes(), media_type="application/json")
+
+
+@app.get("/cities/{slug}/crashes")
+def city_crashes(slug: str) -> Response:
+    """cache/{slug}/crashes.json (CR-017). 404 only for an unknown slug; built on demand if absent."""
+    if not _SLUG_RE.match(slug) or not (cache.city_dir(slug) / "city.json").is_file():
+        raise HTTPException(status_code=404, detail="not cached")
+    path = cache.city_dir(slug) / "crashes.json"
+    if not path.is_file():
+        city = cache.read_json(slug, "city.json")
+        write_crashes(slug, city["lat"], city["lng"], city.get("country_code"))
+    return Response(content=path.read_bytes(), media_type="application/json")

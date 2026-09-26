@@ -45,7 +45,7 @@ curl localhost:8000/cities/phoenix-az-usa
 
 Slugs come from the `name` sent to `POST /analyze`. Send Google Places' formatted address ("New York, NY, USA", "London, UK") to hit the pre-cached cities.
 
-Data: OpenStreetMap (ODbL) via OSMnx; weather from Open-Meteo (CC BY 4.0); Elevation: Copernicus DEM GLO-90 via Open-Meteo. Open-Meteo responses are cached in `backend/openmeteo_cache/` (free tier: 10,000 calls a day; a 5-year weather pull is ~130).
+Data: OpenStreetMap (ODbL) via OSMnx; weather from Open-Meteo (CC BY 4.0); Elevation: Copernicus DEM GLO-90 via Open-Meteo; Crash data: NHTSA FARS 2020-2024 (2024 preliminary), display only (`scripts/build_fars_extract.py` rebuilds `backend/data/`, `scripts/build_crashes.py` writes `cache/*/crashes.json`). Open-Meteo responses are cached in `backend/openmeteo_cache/` (free tier: 10,000 calls a day; a 5-year weather pull is ~130).
 
 ## Frontend (P3)
 

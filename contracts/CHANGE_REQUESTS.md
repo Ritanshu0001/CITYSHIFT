@@ -273,3 +273,24 @@ Refit, tests and CR-008 are shipped together as P1 asked. Notes:
   its guard are untouched; a unit test keeps its card logic covered in case a
   bare-earth DEM ever puts slope back in the model.
 Status: info
+
+## CR-017  (P1 + P3)  Fatal-crash layer from NHTSA FARS (display only, not scored)
+(Proposed as "CR-016"; renumbered because CR-016 is P2's CR-014 delivery note.)
+Why: Show where fatal crashes happened, as context next to the shift score.
+Scope: P1 + P3 only. No change to the model, result.json, scoring or scenario cards.
+Data: NHTSA FARS 2020-2024 (2024 = initial/preliminary release). Fatal crashes only. US only.
+New file: cache/{slug}/crashes.json
+New endpoint: GET /cities/{slug}/crashes -> crashes.json (200), 404 only for unknown slugs.
+Shape (US city):
+{ "slug": "new-york-ny-usa", "available": true, "source": "NHTSA FARS",
+  "years": [2020,2021,2022,2023,2024], "preliminary_years": [2024],
+  "note": "Fatal crashes only", "total": 812,
+  "points": [ { "lat": 40.75, "lng": -73.98, "year": 2023, "month": 7, "hour": 22,
+                "fatalities": 1, "pedestrian": true, "cyclist": false, "dark": true,
+                "h3": "882a1072...fffff" } ],
+  "by_hex": { "882a1072...fffff": { "count": 3, "pct": 94.5 } } }
+Shape (no data): { "slug": "london-uk", "available": false, "reason": "FARS covers US crashes only" }
+Rules: points = crashes within the city's 8 km circle. hour = null if unknown.
+by_hex.pct = percentile of that hex's count WITHIN THIS CITY ONLY. Never compare counts
+across cities. Attribution: "Crash data: NHTSA FARS 2020-2024 (2024 preliminary)".
+Status: agreed P1 + P3
