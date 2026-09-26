@@ -88,9 +88,11 @@ def get_json(url: str, params: dict, *, cost: float, what: str,
     full_url = str(requests.Request("GET", url, params=params).prepare().url)
     path = CACHE_DIR / (hashlib.sha1(full_url.encode("utf-8")).hexdigest() + ".json")
     if path.is_file():
+        log.debug("Open-Meteo %s: disk cache hit %s", what, path.name)
         return json.loads(path.read_text(encoding="utf-8"))
 
     _wait_for_budget(cost, cancel_event)
+    t = time.perf_counter()
     try:
         resp = requests.get(full_url, timeout=60)
     except requests.RequestException as exc:
@@ -111,7 +113,8 @@ def get_json(url: str, params: dict, *, cost: float, what: str,
     with _lock:
         _run_total += cost
         total = _run_total
-    log.info("Open-Meteo %s: ~%.1f calls (run total ~%.1f)", what, cost, total)
+    log.info("Open-Meteo %s: ~%.1f calls in %.1f s, %.0f KB (run total ~%.1f)",
+             what, cost, time.perf_counter() - t, len(resp.content) / 1024, total)
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     tmp.write_text(resp.text, encoding="utf-8")

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
 
 from fastapi import FastAPI, HTTPException, Response
@@ -13,6 +14,8 @@ from app.pipeline import write_crashes
 from app.schemas import AnalyzeRequest, AnalyzeResponse, CitiesResponse, JobStatus
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+# LOG_LEVEL=DEBUG adds CityShift's own debug lines (e.g. Open-Meteo cache hits) without library noise.
+logging.getLogger("app").setLevel(os.environ.get("LOG_LEVEL", "INFO").upper())
 
 app = FastAPI(title="CityShift")
 app.add_middleware(

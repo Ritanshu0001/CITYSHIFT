@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import threading
+import time
 from pathlib import Path
 from typing import Callable, TypeVar
 
@@ -82,22 +83,26 @@ def _call_with_timeout(fn: Callable[[], T], server: str) -> T:
 def _with_fallback(what: str, fn: Callable[[], T]) -> tuple[T, str]:
     """Run fn on the default Overpass server, then once on the fallback. Returns (result, server)."""
     server = ox.settings.overpass_url
+    log.info("%s: querying %s (%d m radius, %d s limit)", what, server, DIST_M, ATTEMPT_TIMEOUT_S)
+    t = time.perf_counter()
     try:
         result = _call_with_timeout(fn, server)
-        log.info("%s answered by %s", what, server)
+        log.info("%s answered by %s in %.1f s", what, server, time.perf_counter() - t)
         return result, server
     except InsufficientResponseError:
         raise
     except Exception as first:  # noqa: BLE001
-        log.warning("%s failed on %s: %s; retrying on %s", what, server, first, FALLBACK_OVERPASS_URL)
+        log.warning("%s failed on %s after %.1f s: %s; retrying on %s",
+                    what, server, time.perf_counter() - t, first, FALLBACK_OVERPASS_URL)
     with _url_lock:
         ox.settings.overpass_url = FALLBACK_OVERPASS_URL
         # Servers without per-IP limits print no "slots available" line in /status, and
         # OSMnx then re-polls /status every 5 s forever. Skip that check on the fallback.
         ox.settings.overpass_rate_limit = False
+        t = time.perf_counter()
         try:
             result = _call_with_timeout(fn, FALLBACK_OVERPASS_URL)
-            log.info("%s answered by %s", what, FALLBACK_OVERPASS_URL)
+            log.info("%s answered by %s in %.1f s", what, FALLBACK_OVERPASS_URL, time.perf_counter() - t)
             return result, FALLBACK_OVERPASS_URL
         except InsufficientResponseError:
             raise
