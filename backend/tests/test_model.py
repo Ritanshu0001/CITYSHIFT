@@ -22,7 +22,8 @@ import app.model.reference as reference
 from app.model.scenarios import build_scenarios
 from app.model.scoring import score_city, z_matrix
 from app.model.summary import build_summary
-from app.schemas import BAND_RED, BAND_YELLOW, CityResult, HEX_FEATURES, TOP_FEATURES_N
+from app.schemas import (BAND_RED, BAND_YELLOW, CityResult, HEX_FEATURES, NOVEL_Z_EQUIVALENT,
+                         TOP_FEATURES_N)
 
 FIXTURES = BACKEND / "tests" / "fixtures"
 
@@ -224,6 +225,62 @@ def test_rules_are_skipped_when_their_feature_is_rare_on_the_reference():
     ids = {card["id"] for card in _full_result(target, _target_city(city))["scenarios"]}
     assert "late_night_pedestrians" not in ids
     assert "bus_in_lane" not in ids
+
+
+def test_roundabout_or_tunnel_triggers_on_modeled_z_not_novel():
+    """CR-005: the rule keys off z > 2 on the modeled features.
+
+    On the real reference, roundabouts and tunnels are in 7.0% and 5.7% of
+    Phoenix hexes, so they are always modeled and never appear in novel[]. The
+    old novel-based trigger could therefore never fire. This builds a reference
+    with the same property and checks the card comes back.
+    """
+    phoenix, target, city = _fixtures()
+    common = phoenix.copy()
+    common["roundabout_count"] = 0.0
+    common["tunnel_count"] = 0.0
+    common.loc[:18, "roundabout_count"] = 1.0   # 19 of 270 hexes, ~7.0%
+    common.loc[:14, "tunnel_count"] = 1.0       # 15 of 270 hexes, ~5.6%
+    _use_fixture_reference(common, city)
+    artifact = reference.cached_reference()
+    assert "roundabout_count" in artifact["feature_order"]
+    assert "tunnel_count" in artifact["feature_order"]
+
+    loud = target.copy()
+    loud["roundabout_count"] = 0.0
+    loud["tunnel_count"] = 0.0
+    loud.loc[0:2, "roundabout_count"] = 9.0
+    loud.loc[3:4, "tunnel_count"] = 7.0
+
+    result = _full_result(loud, _target_city(city))
+    card = next(c for c in result["scenarios"] if c["id"] == "roundabout_or_tunnel")
+    triggering = z_matrix(loud).loc[:, ["roundabout_count", "tunnel_count"]].max(axis=1)
+    expected = {str(value) for value in loud.loc[triggering > 2, "h3"]}
+    assert expected and set(card["hex_ids"]) == expected
+    # Nothing here came from novel[]: neither feature is rare on this reference.
+    assert not any({"roundabout_count", "tunnel_count"} & set(item["novel"])
+                   for item in result["hexes"])
+    # Priced on the real z magnitude, not the flat novel equivalent (CR-005).
+    assert card["priority"] != round(NOVEL_Z_EQUIVALENT * len(expected), 1)
+
+
+def test_roundabout_or_tunnel_is_quiet_when_neither_feature_is_modeled():
+    """Accepted consequence of CR-005: no z column means no card.
+
+    The stock fixtures make both features rare, so the z-based trigger cannot be
+    evaluated and the rule goes quiet instead of falling back to novel[]. The
+    information is not lost -- the hexes still carry the novel warning that the
+    frontend draws.
+    """
+    phoenix, target, city = _fixtures()
+    _use_fixture_reference(phoenix, city)
+    artifact = reference.cached_reference()
+    assert "roundabout_count" in artifact["rare_features"]
+    assert "tunnel_count" in artifact["rare_features"]
+    result = _full_result(target, _target_city(city))
+    assert not any(card["id"] == "roundabout_or_tunnel" for card in result["scenarios"])
+    assert any({"roundabout_count", "tunnel_count"} & set(item["novel"])
+               for item in result["hexes"])
 
 
 def test_rain_rule_needs_a_genuinely_rainier_city():

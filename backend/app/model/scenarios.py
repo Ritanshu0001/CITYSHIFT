@@ -193,13 +193,35 @@ def left_hand_traffic(features: pd.DataFrame, city: dict, hexes: list[dict], sum
 
 
 def roundabout_or_tunnel(features: pd.DataFrame, city: dict, hexes: list[dict], summary: dict, z_values: pd.DataFrame) -> dict | None:
-    ids = _novel_ids(hexes, "roundabout_count", "tunnel_count")
+    """Hexes with an unusual roundabout or tunnel concentration (CR-005).
+
+    Contract 4.7 originally keyed this on novel[], but novel only ever holds
+    features that are rare on the reference, and roundabouts and tunnels sit in
+    7.0% and 5.7% of real Phoenix hexes -- far above RARE_PRESENCE_THRESHOLD. They
+    are therefore always modeled, never novel, and the card could never be
+    produced on real data. CR-005 (all three agreed) moves the trigger onto the
+    modeled z values instead, which also prices the card on the real z magnitude
+    rather than the flat NOVEL_Z_EQUIVALENT.
+
+    The trigger is an OR, so a reference where only one of the two turns out to be
+    rare still fires on the other rather than going silent.
+    """
+    present = [name for name in ("roundabout_count", "tunnel_count") if _modeled(z_values, name)]
+    if not present:
+        return None
+    # z of whichever of the two triggered this hex, which is what contract 4.7
+    # means by "mean |z| of the triggering feature over affected hexes".
+    triggering_z = z_values.loc[:, present].max(axis=1)
+    mask = triggering_z > 2
+    ids = _ids(features, mask)
     if not ids:
         return None
+    triggers = [f"{name} z > 2 in {int((z_values[name] > 2).sum())} hexes"
+                for name in present if bool((z_values[name] > 2).any())]
     return _card("roundabout_or_tunnel", TITLES["roundabout_or_tunnel"],
-                 [f"roundabout_count or tunnel_count novel in {len(ids)} hexes"],
-                 f"{len(ids)} hexes contain a roundabout or tunnel, which Phoenix has too few of to model.",
-                 ids, NOVEL_Z_EQUIVALENT)
+                 triggers,
+                 f"{len(ids)} hexes have a roundabout or tunnel concentration above z = 2.",
+                 ids, float(triggering_z[mask].abs().mean()))
 
 
 def build_scenarios(features: pd.DataFrame, city: dict, hexes: list[dict], summary: dict) -> list[dict]:
