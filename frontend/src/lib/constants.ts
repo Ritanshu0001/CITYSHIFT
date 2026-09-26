@@ -28,7 +28,7 @@ export const JOB_STEPS: JobStep[] = [
 export const JOB_STEP_LABELS: Record<JobStep, string> = {
   roads: "Pulling road network",
   infrastructure: "Reading infrastructure and places",
-  weather: "Pulling five years of weather",
+  weather: "Pulling weather and elevation",
   scoring: `Scoring against ${REFERENCE_LABEL}`,
   scenarios: "Building candidate scenarios",
 };
@@ -57,6 +57,7 @@ export const FEATURE_LABELS: Record<string, string> = {
   tunnel_count: "Tunnels",
   roundabout_count: "Roundabouts",
   stadium_count: "Stadiums",
+  terrain_slope_pct: "Terrain slope (%)",
 };
 
 export function featureLabel(name: string) {

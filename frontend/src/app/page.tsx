@@ -44,7 +44,7 @@ export default function Home() {
           <SearchBox hero />
           <div className="hero-note">
             <Database size={15} />
-            OpenStreetMap + Open-Meteo · 8 km study area · H3 resolution 8
+            OpenStreetMap + Open-Meteo · Elevation: Copernicus DEM GLO-90 via Open-Meteo · 8 km study area · H3 resolution 8
           </div>
         </div>
         <HexFingerprint />
