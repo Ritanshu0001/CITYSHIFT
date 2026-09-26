@@ -200,4 +200,10 @@ def score_cached(slug: str, progress: Progress = _noop) -> dict:
 
     data = result.model_dump(mode="json")
     cache.write_json(slug, "result.json", data)
+    try:
+        from app.briefing import write_briefing
+
+        write_briefing(slug)  # CR-018; deterministic, a few ms
+    except Exception as exc:  # noqa: BLE001 - the briefing never fails a city
+        log.warning("briefing for %s failed: %s", slug, exc)
     return data

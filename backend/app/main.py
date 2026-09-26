@@ -7,7 +7,8 @@ import re
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import cache, jobs
+from app import ai_summary, cache, chat, jobs
+from app.briefing import build_briefing, render_markdown
 from app.pipeline import write_crashes
 from app.schemas import AnalyzeRequest, AnalyzeResponse, CitiesResponse, JobStatus
 
@@ -61,3 +62,30 @@ def city_crashes(slug: str) -> Response:
         city = cache.read_json(slug, "city.json")
         write_crashes(slug, city["lat"], city["lng"], city.get("country_code"))
     return Response(content=path.read_bytes(), media_type="application/json")
+
+
+@app.get("/cities/{slug}/briefing.md")
+def city_briefing_md(slug: str) -> Response:
+    """City readiness briefing (CR-018), deterministic and built on request (a few ms)."""
+    if not _SLUG_RE.match(slug) or not cache.has_result(slug):
+        raise HTTPException(status_code=404, detail="not cached")
+    ai_summary.ensure_async(slug)
+    return Response(content=render_markdown(build_briefing(slug)), media_type="text/markdown; charset=utf-8",
+                    headers={"Content-Disposition": f'attachment; filename="cityshift-{slug}-briefing.md"'})
+
+
+@app.get("/cities/{slug}/briefing.json")
+def city_briefing_json(slug: str) -> dict:
+    if not _SLUG_RE.match(slug) or not cache.has_result(slug):
+        raise HTTPException(status_code=404, detail="not cached")
+    ai_summary.ensure_async(slug)
+    return build_briefing(slug)
+
+
+@app.post("/chat")
+def chat_turn(req: chat.ChatRequest) -> dict:
+    """Gemini chat with validated UI actions (CR-018). Never an empty reply."""
+    if not _SLUG_RE.match(req.slug) or not cache.has_result(req.slug):
+        raise HTTPException(status_code=404, detail="not cached")
+    ai_summary.ensure_async(req.slug)
+    return chat.respond(req)
