@@ -20,10 +20,6 @@ frontend/out/
 .DS_Store
 Thumbs.db
 
-# Planning docs stay out of git (team decision): ignore markdown except the README.
-*.md
-!README.md
-
-# Contracts and plans
-contracts/
-plan/
+# Local team contracts and plans stay out of git.
+/contracts/
+/plans/

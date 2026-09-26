@@ -1,0 +1,1970 @@
+{
+  "hexes": [
+    {
+      "h3": "882a107289fffff",
+      "shift_score": 95.2,
+      "band": "red",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 75.77,
+          "ref_median": 31.2,
+          "z": 2.45,
+          "pct": 96.3
+        },
+        {
+          "name": "signal_density",
+          "value": 13.56,
+          "ref_median": 4.1,
+          "z": 2.23,
+          "pct": 93.6
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 20.45,
+          "ref_median": 6.8,
+          "z": 2.01,
+          "pct": 90.9
+        }
+      ],
+      "novel": [
+        "movable_bridge_count"
+      ]
+    },
+    {
+      "h3": "882a1072c7fffff",
+      "shift_score": 41,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 13.56,
+          "ref_median": 4.1,
+          "z": 0.86,
+          "pct": 42.1
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 20.45,
+          "ref_median": 6.8,
+          "z": 0.64,
+          "pct": 39.4
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.49,
+          "ref_median": 1.9,
+          "z": 0.42,
+          "pct": 36.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a10728dfffff",
+      "shift_score": 48,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 20.45,
+          "ref_median": 6.8,
+          "z": 1.06,
+          "pct": 49.1
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.49,
+          "ref_median": 1.9,
+          "z": 0.84,
+          "pct": 46.4
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.15,
+          "ref_median": 0.7,
+          "z": 0.62,
+          "pct": 43.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107281fffff",
+      "shift_score": 55,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 9.49,
+          "ref_median": 1.9,
+          "z": 1.27,
+          "pct": 56.1
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.15,
+          "ref_median": 0.7,
+          "z": 1.05,
+          "pct": 53.4
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.47,
+          "ref_median": 0.21,
+          "z": 0.83,
+          "pct": 50.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a10728bfffff",
+      "shift_score": 62,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 6.15,
+          "ref_median": 0.7,
+          "z": 1.47,
+          "pct": 63.1
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.47,
+          "ref_median": 0.21,
+          "z": 1.25,
+          "pct": 60.4
+        },
+        {
+          "name": "intersection_density",
+          "value": 102.2,
+          "ref_median": 31.2,
+          "z": 1.03,
+          "pct": 57.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072d5fffff",
+      "shift_score": 86.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.47,
+          "ref_median": 0.21,
+          "z": 2.19,
+          "pct": 87.5
+        },
+        {
+          "name": "intersection_density",
+          "value": 102.2,
+          "ref_median": 31.2,
+          "z": 1.97,
+          "pct": 84.8
+        },
+        {
+          "name": "signal_density",
+          "value": 12.81,
+          "ref_median": 4.1,
+          "z": 1.75,
+          "pct": 82.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072c3fffff",
+      "shift_score": 76,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 102.2,
+          "ref_median": 31.2,
+          "z": 1.89,
+          "pct": 77.1
+        },
+        {
+          "name": "signal_density",
+          "value": 12.81,
+          "ref_median": 4.1,
+          "z": 1.67,
+          "pct": 74.4
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 19.38,
+          "ref_median": 6.8,
+          "z": 1.45,
+          "pct": 71.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072c1fffff",
+      "shift_score": 39,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 12.81,
+          "ref_median": 4.1,
+          "z": 0.8,
+          "pct": 40.1
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 19.38,
+          "ref_median": 6.8,
+          "z": 0.58,
+          "pct": 37.4
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.02,
+          "ref_median": 1.9,
+          "z": 0.36,
+          "pct": 34.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072c5fffff",
+      "shift_score": 89.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 19.38,
+          "ref_median": 6.8,
+          "z": 2.28,
+          "pct": 90.5
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.02,
+          "ref_median": 1.9,
+          "z": 2.06,
+          "pct": 87.8
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.86,
+          "ref_median": 0.7,
+          "z": 1.84,
+          "pct": 85.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072ebfffff",
+      "shift_score": 53,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 9.02,
+          "ref_median": 1.9,
+          "z": 1.21,
+          "pct": 54.1
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.86,
+          "ref_median": 0.7,
+          "z": 0.99,
+          "pct": 51.4
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.45,
+          "ref_median": 0.21,
+          "z": 0.77,
+          "pct": 48.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072e3fffff",
+      "shift_score": 91.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 5.86,
+          "ref_median": 0.7,
+          "z": 2.34,
+          "pct": 92.5
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.45,
+          "ref_median": 0.21,
+          "z": 2.12,
+          "pct": 89.8
+        },
+        {
+          "name": "intersection_density",
+          "value": 97.79,
+          "ref_median": 31.2,
+          "z": 1.9,
+          "pct": 87.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107285fffff",
+      "shift_score": 67,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.45,
+          "ref_median": 0.21,
+          "z": 1.62,
+          "pct": 68.1
+        },
+        {
+          "name": "intersection_density",
+          "value": 97.79,
+          "ref_median": 31.2,
+          "z": 1.4,
+          "pct": 65.4
+        },
+        {
+          "name": "signal_density",
+          "value": 17.28,
+          "ref_median": 4.1,
+          "z": 1.18,
+          "pct": 62.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107287fffff",
+      "shift_score": 74,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 97.79,
+          "ref_median": 31.2,
+          "z": 1.83,
+          "pct": 75.1
+        },
+        {
+          "name": "signal_density",
+          "value": 17.28,
+          "ref_median": 4.1,
+          "z": 1.61,
+          "pct": 72.4
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 18.32,
+          "ref_median": 6.8,
+          "z": 1.39,
+          "pct": 69.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107283fffff",
+      "shift_score": 96.2,
+      "band": "red",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 17.28,
+          "ref_median": 4.1,
+          "z": 2.48,
+          "pct": 97.3
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 18.32,
+          "ref_median": 6.8,
+          "z": 2.26,
+          "pct": 94.6
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 8.55,
+          "ref_median": 1.9,
+          "z": 2.04,
+          "pct": 91.9
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a10729dfffff",
+      "shift_score": 44,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 18.32,
+          "ref_median": 6.8,
+          "z": 0.94,
+          "pct": 45.1
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 8.55,
+          "ref_median": 1.9,
+          "z": 0.72,
+          "pct": 42.4
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.57,
+          "ref_median": 0.7,
+          "z": 0.5,
+          "pct": 39.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072d7fffff",
+      "shift_score": 85.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 8.55,
+          "ref_median": 1.9,
+          "z": 2.16,
+          "pct": 86.5
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.57,
+          "ref_median": 0.7,
+          "z": 1.94,
+          "pct": 83.8
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.42,
+          "ref_median": 0.21,
+          "z": 1.72,
+          "pct": 81.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072d1fffff",
+      "shift_score": 86.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 5.57,
+          "ref_median": 0.7,
+          "z": 2.19,
+          "pct": 87.5
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.42,
+          "ref_median": 0.21,
+          "z": 1.97,
+          "pct": 84.8
+        },
+        {
+          "name": "intersection_density",
+          "value": 93.39,
+          "ref_median": 31.2,
+          "z": 1.75,
+          "pct": 82.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072ddfffff",
+      "shift_score": 96.2,
+      "band": "red",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.42,
+          "ref_median": 0.21,
+          "z": 2.48,
+          "pct": 97.3
+        },
+        {
+          "name": "intersection_density",
+          "value": 93.39,
+          "ref_median": 31.2,
+          "z": 2.26,
+          "pct": 94.6
+        },
+        {
+          "name": "signal_density",
+          "value": 16.54,
+          "ref_median": 4.1,
+          "z": 2.04,
+          "pct": 91.9
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072cbfffff",
+      "shift_score": 72,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 93.39,
+          "ref_median": 31.2,
+          "z": 1.77,
+          "pct": 73.1
+        },
+        {
+          "name": "signal_density",
+          "value": 16.54,
+          "ref_median": 4.1,
+          "z": 1.55,
+          "pct": 70.4
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 24.71,
+          "ref_median": 6.8,
+          "z": 1.33,
+          "pct": 67.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072c9fffff",
+      "shift_score": 35,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 16.54,
+          "ref_median": 4.1,
+          "z": 0.68,
+          "pct": 36.1
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 24.71,
+          "ref_median": 6.8,
+          "z": 0.46,
+          "pct": 33.4
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 8.08,
+          "ref_median": 1.9,
+          "z": 0.24,
+          "pct": 30.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072cdfffff",
+      "shift_score": 90.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 24.71,
+          "ref_median": 6.8,
+          "z": 2.31,
+          "pct": 91.5
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 8.08,
+          "ref_median": 1.9,
+          "z": 2.09,
+          "pct": 88.8
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.28,
+          "ref_median": 0.7,
+          "z": 1.87,
+          "pct": 86.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107213fffff",
+      "shift_score": 49,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 8.08,
+          "ref_median": 1.9,
+          "z": 1.09,
+          "pct": 50.1
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.28,
+          "ref_median": 0.7,
+          "z": 0.87,
+          "pct": 47.4
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.4,
+          "ref_median": 0.21,
+          "z": 0.65,
+          "pct": 44.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072e9fffff",
+      "shift_score": 56,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 5.28,
+          "ref_median": 0.7,
+          "z": 1.3,
+          "pct": 57.1
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.4,
+          "ref_median": 0.21,
+          "z": 1.08,
+          "pct": 54.4
+        },
+        {
+          "name": "intersection_density",
+          "value": 88.98,
+          "ref_median": 31.2,
+          "z": 0.86,
+          "pct": 51.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072e1fffff",
+      "shift_score": 63,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.4,
+          "ref_median": 0.21,
+          "z": 1.5,
+          "pct": 64.1
+        },
+        {
+          "name": "intersection_density",
+          "value": 88.98,
+          "ref_median": 31.2,
+          "z": 1.28,
+          "pct": 61.4
+        },
+        {
+          "name": "signal_density",
+          "value": 15.79,
+          "ref_median": 4.1,
+          "z": 1.06,
+          "pct": 58.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072e7fffff",
+      "shift_score": 83.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 88.98,
+          "ref_median": 31.2,
+          "z": 2.1,
+          "pct": 84.5
+        },
+        {
+          "name": "signal_density",
+          "value": 15.79,
+          "ref_median": 4.1,
+          "z": 1.88,
+          "pct": 81.8
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 23.64,
+          "ref_median": 6.8,
+          "z": 1.66,
+          "pct": 79.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072a9fffff",
+      "shift_score": 84.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 15.79,
+          "ref_median": 4.1,
+          "z": 2.13,
+          "pct": 85.5
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 23.64,
+          "ref_median": 6.8,
+          "z": 1.91,
+          "pct": 82.8
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 10.9,
+          "ref_median": 1.9,
+          "z": 1.69,
+          "pct": 80.1
+        }
+      ],
+      "novel": [
+        "tunnel_count"
+      ]
+    },
+    {
+      "h3": "882a1072abfffff",
+      "shift_score": 97.2,
+      "band": "red",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 23.64,
+          "ref_median": 6.8,
+          "z": 2.51,
+          "pct": 98.3
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 10.9,
+          "ref_median": 1.9,
+          "z": 2.29,
+          "pct": 95.6
+        },
+        {
+          "name": "nightlife_density",
+          "value": 4.99,
+          "ref_median": 0.7,
+          "z": 2.07,
+          "pct": 92.9
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072bdfffff",
+      "shift_score": 47,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 10.9,
+          "ref_median": 1.9,
+          "z": 1.03,
+          "pct": 48.1
+        },
+        {
+          "name": "nightlife_density",
+          "value": 4.99,
+          "ref_median": 0.7,
+          "z": 0.81,
+          "pct": 45.4
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.38,
+          "ref_median": 0.21,
+          "z": 0.59,
+          "pct": 42.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072b9fffff",
+      "shift_score": 54,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 4.99,
+          "ref_median": 0.7,
+          "z": 1.24,
+          "pct": 55.1
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.38,
+          "ref_median": 0.21,
+          "z": 1.02,
+          "pct": 52.4
+        },
+        {
+          "name": "intersection_density",
+          "value": 84.58,
+          "ref_median": 31.2,
+          "z": 0.8,
+          "pct": 49.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107295fffff",
+      "shift_score": 61,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.38,
+          "ref_median": 0.21,
+          "z": 1.44,
+          "pct": 62.1
+        },
+        {
+          "name": "intersection_density",
+          "value": 84.58,
+          "ref_median": 31.2,
+          "z": 1.22,
+          "pct": 59.4
+        },
+        {
+          "name": "signal_density",
+          "value": 15.05,
+          "ref_median": 4.1,
+          "z": 1,
+          "pct": 56.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107291fffff",
+      "shift_score": 89.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 84.58,
+          "ref_median": 31.2,
+          "z": 2.28,
+          "pct": 90.5
+        },
+        {
+          "name": "signal_density",
+          "value": 15.05,
+          "ref_median": 4.1,
+          "z": 2.06,
+          "pct": 87.8
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 22.58,
+          "ref_median": 6.8,
+          "z": 1.84,
+          "pct": 85.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107299fffff",
+      "shift_score": 75,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 15.05,
+          "ref_median": 4.1,
+          "z": 1.86,
+          "pct": 76.1
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 22.58,
+          "ref_median": 6.8,
+          "z": 1.64,
+          "pct": 73.4
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 10.43,
+          "ref_median": 1.9,
+          "z": 1.42,
+          "pct": 70.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072d3fffff",
+      "shift_score": 91.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 22.58,
+          "ref_median": 6.8,
+          "z": 2.34,
+          "pct": 92.5
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 10.43,
+          "ref_median": 1.9,
+          "z": 2.12,
+          "pct": 89.8
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.73,
+          "ref_median": 0.7,
+          "z": 1.9,
+          "pct": 87.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072dbfffff",
+      "shift_score": 45,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 10.43,
+          "ref_median": 1.9,
+          "z": 0.97,
+          "pct": 46.1
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.73,
+          "ref_median": 0.7,
+          "z": 0.75,
+          "pct": 43.4
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.36,
+          "ref_median": 0.21,
+          "z": 0.53,
+          "pct": 40.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072d9fffff",
+      "shift_score": 52,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 6.73,
+          "ref_median": 0.7,
+          "z": 1.18,
+          "pct": 53.1
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.36,
+          "ref_median": 0.21,
+          "z": 0.96,
+          "pct": 50.4
+        },
+        {
+          "name": "intersection_density",
+          "value": 80.17,
+          "ref_median": 31.2,
+          "z": 0.74,
+          "pct": 47.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100d37fffff",
+      "shift_score": 83.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.36,
+          "ref_median": 0.21,
+          "z": 2.1,
+          "pct": 84.5
+        },
+        {
+          "name": "intersection_density",
+          "value": 80.17,
+          "ref_median": 31.2,
+          "z": 1.88,
+          "pct": 81.8
+        },
+        {
+          "name": "signal_density",
+          "value": 14.3,
+          "ref_median": 4.1,
+          "z": 1.66,
+          "pct": 79.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100d35fffff",
+      "shift_score": 66,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 80.17,
+          "ref_median": 31.2,
+          "z": 1.59,
+          "pct": 67.1
+        },
+        {
+          "name": "signal_density",
+          "value": 14.3,
+          "ref_median": 4.1,
+          "z": 1.37,
+          "pct": 64.4
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 21.51,
+          "ref_median": 6.8,
+          "z": 1.15,
+          "pct": 61.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100d23fffff",
+      "shift_score": 73,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 14.3,
+          "ref_median": 4.1,
+          "z": 1.8,
+          "pct": 74.1
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 21.51,
+          "ref_median": 6.8,
+          "z": 1.58,
+          "pct": 71.4
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.96,
+          "ref_median": 1.9,
+          "z": 1.36,
+          "pct": 68.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100d27fffff",
+      "shift_score": 36,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 21.51,
+          "ref_median": 6.8,
+          "z": 0.71,
+          "pct": 37.1
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.96,
+          "ref_median": 1.9,
+          "z": 0.49,
+          "pct": 34.4
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.44,
+          "ref_median": 0.7,
+          "z": 0.27,
+          "pct": 31.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a10721bfffff",
+      "shift_score": 98.2,
+      "band": "red",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 9.96,
+          "ref_median": 1.9,
+          "z": 2.54,
+          "pct": 99.3
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.44,
+          "ref_median": 0.7,
+          "z": 2.32,
+          "pct": 96.6
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.49,
+          "ref_median": 0.21,
+          "z": 2.1,
+          "pct": 93.9
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107211fffff",
+      "shift_score": 88.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 6.44,
+          "ref_median": 0.7,
+          "z": 2.25,
+          "pct": 89.5
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.49,
+          "ref_median": 0.21,
+          "z": 2.03,
+          "pct": 86.8
+        },
+        {
+          "name": "intersection_density",
+          "value": 75.77,
+          "ref_median": 31.2,
+          "z": 1.81,
+          "pct": 84.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107217fffff",
+      "shift_score": 57,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.49,
+          "ref_median": 0.21,
+          "z": 1.33,
+          "pct": 58.1
+        },
+        {
+          "name": "intersection_density",
+          "value": 75.77,
+          "ref_median": 31.2,
+          "z": 1.11,
+          "pct": 55.4
+        },
+        {
+          "name": "signal_density",
+          "value": 13.56,
+          "ref_median": 4.1,
+          "z": 0.89,
+          "pct": 52.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072edfffff",
+      "shift_score": 64,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 75.77,
+          "ref_median": 31.2,
+          "z": 1.53,
+          "pct": 65.1
+        },
+        {
+          "name": "signal_density",
+          "value": 13.56,
+          "ref_median": 4.1,
+          "z": 1.31,
+          "pct": 62.4
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 20.45,
+          "ref_median": 6.8,
+          "z": 1.09,
+          "pct": 59.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072e5fffff",
+      "shift_score": 71,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 13.56,
+          "ref_median": 4.1,
+          "z": 1.74,
+          "pct": 72.1
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 20.45,
+          "ref_median": 6.8,
+          "z": 1.52,
+          "pct": 69.4
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.49,
+          "ref_median": 1.9,
+          "z": 1.3,
+          "pct": 66.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a10705bfffff",
+      "shift_score": 34,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 20.45,
+          "ref_median": 6.8,
+          "z": 0.65,
+          "pct": 35.1
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.49,
+          "ref_median": 1.9,
+          "z": 0.43,
+          "pct": 32.4
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.15,
+          "ref_median": 0.7,
+          "z": 0.21,
+          "pct": 29.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072adfffff",
+      "shift_score": 82.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 9.49,
+          "ref_median": 1.9,
+          "z": 2.07,
+          "pct": 83.5
+        },
+        {
+          "name": "nightlife_density",
+          "value": 6.15,
+          "ref_median": 0.7,
+          "z": 1.85,
+          "pct": 80.8
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.47,
+          "ref_median": 0.21,
+          "z": 1.63,
+          "pct": 78.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072a1fffff",
+      "shift_score": 48,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 6.15,
+          "ref_median": 0.7,
+          "z": 1.06,
+          "pct": 49.1
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.47,
+          "ref_median": 0.21,
+          "z": 0.84,
+          "pct": 46.4
+        },
+        {
+          "name": "intersection_density",
+          "value": 102.2,
+          "ref_median": 31.2,
+          "z": 0.62,
+          "pct": 43.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072a3fffff",
+      "shift_score": 55,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.47,
+          "ref_median": 0.21,
+          "z": 1.27,
+          "pct": 56.1
+        },
+        {
+          "name": "intersection_density",
+          "value": 102.2,
+          "ref_median": 31.2,
+          "z": 1.05,
+          "pct": 53.4
+        },
+        {
+          "name": "signal_density",
+          "value": 12.81,
+          "ref_median": 4.1,
+          "z": 0.83,
+          "pct": 50.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072b5fffff",
+      "shift_score": 85.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 102.2,
+          "ref_median": 31.2,
+          "z": 2.16,
+          "pct": 86.5
+        },
+        {
+          "name": "signal_density",
+          "value": 12.81,
+          "ref_median": 4.1,
+          "z": 1.94,
+          "pct": 83.8
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 19.38,
+          "ref_median": 6.8,
+          "z": 1.72,
+          "pct": 81.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072b1fffff",
+      "shift_score": 69,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 12.81,
+          "ref_median": 4.1,
+          "z": 1.68,
+          "pct": 70.1
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 19.38,
+          "ref_median": 6.8,
+          "z": 1.46,
+          "pct": 67.4
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.02,
+          "ref_median": 1.9,
+          "z": 1.24,
+          "pct": 64.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a1072bbfffff",
+      "shift_score": 87.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 19.38,
+          "ref_median": 6.8,
+          "z": 2.22,
+          "pct": 88.5
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 9.02,
+          "ref_median": 1.9,
+          "z": 2,
+          "pct": 85.8
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.86,
+          "ref_median": 0.7,
+          "z": 1.78,
+          "pct": 83.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107297fffff",
+      "shift_score": 39,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 9.02,
+          "ref_median": 1.9,
+          "z": 0.8,
+          "pct": 40.1
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.86,
+          "ref_median": 0.7,
+          "z": 0.58,
+          "pct": 37.4
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.45,
+          "ref_median": 0.21,
+          "z": 0.36,
+          "pct": 34.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a107293fffff",
+      "shift_score": 95.2,
+      "band": "red",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 5.86,
+          "ref_median": 0.7,
+          "z": 2.45,
+          "pct": 96.3
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.45,
+          "ref_median": 0.21,
+          "z": 2.23,
+          "pct": 93.6
+        },
+        {
+          "name": "intersection_density",
+          "value": 97.79,
+          "ref_median": 31.2,
+          "z": 2.01,
+          "pct": 90.9
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a10729bfffff",
+      "shift_score": 53,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.45,
+          "ref_median": 0.21,
+          "z": 1.21,
+          "pct": 54.1
+        },
+        {
+          "name": "intersection_density",
+          "value": 97.79,
+          "ref_median": 31.2,
+          "z": 0.99,
+          "pct": 51.4
+        },
+        {
+          "name": "signal_density",
+          "value": 17.28,
+          "ref_median": 4.1,
+          "z": 0.77,
+          "pct": 48.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100da5fffff",
+      "shift_score": 60,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 97.79,
+          "ref_median": 31.2,
+          "z": 1.41,
+          "pct": 61.1
+        },
+        {
+          "name": "signal_density",
+          "value": 17.28,
+          "ref_median": 4.1,
+          "z": 1.19,
+          "pct": 58.4
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 18.32,
+          "ref_median": 6.8,
+          "z": 0.97,
+          "pct": 55.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100dadfffff",
+      "shift_score": 81.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "signal_density",
+          "value": 17.28,
+          "ref_median": 4.1,
+          "z": 2.04,
+          "pct": 82.5
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 18.32,
+          "ref_median": 6.8,
+          "z": 1.82,
+          "pct": 79.8
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 8.55,
+          "ref_median": 1.9,
+          "z": 1.6,
+          "pct": 77.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100de7fffff",
+      "shift_score": 82.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "crosswalk_density",
+          "value": 18.32,
+          "ref_median": 6.8,
+          "z": 2.07,
+          "pct": 83.5
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 8.55,
+          "ref_median": 1.9,
+          "z": 1.85,
+          "pct": 80.8
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.57,
+          "ref_median": 0.7,
+          "z": 1.63,
+          "pct": 78.1
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100de5fffff",
+      "shift_score": 37,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "transit_stop_density",
+          "value": 8.55,
+          "ref_median": 1.9,
+          "z": 0.74,
+          "pct": 38.1
+        },
+        {
+          "name": "nightlife_density",
+          "value": 5.57,
+          "ref_median": 0.7,
+          "z": 0.52,
+          "pct": 35.4
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.42,
+          "ref_median": 0.21,
+          "z": 0.3,
+          "pct": 32.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100d33fffff",
+      "shift_score": 44,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "nightlife_density",
+          "value": 5.57,
+          "ref_median": 0.7,
+          "z": 0.94,
+          "pct": 45.1
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.42,
+          "ref_median": 0.21,
+          "z": 0.72,
+          "pct": 42.4
+        },
+        {
+          "name": "intersection_density",
+          "value": 93.39,
+          "ref_median": 31.2,
+          "z": 0.5,
+          "pct": 39.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100d31fffff",
+      "shift_score": 51,
+      "band": "green",
+      "top_features": [
+        {
+          "name": "arterial_share",
+          "value": 0.42,
+          "ref_median": 0.21,
+          "z": 1.15,
+          "pct": 52.1
+        },
+        {
+          "name": "intersection_density",
+          "value": 93.39,
+          "ref_median": 31.2,
+          "z": 0.93,
+          "pct": 49.4
+        },
+        {
+          "name": "signal_density",
+          "value": 16.54,
+          "ref_median": 4.1,
+          "z": 0.71,
+          "pct": 46.7
+        }
+      ],
+      "novel": []
+    },
+    {
+      "h3": "882a100d3dfffff",
+      "shift_score": 86.4,
+      "band": "yellow",
+      "top_features": [
+        {
+          "name": "intersection_density",
+          "value": 93.39,
+          "ref_median": 31.2,
+          "z": 2.19,
+          "pct": 87.5
+        },
+        {
+          "name": "signal_density",
+          "value": 16.54,
+          "ref_median": 4.1,
+          "z": 1.97,
+          "pct": 84.8
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 24.71,
+          "ref_median": 6.8,
+          "z": 1.75,
+          "pct": 82.1
+        }
+      ],
+      "novel": []
+    }
+  ],
+  "summary": {
+    "city": "New York, NY, USA",
+    "slug": "new-york-ny-usa",
+    "center": {
+      "lat": 40.7128,
+      "lng": -74.006
+    },
+    "radius_km": 8,
+    "n_hexes": 61,
+    "pct_red": 9.8,
+    "climate": {
+      "target": {
+        "rain_days_per_year": 120.4,
+        "heavy_rain_days_per_year": 6.2,
+        "snow_days_per_year": 11
+      },
+      "reference": {
+        "rain_days_per_year": 33,
+        "heavy_rain_days_per_year": 0.6,
+        "snow_days_per_year": 0
+      }
+    },
+    "driving_side": "right",
+    "feature_comparison": [
+      {
+        "name": "intersection_density",
+        "target": 60.2,
+        "reference": 31.2
+      },
+      {
+        "name": "road_density",
+        "target": 14.1,
+        "reference": 8.9
+      },
+      {
+        "name": "arterial_share",
+        "target": 0.42,
+        "reference": 0.21
+      },
+      {
+        "name": "motorway_share",
+        "target": 0.08,
+        "reference": 0.17
+      },
+      {
+        "name": "oneway_share",
+        "target": 0.38,
+        "reference": 0.16
+      },
+      {
+        "name": "signal_density",
+        "target": 12.4,
+        "reference": 4.1
+      },
+      {
+        "name": "crosswalk_density",
+        "target": 18.6,
+        "reference": 6.8
+      },
+      {
+        "name": "bike_lane_density",
+        "target": 4.8,
+        "reference": 1.1
+      },
+      {
+        "name": "transit_stop_density",
+        "target": 8.2,
+        "reference": 1.9
+      },
+      {
+        "name": "school_density",
+        "target": 2.4,
+        "reference": 0.9
+      },
+      {
+        "name": "nightlife_density",
+        "target": 4.9,
+        "reference": 0.7
+      },
+      {
+        "name": "tourism_density",
+        "target": 3.7,
+        "reference": 0.6
+      },
+      {
+        "name": "bridge_count",
+        "target": 1.2,
+        "reference": 0.1
+      },
+      {
+        "name": "movable_bridge_count",
+        "target": 0.04,
+        "reference": 0
+      },
+      {
+        "name": "tunnel_count",
+        "target": 0.18,
+        "reference": 0.01
+      },
+      {
+        "name": "roundabout_count",
+        "target": 0.06,
+        "reference": 0.02
+      },
+      {
+        "name": "stadium_count",
+        "target": 0.03,
+        "reference": 0
+      }
+    ],
+    "osm_completeness": 0.72,
+    "novel_city": [
+      "snow"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "rain_dense_intersection",
+      "priority": 87.3,
+      "title": "Heavy rain at a dense signalized intersection",
+      "description": "New York has 3.6× Phoenix’s rain days. Dense intersections concentrate pedestrians, signals, and turning conflicts.",
+      "triggered_by": [
+        "heavy_rain_days_per_year 10.3× reference",
+        "intersection_density z > 2 in 7 hexes"
+      ],
+      "hex_ids": [
+        "882a107289fffff",
+        "882a107283fffff",
+        "882a1072ddfffff",
+        "882a1072abfffff",
+        "882a10721bfffff",
+        "882a107293fffff"
+      ],
+      "scope": "hex"
+    },
+    {
+      "id": "crosswalk_wide_arterial",
+      "priority": 64.8,
+      "title": "Pedestrian crossing a wide arterial",
+      "description": "High crosswalk density overlaps unusually arterial-heavy streets in the study area.",
+      "triggered_by": [
+        "crosswalk_density z > 2",
+        "arterial_share z > 1"
+      ],
+      "hex_ids": [
+        "882a107283fffff",
+        "882a1072ddfffff",
+        "882a1072abfffff",
+        "882a10721bfffff"
+      ],
+      "scope": "hex"
+    },
+    {
+      "id": "snow_traction",
+      "priority": 51.2,
+      "title": "Reduced traction + hidden lane markings",
+      "description": "Recurring snow creates a city-wide operating condition absent from the Phoenix reference.",
+      "triggered_by": [
+        "snow_days_per_year 11.0 vs Phoenix 0.0"
+      ],
+      "hex_ids": [],
+      "scope": "city"
+    },
+    {
+      "id": "late_night_pedestrians",
+      "priority": 38.1,
+      "title": "Late-night pedestrian activity",
+      "description": "Nightlife density indicates concentrated pedestrian activity during low-light hours.",
+      "triggered_by": [
+        "nightlife_density z > 2 in 4 hexes"
+      ],
+      "hex_ids": [
+        "882a107289fffff",
+        "882a1072ddfffff",
+        "882a1072d9fffff",
+        "882a107297fffff"
+      ],
+      "scope": "hex"
+    },
+    {
+      "id": "movable_bridge",
+      "priority": 24.6,
+      "title": "Queue at an opening bridge + adjacent lane change",
+      "description": "A movable bridge is novel relative to the Phoenix reference and creates a distinct queue-release pattern.",
+      "triggered_by": [
+        "movable_bridge_count is novel"
+      ],
+      "hex_ids": [
+        "882a107289fffff"
+      ],
+      "scope": "hex"
+    }
+  ]
+}
