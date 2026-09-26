@@ -30,6 +30,7 @@ python -c "import h3, osmnx; print(h3.__version__, osmnx.__version__)"   # expec
 uvicorn app.main:app --port 8000                                                  # API, CORS for localhost:3000
 python scripts/run_city.py "Phoenix, AZ, USA" 33.4484 -112.0740 --country US      # features for one city
 python scripts/precache.py              # all demo cities; add --data-only before P2's model exists
+python scripts/precache.py --rescore    # after a model/scenario change: re-score cached cities, offline
 ```
 
 Smoke test (API running):

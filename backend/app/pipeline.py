@@ -134,9 +134,16 @@ def analyze_city(
     progress: Progress = _noop,
 ) -> None:
     """Full run: data half, then P2's score_city, build_summary, build_scenarios -> result.json."""
-    slug = cache.slugify(name)
     build_city_data(name, lat, lng, country_code, progress)
+    score_cached(cache.slugify(name), progress)
 
+
+def score_cached(slug: str, progress: Progress = _noop) -> dict:
+    """Scoring half only: cached features.csv + city.json -> result.json. No network.
+
+    Used after a model or scenario-rule change to rebuild results without re-downloading.
+    Returns the result dict that was written.
+    """
     # P2 gets exactly what is on disk.
     features = cache.read_features(slug)
     city = cache.read_json(slug, "city.json")
@@ -160,4 +167,6 @@ def analyze_city(
     except Exception as exc:
         raise StepError("scenarios", exc) from exc
 
-    cache.write_json(slug, "result.json", result.model_dump(mode="json"))
+    data = result.model_dump(mode="json")
+    cache.write_json(slug, "result.json", data)
+    return data

@@ -2,6 +2,7 @@
 
     python scripts/precache.py              # full analyze_city; skips cities with result.json
     python scripts/precache.py --data-only  # features.csv + city.json only (before P2's model exists)
+    python scripts/precache.py --rescore    # re-score cached features after a model/rule change (offline)
     python scripts/precache.py --only tokyo-japan london-uk
 
 Names follow Google Places' formatted address so a search from the UI hits the same slug.
@@ -17,7 +18,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app import cache  # noqa: E402
-from app.pipeline import analyze_city, build_city_data  # noqa: E402
+from app.pipeline import analyze_city, build_city_data, score_cached  # noqa: E402
 
 CITIES = [
     # name, lat, lng, country_code
@@ -36,17 +37,44 @@ CITIES = [
 ]
 
 
+def _rescore(slug: str) -> None:
+    """Re-score one cached city and print what changed: pct_red and scenario cards."""
+    if not (cache.city_dir(slug) / "features.csv").is_file():
+        print(f"skip  {slug:28s} no features.csv (run --data-only first)")
+        return
+    before = cache.read_json(slug, "result.json") if cache.has_result(slug) else None
+    after = score_cached(slug)
+    old_ids = {c["id"] for c in before["scenarios"]} if before else set()
+    new_ids = {c["id"] for c in after["scenarios"]}
+    red = after["summary"]["pct_red"]
+    red_note = f"{before['summary']['pct_red']} -> {red}" if before else f"{red}"
+    changes = [f"+{i}" for i in sorted(new_ids - old_ids)] + [f"-{i}" for i in sorted(old_ids - new_ids)]
+    print(f"ok    {slug:28s} red {red_note}%  cards {len(new_ids)}  {' '.join(changes) or 'no card changes'}",
+          flush=True)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data-only", action="store_true", help="skip P2's scoring; write features.csv + city.json")
+    ap.add_argument("--rescore", action="store_true",
+                    help="rebuild result.json from cached features.csv + city.json (no downloads)")
     ap.add_argument("--only", nargs="*", metavar="SLUG", help="run just these slugs")
     args = ap.parse_args()
+    if args.rescore and args.data_only:
+        ap.error("--rescore and --data-only are opposites; pick one")
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     failed = 0
     for name, lat, lng, cc in CITIES:
         slug = cache.slugify(name)
         if args.only and slug not in args.only:
+            continue
+        if args.rescore:
+            try:
+                _rescore(slug)
+            except Exception as exc:  # noqa: BLE001 - keep going; report at the end
+                failed += 1
+                print(f"FAIL  {slug:28s} {exc}", flush=True)
             continue
         if args.data_only and (cache.city_dir(slug) / "features.csv").is_file():
             print(f"skip  {slug:28s} features.csv exists")
