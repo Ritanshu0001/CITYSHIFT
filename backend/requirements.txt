@@ -1,6 +1,6 @@
 # Owner: P1. Pinned with `pip freeze` on Python 3.11 (CONTRACTS.md D11). P2 may APPEND lines only.
 # Direct deps: fastapi uvicorn[standard] pydantic osmnx geopandas shapely h3 pandas numpy
-#              scikit-learn scipy joblib requests reverse_geocoder
+#              scikit-learn scipy joblib requests reverse_geocoder python-dotenv google-genai
 # Must resolve to h3 4.x and osmnx 2.x.
 annotated-doc==0.0.5
 annotated-types==0.8.0
@@ -43,7 +43,7 @@ urllib3==2.8.0
 uvicorn==0.54.0
 uvloop==0.22.1; sys_platform != "win32"
 watchfiles==1.3.0
-websockets==17.1
+websockets==16.1.1  # google-genai 2.25 requires websockets<17 (CR-018)
 
 # --- Appended by P2 (D13: P2 may append lines only) ---
 # Test runner for backend/tests/test_model.py (also runs standalone via python).
@@ -51,3 +51,17 @@ websockets==17.1
 # joblib are the versions the reference artifact is pickled with, and
 # reference_meta.json records them so load_reference warns on drift.
 pytest
+
+# --- Added by P1 for CR-018 (Gemini chat + AI summary): google-genai and its new deps ---
+cffi==2.1.1
+cryptography==50.0.1
+distro==1.9.0
+google-auth==2.58.1
+google-genai==2.25.0
+httpcore==1.0.9
+httpx==0.28.1
+pyasn1==0.6.4
+pyasn1_modules==0.4.2
+pycparser==3.0
+sniffio==1.3.1
+tenacity==9.1.4

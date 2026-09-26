@@ -294,3 +294,55 @@ Rules: points = crashes within the city's 8 km circle. hour = null if unknown.
 by_hex.pct = percentile of that hex's count WITHIN THIS CITY ONLY. Never compare counts
 across cities. Attribution: "Crash data: NHTSA FARS 2020-2024 (2024 preliminary)".
 Status: agreed P1 + P3
+
+## CR-018  (P1 + P3)  Gemini chat assistant + downloadable city briefing
+(Proposed as "CR-017"; renumbered because CR-017 is the crash layer.)
+Framing: "City readiness briefing: candidate test plan from public data". Never claims it trains
+Waymo's models or describes Waymo's internal systems. Red = unfamiliar to the car, not dangerous.
+Backend only (P1); P3 builds the chat UI and executes actions. Model/scoring/result.json unchanged.
+
+### Briefing (deterministic, no LLM)
+GET /cities/{slug}/briefing.md   -> text/markdown; Content-Disposition: attachment;
+                                    filename="cityshift-{slug}-briefing.md"
+GET /cities/{slug}/briefing.json -> same content, structured. 404 {"detail":"not cached"} if no result.json.
+briefing.json keys: title, disclaimer, city {name, slug, center, radius_km, data_as_of},
+reference {label, cities[], model_artifact {commit, fit_timestamp}}, sources [{name, licence, note}],
+ai_summary {label:"AI-generated summary", text, model} | null,
+key_numbers {pct_red, n_hexes, bands {red, yellow, green}, climate {target, reference_max},
+  driving_side, osm_completeness, novel_city[]},
+biggest_differences [{name, target, reference, ratio|null}]  (top 5 by ratio),
+scenarios [{rank, id, title, priority, scope, description, triggered_by[], n_hexes,
+  hexes [{h3, lat, lng}]}],
+unfamiliar_areas [{rank, h3, lat, lng, shift_score, band, top_features[], novel[],
+  fatal_crashes: int|null}]  (top 20 by shift_score),
+crash_context {available:true, source, years, preliminary_years, total, pct_pedestrian,
+  pct_cyclist, pct_dark, hotspots [{h3, lat, lng, count, pct}]} | {available:false, reason},
+limitations [str].
+
+### Chat
+POST /chat
+request:  {"slug": "new-york-ny-usa",
+           "messages": [{"role": "user", "text": "Why is the reddest area red?"}],
+           "ui_state": {"selected_hex": null, "open_panel": null, "crashes_on": false}}
+  roles "user" | "model"; the last message must be "user"; only the last 10 are used.
+response: {"reply": "The reddest hex, 882a1072...fffff, scores 99.9 ...",
+           "actions": [{"type": "select_hex", "h3": "882a1072...fffff"},
+                       {"type": "open_panel", "panel": "why"}],
+           "model": "<gemini model id>" | "fallback",
+           "fallback": false}
+404 for an unknown slug, 422 for a malformed request. Never an empty reply: if Gemini fails or
+takes > 15 s, reply = deterministic summary (key numbers + top 3 scenarios), actions [], fallback true.
+ACTIONS (validated server-side; invalid ones are dropped, never returned):
+  {"type":"select_hex","h3":str}                         h3 is a hex of this city
+  {"type":"highlight_scenario","id":str}                 id is a scenario of this city
+  {"type":"open_panel","panel":"why"|"comparison"|"scenarios"}
+  {"type":"toggle_crashes","on":bool}                    only when crash data is available
+  {"type":"fly_to","lat":float,"lng":float,"zoom":int}   inside the city's 8 km area (+2 km), zoom 3-20
+  {"type":"open_city","slug":str}                        cached slugs only
+  {"type":"download_briefing","format":"md"|"json"}
+Data tools (run on the backend): get_city_summary(slug?) [slug = another cached city, for
+comparisons], list_hexes(band?, novel_only?, feature?, min_z?, limit<=20) [feature matches a hex's
+top-3 reasons with z >= min_z (default 2) or its novel flags], get_hex(h3), get_scenario(id),
+get_crash_summary(h3?), compare_feature(name).
+Limits: last 10 messages + compact summary (< ~3k tokens) + ui_state; <= 3 tool rounds; 15 s; low temperature.
+Status: agreed P1 + P3
