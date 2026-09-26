@@ -1,0 +1,21 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# OSMnx raw HTTP cache (large). The app cache in cache/ IS committed on purpose.
+osmnx_cache/
+backend/osmnx_cache/
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Secrets
+.env
+.env*.local
+
+# OS
+.DS_Store
+Thumbs.db

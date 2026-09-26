@@ -1,0 +1,18 @@
+# Owner: P1. Full team list so nobody else has to edit this file. P2 may APPEND lines only.
+# Hour 0 (P1): create the venv, `pip install -r requirements.txt`, then replace this list
+# with the `pip freeze` output so every laptop gets identical versions.
+# Must resolve to h3 4.x and osmnx 2.x (see CONTRACTS.md D11).
+fastapi
+uvicorn[standard]
+pydantic
+osmnx
+geopandas
+shapely
+h3
+pandas
+numpy
+scikit-learn
+scipy
+joblib
+requests
+reverse_geocoder
