@@ -22,7 +22,8 @@ import sklearn
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 
-from app.schemas import HEX_FEATURES, ISOFOREST_SEED, RARE_PRESENCE_THRESHOLD
+from app.schemas import (HEX_FEATURES, ISOFOREST_SEED, RARE_PRESENCE_THRESHOLD,
+                         UNSCORED_FEATURES)
 
 DEFAULT_REFERENCE_DIR = Path(__file__).parent / "reference"
 REFERENCE_DIR_ENV = "CITYSHIFT_REFERENCE_DIR"
@@ -60,6 +61,19 @@ def library_versions() -> dict[str, str]:
     }
 
 
+def _retain_unmodeled(raw: pd.DataFrame, features: pd.DataFrame) -> None:
+    """Carry the unmodeled columns into the reference frame, for display only.
+
+    avg_lanes (contract 4.3) and the CR-014 UNSCORED_FEATURES never reach the
+    model, but feature_comparison still needs a reference median for them. They
+    stay unsanitized: a missing lane tag must not become a zero-lane road, and a
+    missing slope must not become flat ground.
+    """
+    for name in ("avg_lanes", *UNSCORED_FEATURES):
+        if name in features.columns:
+            raw[name] = pd.to_numeric(features[name], errors="coerce")
+
+
 def fit_reference(features: pd.DataFrame, city: dict) -> dict:
     """Fit a single-city reference (fixtures and tests). Same artifact shape as the pooled fit."""
     return fit_pooled_reference([features], [city])
@@ -78,10 +92,7 @@ def fit_pooled_reference(frames: list[pd.DataFrame], cities: list[dict]) -> dict
         raise ValueError(f"need one city dict per feature table, got {len(frames)} tables and {len(cities)} cities")
     features = pd.concat(frames, ignore_index=True)
     raw = sanitize_features(features.loc[:, HEX_FEATURES].astype(float))
-    if "avg_lanes" in features.columns:
-        # Kept unsanitized and unmodeled: feature_comparison needs a reference
-        # median for it when both cities have lane tags (contract 4.3).
-        raw["avg_lanes"] = pd.to_numeric(features["avg_lanes"], errors="coerce")
+    _retain_unmodeled(raw, features)
     presence = (raw.loc[:, HEX_FEATURES] > 0).mean()
     rare_features = [name for name in HEX_FEATURES if presence[name] < RARE_PRESENCE_THRESHOLD]
     feature_order = [name for name in HEX_FEATURES if name not in rare_features]
@@ -192,25 +203,38 @@ def _warn_on_version_drift(meta_path: Path) -> None:
         )
 
 
-def _check_artifact_covers_hex_features(artifact: dict, artifact_path: Path) -> None:
-    """Fail clearly when the saved artifact predates a HEX_FEATURES change.
+def _check_artifact_matches_hex_features(artifact: dict, artifact_path: Path) -> None:
+    """Fail clearly when the saved artifact disagrees with HEX_FEATURES.
 
-    build_summary walks HEX_FEATURES and indexes the reference frame for each
-    one, so an artifact fitted before a feature was added dies on a bare
-    KeyError several frames deep, in a place that says nothing about refitting.
-    The model tests do not catch it either: they always fit a fresh reference
-    from the fixtures, so only the committed artifact is ever stale.
+    Both directions break scoring, several frames deep and in a place that says
+    nothing about refitting:
+
+      missing - a feature joined HEX_FEATURES after the fit, so build_summary
+                walks it and the reference frame has no such column;
+      extra   - a feature left HEX_FEATURES after the fit (CR-014 moved
+                terrain_slope_pct to UNSCORED_FEATURES), so feature_order still
+                names it and z_matrix reindexes onto a column it never selected.
+
+    The model tests catch neither: they always fit a fresh reference from the
+    fixtures, so only the committed artifact is ever out of step.
     """
     raw = artifact.get("phoenix_raw")
-    if raw is None:
-        return
-    missing = [name for name in HEX_FEATURES if name not in raw.columns]
-    if missing:
+    refit = ("Refit it from the reference cities with "
+             "`python scripts/fit_reference.py --out app/model/reference --force`.")
+    if raw is not None:
+        missing = [name for name in HEX_FEATURES if name not in raw.columns]
+        if missing:
+            raise ValueError(
+                f"Reference artifact at {artifact_path} was fitted before "
+                f"{', '.join(missing)} joined HEX_FEATURES, so it cannot score or "
+                f"summarise any city. {refit}"
+            )
+    extra = [name for name in artifact.get("feature_order", ()) if name not in HEX_FEATURES]
+    if extra:
         raise ValueError(
-            f"Reference artifact at {artifact_path} was fitted before "
-            f"{', '.join(missing)} joined HEX_FEATURES, so it cannot score or summarise "
-            "any city. Refit it from the reference cities with "
-            "`python scripts/fit_reference.py --out app/model/reference --force`."
+            f"Reference artifact at {artifact_path} still models "
+            f"{', '.join(extra)}, which HEX_FEATURES no longer scores, so every city "
+            f"fails on a missing column. {refit}"
         )
 
 
@@ -234,7 +258,7 @@ def load_reference(directory: str | Path | None = None) -> dict:
             f"or point {REFERENCE_DIR_ENV} at a fixture-fitted reference for local development."
         )
     artifact = joblib.load(artifact_path)
-    _check_artifact_covers_hex_features(artifact, artifact_path)
+    _check_artifact_matches_hex_features(artifact, artifact_path)
     if _is_fixture_fit(artifact):
         warnings.warn(
             f"Reference artifact at {artifact_path} was fitted on the fake fixture, not on the real "

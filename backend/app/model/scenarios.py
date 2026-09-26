@@ -100,16 +100,24 @@ def rain_dense_intersection(features: pd.DataFrame, city: dict, hexes: list[dict
 
 
 def crosswalk_wide_arterial(features: pd.DataFrame, city: dict, hexes: list[dict], summary: dict, z_values: pd.DataFrame) -> dict | None:
+    """Dense crosswalks on wide arterials (CR-008: crosswalk bar lowered to z > 1).
+
+    The original z > 2 could not fire. Phoenix counts every `highway=crossing`
+    including `crossing=unmarked` (CR-001, a bulk sidewalk import), so the
+    reference crosswalk distribution is inflated and z > 2 worked out to a grade
+    of raw density no hex in any cached city reached. z > 1 restores the rule
+    while leaving the reference cities quiet.
+    """
     if not _modeled(z_values, "crosswalk_density", "arterial_share"):
         return None
-    mask = (z_values["crosswalk_density"] > 2) & (z_values["arterial_share"] > 1)
+    mask = (z_values["crosswalk_density"] > 1) & (z_values["arterial_share"] > 1)
     ids = _ids(features, mask)
     if not ids:
         return None
     crosswalk_z = _mean_abs(z_values, "crosswalk_density", mask)
     arterial_z = _mean_abs(z_values, "arterial_share", mask)
     return _card("crosswalk_wide_arterial", TITLES["crosswalk_wide_arterial"],
-                 [f"crosswalk_density z > 2 in {len(ids)} hexes (mean z {crosswalk_z:.1f})",
+                 [f"crosswalk_density z > 1 in {len(ids)} hexes (mean z {crosswalk_z:.1f})",
                   f"arterial_share z > 1 in the same hexes (mean z {arterial_z:.1f})"],
                  f"{len(ids)} hexes combine dense crosswalks with wide arterial roads.",
                  ids, float(np.mean([crosswalk_z, arterial_z])))

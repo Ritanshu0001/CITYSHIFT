@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from app.schemas import HEX_FEATURES
+from app.schemas import HEX_FEATURES, UNSCORED_FEATURES
 from .reference import CLIMATE_KEYS, cached_reference, reference_climate, sanitize_features
 
 def _median(values: pd.Series) -> float:
@@ -13,11 +13,16 @@ def _median(values: pd.Series) -> float:
     return 0.0 if pd.isna(value) else round(float(value), 2)
 
 
+def _has_values(frame: pd.DataFrame, name: str) -> bool:
+    """True when this frame carries at least one numeric value for a column."""
+    if name not in frame.columns:
+        return False
+    return bool(pd.to_numeric(frame[name], errors="coerce").notna().any())
+
+
 def _has_lane_data(frame: pd.DataFrame) -> bool:
     """True when this city carries at least one numeric avg_lanes value."""
-    if "avg_lanes" not in frame.columns:
-        return False
-    return bool(pd.to_numeric(frame["avg_lanes"], errors="coerce").notna().any())
+    return _has_values(frame, "avg_lanes")
 
 
 def _driving_side(city: dict) -> str:
@@ -43,6 +48,18 @@ def build_summary(features: pd.DataFrame, city: dict, hexes: list[dict]) -> dict
         {"name": name, "target": _median(target[name]), "reference": _median(reference[name])}
         for name in HEX_FEATURES
     ]
+    # CR-014: terrain_slope_pct is collected but not scored. It still earns a
+    # comparison row so the number stays visible, on the same terms as avg_lanes:
+    # only when both sides actually have values, never faked from a missing
+    # column. Placed before avg_lanes to match FEATURE_CSV_COLUMNS order.
+    for name in UNSCORED_FEATURES:
+        if _has_values(features, name) and _has_values(reference, name):
+            feature_comparison.append({
+                "name": name,
+                "target": _median(pd.to_numeric(features[name], errors="coerce")),
+                "reference": _median(pd.to_numeric(reference[name], errors="coerce")),
+            })
+
     # Contract 4.3: avg_lanes is never modeled and appears here only when both
     # cities have lane tags. A reference fitted before avg_lanes was retained
     # simply has no column, so the row is omitted rather than faked.

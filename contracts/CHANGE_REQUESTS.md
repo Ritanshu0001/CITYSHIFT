@@ -152,7 +152,11 @@ Decision:
 - Phoenix-only results are tagged v1-phoenix-reference (3644f92) for the before/after slide.
 Status: approved at sync
 
-## CR-011  (P3, hour 14)  P3 decisions on CR-004 and CR-008
+## CR-015  (P3, hour 14)  P3 decisions on CR-004 and CR-008
+Renumbered from CR-011 by P2 at hour 15: two entries were filed as CR-011 in
+parallel (this one and P1's terrain CR). P1's terrain CR keeps CR-011, since
+commit messages and the schema comments already reference it by that number.
+Contents unchanged.
 - CR-004: approved. Use the defensible fallback wording: the Waymo Open Dataset does
   include roadgraph and infrastructure information, but it covers locations already
   collected; CityShift uses public data to rank and prepare candidate cities before a
@@ -241,3 +245,31 @@ the CR-010 results (519fd30) byte for byte; San Diego 13.1% red.
 Needs from P2: refit, update the 3 slope tests. Optional: show slope as a display-only
 feature_comparison row, like avg_lanes.
 Status: decided by P1 for the demo; revisit after (e.g. a bare-earth DTM).
+
+## CR-016  (P2, hour 15)  CR-014 delivered, with one deviation from P1's preview
+Refit, tests and CR-008 are shipped together as P1 asked. Notes:
+- Refit gates met: 16 modeled, rare = movable_bridge_count, pooled self-score 5.0% over
+  1,153 hexes, library versions still match the pins.
+- Deviation worth knowing before you --rescore: P1's preview expected the 12 original
+  cities byte-identical to 519fd30. That holds for hexes, scores and scenarios, all
+  byte-identical. It does NOT hold for result.json as a whole, because the optional
+  display row was taken up: every summary now carries one extra feature_comparison
+  entry for terrain_slope_pct, placed before avg_lanes to match FEATURE_CSV_COLUMNS.
+  Verified across all 12: nothing else differs. Sample medians, target vs reference:
+  San Francisco 3.85 vs 1.33, Atlanta 1.68, New York 1.15, Chicago 0.31, Miami 0.15.
+  If the team would rather keep strict byte-identity for v1, the row is one commit to
+  remove.
+- The unscored columns are now retained in the artifact on the same terms as avg_lanes:
+  unsanitized, never modeled, shown only when both sides have real values. A missing
+  slope must not become flat ground.
+- Guard gap from a236535 closed. It only caught features missing from the model, so
+  CR-014's change produced a bare `KeyError: ['terrain_slope_pct'] not in index`
+  instead of a clear message. load_reference now checks both directions and names the
+  offending feature either way. Both directions are covered by tests.
+- CR-008 measured on the pooled reference after the refit: crosswalk_wide_arterial
+  fires in 12 of 13 cities (Tokyo is the exception), with Phoenix at 1 hex and Tucson
+  at 1, so the reference stays quiet. That matches what P3 predicted in CR-015.
+- steep_grade now fires in 0 of 13, which is the intended CR-014 outcome. The rule and
+  its guard are untouched; a unit test keeps its card logic covered in case a
+  bare-earth DEM ever puts slope back in the model.
+Status: info
