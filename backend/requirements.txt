@@ -44,3 +44,10 @@ uvicorn==0.54.0
 uvloop==0.22.1; sys_platform != "win32"
 watchfiles==1.3.0
 websockets==17.1
+
+# --- Appended by P2 (D13: P2 may append lines only) ---
+# Test runner for backend/tests/test_model.py (also runs standalone via python).
+# CR-002 is resolved by P1's pinned list above: scikit-learn, numpy, pandas and
+# joblib are the versions the reference artifact is pickled with, and
+# reference_meta.json records them so load_reference warns on drift.
+pytest
