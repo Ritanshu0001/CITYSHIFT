@@ -1,0 +1,23 @@
+{
+  "slug": "tucson-az-usa",
+  "created_at": "2026-09-26T06:13:21Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.7,
+    "infrastructure": 1.77,
+    "roads": 7.26,
+    "downloads_wall": 7.26,
+    "features": 0.74
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 11348,
+  "n_graph_edges": 29463,
+  "n_osm_features": 10218,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

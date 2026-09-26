@@ -23,3 +23,7 @@ Thumbs.db
 # Planning docs stay out of git (team decision): ignore markdown except the README.
 *.md
 !README.md
+
+# Contracts and plans
+contracts/
+plan/

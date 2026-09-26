@@ -1,0 +1,23 @@
+{
+  "slug": "austin-tx-usa",
+  "created_at": "2026-09-26T06:38:30Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.58,
+    "infrastructure": 12.68,
+    "roads": 181.03,
+    "downloads_wall": 181.03,
+    "features": 0.93
+  },
+  "overpass": {
+    "roads": "https://maps.mail.ru/osm/tools/overpass/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 11011,
+  "n_graph_edges": 28280,
+  "n_osm_features": 24034,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

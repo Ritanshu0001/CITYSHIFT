@@ -1,0 +1,23 @@
+{
+  "slug": "san-francisco-ca-usa",
+  "created_at": "2026-09-26T06:33:30Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 1.09,
+    "infrastructure": 22.21,
+    "roads": 31.35,
+    "downloads_wall": 31.36,
+    "features": 1.14
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 10369,
+  "n_graph_edges": 28536,
+  "n_osm_features": 28199,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}
