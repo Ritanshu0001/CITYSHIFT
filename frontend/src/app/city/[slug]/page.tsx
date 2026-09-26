@@ -18,6 +18,10 @@ import type { ChatAction, CityHex, CityResult, CrashesResponse, JobStatus, Scena
 
 type PanelTab = "why" | "compare" | "scenarios";
 type Phase = "loading" | "progress" | "result" | "missing" | "error";
+type CityPageContentProps = {
+  slug: string;
+  jobId: string | null;
+};
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -25,9 +29,14 @@ function wait(ms: number) {
 
 export default function CityPage() {
   const { slug } = useParams<{ slug: string }>();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const jobId = searchParams.get("job");
+
+  return <CityPageContent key={`${slug}:${jobId ?? "cached"}`} slug={slug} jobId={jobId} />;
+}
+
+function CityPageContent({ slug, jobId }: CityPageContentProps) {
+  const router = useRouter();
   const [phase, setPhase] = useState<Phase>("loading");
   const [result, setResult] = useState<CityResult | null>(null);
   const [job, setJob] = useState<JobStatus | null>(null);

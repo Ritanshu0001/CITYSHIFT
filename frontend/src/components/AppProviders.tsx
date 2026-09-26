@@ -8,7 +8,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
   if (!MAPS_API_KEY) return children;
 
   return (
-    <APIProvider apiKey={MAPS_API_KEY} libraries={["places"]}>
+    <APIProvider apiKey={MAPS_API_KEY} libraries={["places"]} language="en">
       {children}
     </APIProvider>
   );

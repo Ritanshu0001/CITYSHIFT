@@ -16,6 +16,7 @@ interface CitySuggestion {
   prediction: google.maps.places.PlacePrediction;
   main: string;
   secondary: string;
+  requestQuery: string;
 }
 
 const DEMO_PLACES: Record<string, SelectedPlace> = {
@@ -29,6 +30,15 @@ function countryCode(components?: google.maps.GeocoderAddressComponent[]) {
   return components?.find((part) => part.types.includes("country"))?.short_name ?? null;
 }
 
+function normalizedPlaceText(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
 export function SearchBox({ hero = false }: { hero?: boolean }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +50,7 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
   const [selection, setSelection] = useState<SelectedPlace | null>(null);
   const [placesReady, setPlacesReady] = useState(false);
   const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [searchFocused, setSearchFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,6 +87,7 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
     const text = query.trim();
     if (!placesReady || selection || text.length < 2 || !suggestionApiRef.current) {
       setSuggestions([]);
+      setActiveSuggestion(-1);
       return;
     }
 
@@ -85,20 +97,30 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
         const response = await suggestionApiRef.current!.fetchAutocompleteSuggestions({
           input: text,
           includedPrimaryTypes: ["locality", "sublocality", "administrative_area_level_1", "administrative_area_level_2", "country"],
+          language: "en",
           sessionToken: sessionTokenRef.current ?? undefined,
         });
         if (sequence !== requestSequenceRef.current) return;
-        setSuggestions(response.suggestions.flatMap((suggestion) => {
+        const normalizedQuery = normalizedPlaceText(text);
+        const nextSuggestions = response.suggestions.flatMap((suggestion) => {
           const prediction = suggestion.placePrediction;
           if (!prediction) return [];
-          return [{
+          const nextSuggestion = {
             prediction,
             main: prediction.mainText?.text ?? prediction.text.text,
             secondary: prediction.secondaryText?.text ?? "",
-          }];
-        }).slice(0, 5));
+            requestQuery: text,
+          };
+          const candidateText = normalizedPlaceText(`${nextSuggestion.main} ${nextSuggestion.secondary}`);
+          return candidateText.includes(normalizedQuery) ? [nextSuggestion] : [];
+        }).slice(0, 5);
+        setSuggestions(nextSuggestions);
+        setActiveSuggestion(nextSuggestions.length ? 0 : -1);
       } catch {
-        if (sequence === requestSequenceRef.current) setSuggestions([]);
+        if (sequence === requestSequenceRef.current) {
+          setSuggestions([]);
+          setActiveSuggestion(-1);
+        }
       }
     }, 250);
 
@@ -106,7 +128,14 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
   }, [placesReady, query, selection]);
 
   async function chooseSuggestion(suggestion: CitySuggestion) {
+    if (suggestion.requestQuery !== query.trim()) {
+      setSuggestions([]);
+      setActiveSuggestion(-1);
+      return;
+    }
+
     setSuggestions([]);
+    setActiveSuggestion(-1);
     setError(null);
     try {
       const place = suggestion.prediction.toPlace();
@@ -152,7 +181,7 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
       }
     }
 
-    return { ...DEMO_PLACES["new york"], name: query.trim() || DEMO_PLACES["new york"].name };
+    throw new Error("City lookup is unavailable. Choose a suggested city or try again in a moment.");
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -188,9 +217,27 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
             id={hero ? "hero-city-search" : "city-search"}
             value={query}
             onChange={(event) => {
+              requestSequenceRef.current += 1;
               setQuery(event.target.value);
               setSelection(null);
+              setActiveSuggestion(-1);
               setError(null);
+            }}
+            onKeyDown={(event) => {
+              if (!suggestions.length) return;
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setActiveSuggestion((current) => current >= suggestions.length - 1 ? 0 : current + 1);
+              } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setActiveSuggestion((current) => current <= 0 ? suggestions.length - 1 : current - 1);
+              } else if (event.key === "Enter" && activeSuggestion >= 0) {
+                event.preventDefault();
+                void chooseSuggestion(suggestions[activeSuggestion]);
+              } else if (event.key === "Escape") {
+                setSuggestions([]);
+                setActiveSuggestion(-1);
+              }
             }}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
@@ -200,6 +247,7 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
             aria-autocomplete="list"
             aria-controls={`${hero ? "hero-" : ""}city-suggestions`}
             aria-expanded={searchFocused && suggestions.length > 0}
+            aria-activedescendant={activeSuggestion >= 0 ? `${hero ? "hero-" : ""}city-suggestion-${activeSuggestion}` : undefined}
           />
           {searchFocused && suggestions.length > 0 && (
             <div
@@ -208,16 +256,20 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
               role="listbox"
               aria-label="City suggestions"
             >
-              {suggestions.map((suggestion) => (
+              <div className="city-suggestions-label">Suggested cities</div>
+              {suggestions.map((suggestion, index) => (
                 <button
                   key={suggestion.prediction.placeId}
+                  id={`${hero ? "hero-" : ""}city-suggestion-${index}`}
                   type="button"
                   role="option"
-                  aria-selected="false"
+                  aria-selected={activeSuggestion === index}
+                  className={activeSuggestion === index ? "is-active" : ""}
                   onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => setActiveSuggestion(index)}
                   onClick={() => chooseSuggestion(suggestion)}
                 >
-                  <LocateFixed size={15} aria-hidden="true" />
+                  <span className="suggestion-icon"><LocateFixed size={16} aria-hidden="true" /></span>
                   <span>
                     <strong>{suggestion.main}</strong>
                     {suggestion.secondary && <small>{suggestion.secondary}</small>}
@@ -227,7 +279,7 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
             </div>
           )}
         </div>
-        <button type="submit" disabled={isLoading}>
+        <button className="search-submit" type="submit" disabled={isLoading}>
           {isLoading ? <LoaderCircle className="spin" size={18} /> : <ArrowRight size={18} />}
           <span>{isLoading ? "Starting" : "Analyze"}</span>
         </button>
