@@ -2995,7 +2995,7 @@
     },
     {
       "h3": "8828309517fffff",
-      "shift_score": 40.2,
+      "shift_score": 40.1,
       "band": "green",
       "top_features": [
         {
@@ -4784,11 +4784,6 @@
         "name": "stadium_count",
         "target": 0.0,
         "reference": 0.0
-      },
-      {
-        "name": "terrain_slope_pct",
-        "target": 3.85,
-        "reference": 1.33
       },
       {
         "name": "avg_lanes",

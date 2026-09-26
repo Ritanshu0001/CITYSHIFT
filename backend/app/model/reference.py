@@ -22,8 +22,7 @@ import sklearn
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 
-from app.schemas import (HEX_FEATURES, ISOFOREST_SEED, RARE_PRESENCE_THRESHOLD,
-                         UNSCORED_FEATURES)
+from app.schemas import HEX_FEATURES, ISOFOREST_SEED, RARE_PRESENCE_THRESHOLD
 
 DEFAULT_REFERENCE_DIR = Path(__file__).parent / "reference"
 REFERENCE_DIR_ENV = "CITYSHIFT_REFERENCE_DIR"
@@ -62,16 +61,19 @@ def library_versions() -> dict[str, str]:
 
 
 def _retain_unmodeled(raw: pd.DataFrame, features: pd.DataFrame) -> None:
-    """Carry the unmodeled columns into the reference frame, for display only.
+    """Carry avg_lanes into the reference frame, for display only.
 
-    avg_lanes (contract 4.3) and the CR-014 UNSCORED_FEATURES never reach the
-    model, but feature_comparison still needs a reference median for them. They
-    stay unsanitized: a missing lane tag must not become a zero-lane road, and a
-    missing slope must not become flat ground.
+    avg_lanes is never modeled, but feature_comparison needs a reference median
+    for it when both cities have lane tags (contract 4.3). It stays unsanitized:
+    a missing lane tag must not become a zero-lane road.
+
+    UNSCORED_FEATURES are deliberately NOT retained. terrain_slope_pct is
+    Copernicus surface data that reads towers as hills, so it is neither scored
+    nor compared; the UI shows live Google elevation for the selected hex
+    instead, which is context rather than a stored metric.
     """
-    for name in ("avg_lanes", *UNSCORED_FEATURES):
-        if name in features.columns:
-            raw[name] = pd.to_numeric(features[name], errors="coerce")
+    if "avg_lanes" in features.columns:
+        raw["avg_lanes"] = pd.to_numeric(features["avg_lanes"], errors="coerce")
 
 
 def fit_reference(features: pd.DataFrame, city: dict) -> dict:

@@ -150,8 +150,7 @@ def test_summary_shape_and_feature_comparison_order():
     summary = build_summary(target, target_city, score_city(target, target_city))
     names = [row["name"] for row in summary["feature_comparison"]]
     assert names[:len(HEX_FEATURES)] == HEX_FEATURES
-    # CR-014: slope is unscored but still shown, then avg_lanes (contract 4.3).
-    assert names[len(HEX_FEATURES):] == ["terrain_slope_pct", "avg_lanes"]
+    assert names[len(HEX_FEATURES):] == ["avg_lanes"]  # both fixtures carry lane data
     assert summary["novel_city"] == ["snow", "left_hand_traffic"]
     assert summary["driving_side"] == "left"
 
@@ -174,8 +173,9 @@ def test_avg_lanes_row_is_omitted_when_the_target_has_none():
     summary = build_summary(without, _target_city(city), score_city(without, _target_city(city)))
     names = [row["name"] for row in summary["feature_comparison"]]
     assert "avg_lanes" not in names
-    # The unscored slope row is unaffected by a missing lane column (CR-014).
-    assert names == HEX_FEATURES + ["terrain_slope_pct"]
+    # Unscored columns get no comparison row at all, so this is exactly
+    # HEX_FEATURES (CR-014: slope is context in the UI, not a stored metric).
+    assert names == HEX_FEATURES
 
 
 # --------------------------------------------------------------------------
