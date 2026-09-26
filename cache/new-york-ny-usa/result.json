@@ -2,7 +2,7 @@
   "hexes": [
     {
       "h3": "882a100893fffff",
-      "shift_score": 85.5,
+      "shift_score": 91.7,
       "band": "yellow",
       "top_features": [
         {
@@ -31,7 +31,7 @@
     },
     {
       "h3": "882a100897fffff",
-      "shift_score": 90.5,
+      "shift_score": 93.4,
       "band": "yellow",
       "top_features": [
         {
@@ -60,7 +60,7 @@
     },
     {
       "h3": "882a1008b1fffff",
-      "shift_score": 89.8,
+      "shift_score": 87.5,
       "band": "yellow",
       "top_features": [
         {
@@ -89,7 +89,7 @@
     },
     {
       "h3": "882a1008b3fffff",
-      "shift_score": 95.2,
+      "shift_score": 97.7,
       "band": "red",
       "top_features": [
         {
@@ -118,8 +118,8 @@
     },
     {
       "h3": "882a1008b5fffff",
-      "shift_score": 81.8,
-      "band": "yellow",
+      "shift_score": 78.4,
+      "band": "green",
       "top_features": [
         {
           "name": "road_density",
@@ -147,7 +147,7 @@
     },
     {
       "h3": "882a1008b7fffff",
-      "shift_score": 91.7,
+      "shift_score": 91.0,
       "band": "yellow",
       "top_features": [
         {
@@ -176,8 +176,8 @@
     },
     {
       "h3": "882a1008bbfffff",
-      "shift_score": 91.1,
-      "band": "yellow",
+      "shift_score": 97.3,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -205,7 +205,7 @@
     },
     {
       "h3": "882a100c25fffff",
-      "shift_score": 35.9,
+      "shift_score": 30.4,
       "band": "green",
       "top_features": [
         {
@@ -234,7 +234,7 @@
     },
     {
       "h3": "882a100c27fffff",
-      "shift_score": 39.5,
+      "shift_score": 45.9,
       "band": "green",
       "top_features": [
         {
@@ -263,7 +263,7 @@
     },
     {
       "h3": "882a100d01fffff",
-      "shift_score": 96.9,
+      "shift_score": 97.0,
       "band": "red",
       "top_features": [
         {
@@ -292,7 +292,7 @@
     },
     {
       "h3": "882a100d03fffff",
-      "shift_score": 85.3,
+      "shift_score": 89.9,
       "band": "yellow",
       "top_features": [
         {
@@ -352,7 +352,7 @@
     },
     {
       "h3": "882a100d09fffff",
-      "shift_score": 82.6,
+      "shift_score": 87.6,
       "band": "yellow",
       "top_features": [
         {
@@ -381,7 +381,7 @@
     },
     {
       "h3": "882a100d0bfffff",
-      "shift_score": 74.1,
+      "shift_score": 68.4,
       "band": "green",
       "top_features": [
         {
@@ -412,7 +412,7 @@
     },
     {
       "h3": "882a100d0dfffff",
-      "shift_score": 92.7,
+      "shift_score": 87.1,
       "band": "yellow",
       "top_features": [
         {
@@ -441,7 +441,7 @@
     },
     {
       "h3": "882a100d11fffff",
-      "shift_score": 92.3,
+      "shift_score": 91.0,
       "band": "yellow",
       "top_features": [
         {
@@ -470,8 +470,8 @@
     },
     {
       "h3": "882a100d13fffff",
-      "shift_score": 78.1,
-      "band": "green",
+      "shift_score": 81.5,
+      "band": "yellow",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -499,7 +499,7 @@
     },
     {
       "h3": "882a100d15fffff",
-      "shift_score": 92.7,
+      "shift_score": 92.2,
       "band": "yellow",
       "top_features": [
         {
@@ -528,7 +528,7 @@
     },
     {
       "h3": "882a100d17fffff",
-      "shift_score": 98.6,
+      "shift_score": 98.8,
       "band": "red",
       "top_features": [
         {
@@ -557,7 +557,7 @@
     },
     {
       "h3": "882a100d19fffff",
-      "shift_score": 64.0,
+      "shift_score": 65.4,
       "band": "green",
       "top_features": [
         {
@@ -615,7 +615,7 @@
     },
     {
       "h3": "882a100d1dfffff",
-      "shift_score": 44.0,
+      "shift_score": 55.9,
       "band": "green",
       "top_features": [
         {
@@ -626,18 +626,18 @@
           "pct": 93.3
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.29,
-          "ref_median": 1.33,
-          "z": -1.22,
-          "pct": 7.1
-        },
-        {
           "name": "school_density",
           "value": 0.0,
           "ref_median": 0.0,
           "z": -0.86,
           "pct": 52.5
+        },
+        {
+          "name": "signal_density",
+          "value": 10.8,
+          "ref_median": 3.52,
+          "z": 0.86,
+          "pct": 77.6
         }
       ],
       "novel": [
@@ -646,7 +646,7 @@
     },
     {
       "h3": "882a100d21fffff",
-      "shift_score": 98.9,
+      "shift_score": 99.4,
       "band": "red",
       "top_features": [
         {
@@ -675,7 +675,7 @@
     },
     {
       "h3": "882a100d23fffff",
-      "shift_score": 96.8,
+      "shift_score": 98.8,
       "band": "red",
       "top_features": [
         {
@@ -704,7 +704,7 @@
     },
     {
       "h3": "882a100d25fffff",
-      "shift_score": 98.4,
+      "shift_score": 99.7,
       "band": "red",
       "top_features": [
         {
@@ -733,7 +733,7 @@
     },
     {
       "h3": "882a100d27fffff",
-      "shift_score": 95.0,
+      "shift_score": 98.0,
       "band": "red",
       "top_features": [
         {
@@ -762,7 +762,7 @@
     },
     {
       "h3": "882a100d29fffff",
-      "shift_score": 99.8,
+      "shift_score": 99.9,
       "band": "red",
       "top_features": [
         {
@@ -791,7 +791,7 @@
     },
     {
       "h3": "882a100d2bfffff",
-      "shift_score": 85.7,
+      "shift_score": 89.5,
       "band": "yellow",
       "top_features": [
         {
@@ -820,7 +820,7 @@
     },
     {
       "h3": "882a100d2dfffff",
-      "shift_score": 99.8,
+      "shift_score": 99.3,
       "band": "red",
       "top_features": [
         {
@@ -849,7 +849,7 @@
     },
     {
       "h3": "882a100d31fffff",
-      "shift_score": 83.2,
+      "shift_score": 84.2,
       "band": "yellow",
       "top_features": [
         {
@@ -878,7 +878,7 @@
     },
     {
       "h3": "882a100d33fffff",
-      "shift_score": 90.7,
+      "shift_score": 90.5,
       "band": "yellow",
       "top_features": [
         {
@@ -907,8 +907,8 @@
     },
     {
       "h3": "882a100d35fffff",
-      "shift_score": 93.5,
-      "band": "yellow",
+      "shift_score": 97.7,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -936,7 +936,7 @@
     },
     {
       "h3": "882a100d37fffff",
-      "shift_score": 99.1,
+      "shift_score": 99.2,
       "band": "red",
       "top_features": [
         {
@@ -965,7 +965,7 @@
     },
     {
       "h3": "882a100d39fffff",
-      "shift_score": 81.1,
+      "shift_score": 87.8,
       "band": "yellow",
       "top_features": [
         {
@@ -994,7 +994,7 @@
     },
     {
       "h3": "882a100d3bfffff",
-      "shift_score": 89.4,
+      "shift_score": 92.0,
       "band": "yellow",
       "top_features": [
         {
@@ -1023,7 +1023,7 @@
     },
     {
       "h3": "882a100d3dfffff",
-      "shift_score": 88.7,
+      "shift_score": 87.1,
       "band": "yellow",
       "top_features": [
         {
@@ -1052,7 +1052,7 @@
     },
     {
       "h3": "882a100d41fffff",
-      "shift_score": 71.1,
+      "shift_score": 78.1,
       "band": "green",
       "top_features": [
         {
@@ -1083,7 +1083,7 @@
     },
     {
       "h3": "882a100d43fffff",
-      "shift_score": 98.3,
+      "shift_score": 97.6,
       "band": "red",
       "top_features": [
         {
@@ -1112,7 +1112,7 @@
     },
     {
       "h3": "882a100d45fffff",
-      "shift_score": 97.3,
+      "shift_score": 98.9,
       "band": "red",
       "top_features": [
         {
@@ -1141,8 +1141,8 @@
     },
     {
       "h3": "882a100d47fffff",
-      "shift_score": 96.1,
-      "band": "red",
+      "shift_score": 94.7,
+      "band": "yellow",
       "top_features": [
         {
           "name": "motorway_share",
@@ -1170,7 +1170,7 @@
     },
     {
       "h3": "882a100d51fffff",
-      "shift_score": 88.2,
+      "shift_score": 90.7,
       "band": "yellow",
       "top_features": [
         {
@@ -1199,7 +1199,7 @@
     },
     {
       "h3": "882a100d53fffff",
-      "shift_score": 92.3,
+      "shift_score": 93.4,
       "band": "yellow",
       "top_features": [
         {
@@ -1228,7 +1228,7 @@
     },
     {
       "h3": "882a100d55fffff",
-      "shift_score": 92.5,
+      "shift_score": 89.7,
       "band": "yellow",
       "top_features": [
         {
@@ -1257,8 +1257,8 @@
     },
     {
       "h3": "882a100d57fffff",
-      "shift_score": 75.4,
-      "band": "green",
+      "shift_score": 80.4,
+      "band": "yellow",
       "top_features": [
         {
           "name": "tourism_density",
@@ -1288,7 +1288,7 @@
     },
     {
       "h3": "882a100d5dfffff",
-      "shift_score": 77.3,
+      "shift_score": 79.0,
       "band": "green",
       "top_features": [
         {
@@ -1375,7 +1375,7 @@
     },
     {
       "h3": "882a100d65fffff",
-      "shift_score": 98.7,
+      "shift_score": 98.9,
       "band": "red",
       "top_features": [
         {
@@ -1404,7 +1404,7 @@
     },
     {
       "h3": "882a100d67fffff",
-      "shift_score": 99.4,
+      "shift_score": 98.9,
       "band": "red",
       "top_features": [
         {
@@ -1433,7 +1433,7 @@
     },
     {
       "h3": "882a100d69fffff",
-      "shift_score": 95.0,
+      "shift_score": 97.3,
       "band": "red",
       "top_features": [
         {
@@ -1462,7 +1462,7 @@
     },
     {
       "h3": "882a100d6bfffff",
-      "shift_score": 99.6,
+      "shift_score": 99.9,
       "band": "red",
       "top_features": [
         {
@@ -1491,7 +1491,7 @@
     },
     {
       "h3": "882a100d6dfffff",
-      "shift_score": 96.6,
+      "shift_score": 97.3,
       "band": "red",
       "top_features": [
         {
@@ -1520,8 +1520,8 @@
     },
     {
       "h3": "882a100d81fffff",
-      "shift_score": 89.9,
-      "band": "yellow",
+      "shift_score": 96.7,
+      "band": "red",
       "top_features": [
         {
           "name": "school_density",
@@ -1549,7 +1549,7 @@
     },
     {
       "h3": "882a100d83fffff",
-      "shift_score": 85.0,
+      "shift_score": 91.8,
       "band": "yellow",
       "top_features": [
         {
@@ -1578,8 +1578,8 @@
     },
     {
       "h3": "882a100d85fffff",
-      "shift_score": 71.1,
-      "band": "green",
+      "shift_score": 82.6,
+      "band": "yellow",
       "top_features": [
         {
           "name": "oneway_share",
@@ -1607,8 +1607,8 @@
     },
     {
       "h3": "882a100d87fffff",
-      "shift_score": 88.6,
-      "band": "yellow",
+      "shift_score": 95.3,
+      "band": "red",
       "top_features": [
         {
           "name": "school_density",
@@ -1636,8 +1636,8 @@
     },
     {
       "h3": "882a100d89fffff",
-      "shift_score": 91.3,
-      "band": "yellow",
+      "shift_score": 98.3,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -1665,7 +1665,7 @@
     },
     {
       "h3": "882a100d8bfffff",
-      "shift_score": 87.5,
+      "shift_score": 92.6,
       "band": "yellow",
       "top_features": [
         {
@@ -1694,7 +1694,7 @@
     },
     {
       "h3": "882a100d8dfffff",
-      "shift_score": 83.2,
+      "shift_score": 89.9,
       "band": "yellow",
       "top_features": [
         {
@@ -1723,7 +1723,7 @@
     },
     {
       "h3": "882a100d95fffff",
-      "shift_score": 81.1,
+      "shift_score": 91.8,
       "band": "yellow",
       "top_features": [
         {
@@ -1752,8 +1752,8 @@
     },
     {
       "h3": "882a100d9dfffff",
-      "shift_score": 79.6,
-      "band": "green",
+      "shift_score": 87.7,
+      "band": "yellow",
       "top_features": [
         {
           "name": "school_density",
@@ -1781,7 +1781,7 @@
     },
     {
       "h3": "882a100da1fffff",
-      "shift_score": 84.6,
+      "shift_score": 93.5,
       "band": "yellow",
       "top_features": [
         {
@@ -1810,7 +1810,7 @@
     },
     {
       "h3": "882a100da3fffff",
-      "shift_score": 86.5,
+      "shift_score": 91.4,
       "band": "yellow",
       "top_features": [
         {
@@ -1839,7 +1839,7 @@
     },
     {
       "h3": "882a100da5fffff",
-      "shift_score": 95.0,
+      "shift_score": 97.9,
       "band": "red",
       "top_features": [
         {
@@ -1868,7 +1868,7 @@
     },
     {
       "h3": "882a100da7fffff",
-      "shift_score": 99.0,
+      "shift_score": 99.2,
       "band": "red",
       "top_features": [
         {
@@ -1897,8 +1897,8 @@
     },
     {
       "h3": "882a100da9fffff",
-      "shift_score": 76.8,
-      "band": "green",
+      "shift_score": 90.3,
+      "band": "yellow",
       "top_features": [
         {
           "name": "school_density",
@@ -1926,8 +1926,8 @@
     },
     {
       "h3": "882a100dabfffff",
-      "shift_score": 94.0,
-      "band": "yellow",
+      "shift_score": 97.9,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -1955,7 +1955,7 @@
     },
     {
       "h3": "882a100dadfffff",
-      "shift_score": 90.5,
+      "shift_score": 91.8,
       "band": "yellow",
       "top_features": [
         {
@@ -1984,7 +1984,7 @@
     },
     {
       "h3": "882a100db1fffff",
-      "shift_score": 87.6,
+      "shift_score": 88.4,
       "band": "yellow",
       "top_features": [
         {
@@ -2013,8 +2013,8 @@
     },
     {
       "h3": "882a100db3fffff",
-      "shift_score": 71.1,
-      "band": "green",
+      "shift_score": 81.8,
+      "band": "yellow",
       "top_features": [
         {
           "name": "oneway_share",
@@ -2042,7 +2042,7 @@
     },
     {
       "h3": "882a100db5fffff",
-      "shift_score": 91.3,
+      "shift_score": 93.1,
       "band": "yellow",
       "top_features": [
         {
@@ -2071,7 +2071,7 @@
     },
     {
       "h3": "882a100db7fffff",
-      "shift_score": 86.6,
+      "shift_score": 91.4,
       "band": "yellow",
       "top_features": [
         {
@@ -2100,8 +2100,8 @@
     },
     {
       "h3": "882a100db9fffff",
-      "shift_score": 85.8,
-      "band": "yellow",
+      "shift_score": 95.7,
+      "band": "red",
       "top_features": [
         {
           "name": "oneway_share",
@@ -2129,7 +2129,7 @@
     },
     {
       "h3": "882a100dbbfffff",
-      "shift_score": 87.8,
+      "shift_score": 93.3,
       "band": "yellow",
       "top_features": [
         {
@@ -2158,7 +2158,7 @@
     },
     {
       "h3": "882a100dbdfffff",
-      "shift_score": 86.1,
+      "shift_score": 91.7,
       "band": "yellow",
       "top_features": [
         {
@@ -2187,7 +2187,7 @@
     },
     {
       "h3": "882a100dc1fffff",
-      "shift_score": 82.7,
+      "shift_score": 86.8,
       "band": "yellow",
       "top_features": [
         {
@@ -2216,8 +2216,8 @@
     },
     {
       "h3": "882a100dc3fffff",
-      "shift_score": 92.1,
-      "band": "yellow",
+      "shift_score": 96.7,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -2245,8 +2245,8 @@
     },
     {
       "h3": "882a100dc5fffff",
-      "shift_score": 86.1,
-      "band": "yellow",
+      "shift_score": 95.7,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -2274,7 +2274,7 @@
     },
     {
       "h3": "882a100dc7fffff",
-      "shift_score": 81.8,
+      "shift_score": 87.3,
       "band": "yellow",
       "top_features": [
         {
@@ -2303,7 +2303,7 @@
     },
     {
       "h3": "882a100dc9fffff",
-      "shift_score": 36.6,
+      "shift_score": 49.0,
       "band": "green",
       "top_features": [
         {
@@ -2332,7 +2332,7 @@
     },
     {
       "h3": "882a100dcbfffff",
-      "shift_score": 89.3,
+      "shift_score": 94.3,
       "band": "yellow",
       "top_features": [
         {
@@ -2361,7 +2361,7 @@
     },
     {
       "h3": "882a100dcdfffff",
-      "shift_score": 56.7,
+      "shift_score": 59.7,
       "band": "green",
       "top_features": [
         {
@@ -2372,18 +2372,18 @@
           "pct": 89.5
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.44,
-          "ref_median": 1.33,
-          "z": -1.0,
-          "pct": 16.0
-        },
-        {
           "name": "tourism_density",
           "value": 1.35,
           "ref_median": 0.0,
           "z": 0.98,
           "pct": 89.0
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 17.55,
+          "ref_median": 5.94,
+          "z": 0.89,
+          "pct": 78.8
         }
       ],
       "novel": [
@@ -2392,7 +2392,7 @@
     },
     {
       "h3": "882a100dd5fffff",
-      "shift_score": 81.5,
+      "shift_score": 87.6,
       "band": "yellow",
       "top_features": [
         {
@@ -2421,7 +2421,7 @@
     },
     {
       "h3": "882a100de1fffff",
-      "shift_score": 98.9,
+      "shift_score": 99.0,
       "band": "red",
       "top_features": [
         {
@@ -2450,8 +2450,8 @@
     },
     {
       "h3": "882a100de3fffff",
-      "shift_score": 76.9,
-      "band": "green",
+      "shift_score": 82.3,
+      "band": "yellow",
       "top_features": [
         {
           "name": "school_density",
@@ -2479,7 +2479,7 @@
     },
     {
       "h3": "882a100de5fffff",
-      "shift_score": 89.8,
+      "shift_score": 93.8,
       "band": "yellow",
       "top_features": [
         {
@@ -2508,7 +2508,7 @@
     },
     {
       "h3": "882a100de7fffff",
-      "shift_score": 90.5,
+      "shift_score": 87.0,
       "band": "yellow",
       "top_features": [
         {
@@ -2537,8 +2537,8 @@
     },
     {
       "h3": "882a100de9fffff",
-      "shift_score": 93.8,
-      "band": "yellow",
+      "shift_score": 97.0,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -2566,7 +2566,7 @@
     },
     {
       "h3": "882a100debfffff",
-      "shift_score": 87.5,
+      "shift_score": 92.5,
       "band": "yellow",
       "top_features": [
         {
@@ -2595,7 +2595,7 @@
     },
     {
       "h3": "882a100dedfffff",
-      "shift_score": 98.9,
+      "shift_score": 99.9,
       "band": "red",
       "top_features": [
         {
@@ -2624,7 +2624,7 @@
     },
     {
       "h3": "882a107001fffff",
-      "shift_score": 71.6,
+      "shift_score": 78.5,
       "band": "green",
       "top_features": [
         {
@@ -2653,7 +2653,7 @@
     },
     {
       "h3": "882a107003fffff",
-      "shift_score": 67.6,
+      "shift_score": 70.9,
       "band": "green",
       "top_features": [
         {
@@ -2682,7 +2682,7 @@
     },
     {
       "h3": "882a107007fffff",
-      "shift_score": 78.6,
+      "shift_score": 78.1,
       "band": "green",
       "top_features": [
         {
@@ -2711,7 +2711,7 @@
     },
     {
       "h3": "882a107009fffff",
-      "shift_score": 54.5,
+      "shift_score": 61.1,
       "band": "green",
       "top_features": [
         {
@@ -2740,7 +2740,7 @@
     },
     {
       "h3": "882a10700bfffff",
-      "shift_score": 66.0,
+      "shift_score": 67.3,
       "band": "green",
       "top_features": [
         {
@@ -2769,7 +2769,7 @@
     },
     {
       "h3": "882a107011fffff",
-      "shift_score": 34.1,
+      "shift_score": 32.9,
       "band": "green",
       "top_features": [
         {
@@ -2798,7 +2798,7 @@
     },
     {
       "h3": "882a107013fffff",
-      "shift_score": 88.1,
+      "shift_score": 85.8,
       "band": "yellow",
       "top_features": [
         {
@@ -2827,8 +2827,8 @@
     },
     {
       "h3": "882a107015fffff",
-      "shift_score": 68.2,
-      "band": "green",
+      "shift_score": 80.1,
+      "band": "yellow",
       "top_features": [
         {
           "name": "school_density",
@@ -2856,7 +2856,7 @@
     },
     {
       "h3": "882a107017fffff",
-      "shift_score": 35.9,
+      "shift_score": 32.9,
       "band": "green",
       "top_features": [
         {
@@ -2885,8 +2885,8 @@
     },
     {
       "h3": "882a107019fffff",
-      "shift_score": 76.8,
-      "band": "green",
+      "shift_score": 85.5,
+      "band": "yellow",
       "top_features": [
         {
           "name": "tunnel_count",
@@ -2914,8 +2914,8 @@
     },
     {
       "h3": "882a10701bfffff",
-      "shift_score": 96.3,
-      "band": "red",
+      "shift_score": 92.5,
+      "band": "yellow",
       "top_features": [
         {
           "name": "tunnel_count",
@@ -2943,7 +2943,7 @@
     },
     {
       "h3": "882a10701dfffff",
-      "shift_score": 64.9,
+      "shift_score": 61.9,
       "band": "green",
       "top_features": [
         {
@@ -2972,7 +2972,7 @@
     },
     {
       "h3": "882a107039fffff",
-      "shift_score": 52.5,
+      "shift_score": 53.1,
       "band": "green",
       "top_features": [
         {
@@ -3030,7 +3030,7 @@
     },
     {
       "h3": "882a107041fffff",
-      "shift_score": 88.6,
+      "shift_score": 88.4,
       "band": "yellow",
       "top_features": [
         {
@@ -3061,7 +3061,7 @@
     },
     {
       "h3": "882a107043fffff",
-      "shift_score": 20.7,
+      "shift_score": 25.5,
       "band": "green",
       "top_features": [
         {
@@ -3090,7 +3090,7 @@
     },
     {
       "h3": "882a107045fffff",
-      "shift_score": 94.5,
+      "shift_score": 93.1,
       "band": "yellow",
       "top_features": [
         {
@@ -3119,8 +3119,8 @@
     },
     {
       "h3": "882a107047fffff",
-      "shift_score": 83.8,
-      "band": "yellow",
+      "shift_score": 75.9,
+      "band": "green",
       "top_features": [
         {
           "name": "motorway_share",
@@ -3148,7 +3148,7 @@
     },
     {
       "h3": "882a107049fffff",
-      "shift_score": 79.1,
+      "shift_score": 70.1,
       "band": "green",
       "top_features": [
         {
@@ -3177,7 +3177,7 @@
     },
     {
       "h3": "882a10704bfffff",
-      "shift_score": 93.1,
+      "shift_score": 86.3,
       "band": "yellow",
       "top_features": [
         {
@@ -3206,7 +3206,7 @@
     },
     {
       "h3": "882a107051fffff",
-      "shift_score": 51.7,
+      "shift_score": 50.2,
       "band": "green",
       "top_features": [
         {
@@ -3235,7 +3235,7 @@
     },
     {
       "h3": "882a107053fffff",
-      "shift_score": 45.3,
+      "shift_score": 37.6,
       "band": "green",
       "top_features": [
         {
@@ -3264,8 +3264,8 @@
     },
     {
       "h3": "882a107055fffff",
-      "shift_score": 77.2,
-      "band": "green",
+      "shift_score": 87.2,
+      "band": "yellow",
       "top_features": [
         {
           "name": "school_density",
@@ -3293,7 +3293,7 @@
     },
     {
       "h3": "882a107057fffff",
-      "shift_score": 54.1,
+      "shift_score": 63.1,
       "band": "green",
       "top_features": [
         {
@@ -3322,7 +3322,7 @@
     },
     {
       "h3": "882a107059fffff",
-      "shift_score": 81.3,
+      "shift_score": 86.3,
       "band": "yellow",
       "top_features": [
         {
@@ -3351,7 +3351,7 @@
     },
     {
       "h3": "882a10705bfffff",
-      "shift_score": 72.9,
+      "shift_score": 79.8,
       "band": "green",
       "top_features": [
         {
@@ -3380,8 +3380,8 @@
     },
     {
       "h3": "882a10705dfffff",
-      "shift_score": 76.4,
-      "band": "green",
+      "shift_score": 80.4,
+      "band": "yellow",
       "top_features": [
         {
           "name": "school_density",
@@ -3409,7 +3409,7 @@
     },
     {
       "h3": "882a107081fffff",
-      "shift_score": 79.4,
+      "shift_score": 74.8,
       "band": "green",
       "top_features": [
         {
@@ -3438,7 +3438,7 @@
     },
     {
       "h3": "882a107089fffff",
-      "shift_score": 76.4,
+      "shift_score": 63.8,
       "band": "green",
       "top_features": [
         {
@@ -3467,7 +3467,7 @@
     },
     {
       "h3": "882a10708dfffff",
-      "shift_score": 83.4,
+      "shift_score": 80.7,
       "band": "yellow",
       "top_features": [
         {
@@ -3496,8 +3496,8 @@
     },
     {
       "h3": "882a1070cdfffff",
-      "shift_score": 82.0,
-      "band": "yellow",
+      "shift_score": 78.4,
+      "band": "green",
       "top_features": [
         {
           "name": "road_density",
@@ -3525,7 +3525,7 @@
     },
     {
       "h3": "882a1070e1fffff",
-      "shift_score": 84.0,
+      "shift_score": 85.3,
       "band": "yellow",
       "top_features": [
         {
@@ -3554,7 +3554,7 @@
     },
     {
       "h3": "882a1070e9fffff",
-      "shift_score": 77.5,
+      "shift_score": 71.4,
       "band": "green",
       "top_features": [
         {
@@ -3583,7 +3583,7 @@
     },
     {
       "h3": "882a1070ebfffff",
-      "shift_score": 90.0,
+      "shift_score": 84.2,
       "band": "yellow",
       "top_features": [
         {
@@ -3612,7 +3612,7 @@
     },
     {
       "h3": "882a1070edfffff",
-      "shift_score": 62.1,
+      "shift_score": 66.3,
       "band": "green",
       "top_features": [
         {
@@ -3641,7 +3641,7 @@
     },
     {
       "h3": "882a107201fffff",
-      "shift_score": 81.8,
+      "shift_score": 80.7,
       "band": "yellow",
       "top_features": [
         {
@@ -3652,25 +3652,25 @@
           "pct": 98.1
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 6.97,
-          "ref_median": 1.33,
-          "z": 2.1,
-          "pct": 95.7
-        },
-        {
           "name": "signal_density",
           "value": 39.12,
           "ref_median": 3.52,
           "z": 1.9,
           "pct": 96.9
+        },
+        {
+          "name": "oneway_share",
+          "value": 0.57,
+          "ref_median": 0.1,
+          "z": 1.58,
+          "pct": 90.1
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107203fffff",
-      "shift_score": 96.2,
+      "shift_score": 95.9,
       "band": "red",
       "top_features": [
         {
@@ -3699,16 +3699,9 @@
     },
     {
       "h3": "882a107205fffff",
-      "shift_score": 82.5,
+      "shift_score": 83.0,
       "band": "yellow",
       "top_features": [
-        {
-          "name": "terrain_slope_pct",
-          "value": 7.01,
-          "ref_median": 1.33,
-          "z": 2.11,
-          "pct": 95.7
-        },
         {
           "name": "signal_density",
           "value": 47.21,
@@ -3722,13 +3715,20 @@
           "ref_median": 0.0,
           "z": 1.78,
           "pct": 95.4
+        },
+        {
+          "name": "oneway_share",
+          "value": 0.62,
+          "ref_median": 0.1,
+          "z": 1.77,
+          "pct": 92.7
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107207fffff",
-      "shift_score": 66.2,
+      "shift_score": 68.0,
       "band": "green",
       "top_features": [
         {
@@ -3757,7 +3757,7 @@
     },
     {
       "h3": "882a107209fffff",
-      "shift_score": 93.8,
+      "shift_score": 85.7,
       "band": "yellow",
       "top_features": [
         {
@@ -3775,18 +3775,18 @@
           "pct": 96.8
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 6.74,
-          "ref_median": 1.33,
-          "z": 2.05,
-          "pct": 95.4
+          "name": "oneway_share",
+          "value": 0.59,
+          "ref_median": 0.1,
+          "z": 1.66,
+          "pct": 91.2
         }
       ],
       "novel": []
     },
     {
       "h3": "882a10720bfffff",
-      "shift_score": 58.4,
+      "shift_score": 77.1,
       "band": "green",
       "top_features": [
         {
@@ -3815,7 +3815,7 @@
     },
     {
       "h3": "882a10720dfffff",
-      "shift_score": 88.4,
+      "shift_score": 93.4,
       "band": "yellow",
       "top_features": [
         {
@@ -3844,8 +3844,8 @@
     },
     {
       "h3": "882a107213fffff",
-      "shift_score": 93.8,
-      "band": "yellow",
+      "shift_score": 95.0,
+      "band": "red",
       "top_features": [
         {
           "name": "motorway_share",
@@ -3873,7 +3873,7 @@
     },
     {
       "h3": "882a107215fffff",
-      "shift_score": 81.8,
+      "shift_score": 94.2,
       "band": "yellow",
       "top_features": [
         {
@@ -3902,7 +3902,7 @@
     },
     {
       "h3": "882a107217fffff",
-      "shift_score": 91.8,
+      "shift_score": 93.1,
       "band": "yellow",
       "top_features": [
         {
@@ -3931,7 +3931,7 @@
     },
     {
       "h3": "882a107219fffff",
-      "shift_score": 97.9,
+      "shift_score": 96.6,
       "band": "red",
       "top_features": [
         {
@@ -3960,7 +3960,7 @@
     },
     {
       "h3": "882a10721bfffff",
-      "shift_score": 98.7,
+      "shift_score": 99.0,
       "band": "red",
       "top_features": [
         {
@@ -3989,8 +3989,8 @@
     },
     {
       "h3": "882a10721dfffff",
-      "shift_score": 76.1,
-      "band": "green",
+      "shift_score": 84.1,
+      "band": "yellow",
       "top_features": [
         {
           "name": "road_density",
@@ -4000,25 +4000,25 @@
           "pct": 3.4
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.0,
-          "ref_median": 1.33,
-          "z": -1.67,
-          "pct": 1.3
-        },
-        {
           "name": "intersection_density",
           "value": 10.79,
           "ref_median": 45.72,
           "z": -1.47,
           "pct": 8.2
+        },
+        {
+          "name": "oneway_share",
+          "value": 0.49,
+          "ref_median": 0.1,
+          "z": 1.28,
+          "pct": 86.7
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107221fffff",
-      "shift_score": 91.2,
+      "shift_score": 86.6,
       "band": "yellow",
       "top_features": [
         {
@@ -4047,16 +4047,9 @@
     },
     {
       "h3": "882a107223fffff",
-      "shift_score": 51.5,
+      "shift_score": 36.5,
       "band": "green",
       "top_features": [
-        {
-          "name": "terrain_slope_pct",
-          "value": 4.74,
-          "ref_median": 1.33,
-          "z": 1.5,
-          "pct": 90.9
-        },
         {
           "name": "motorway_share",
           "value": 0.25,
@@ -4070,13 +4063,20 @@
           "ref_median": 0.1,
           "z": 1.03,
           "pct": 81.8
+        },
+        {
+          "name": "arterial_share",
+          "value": 0.15,
+          "ref_median": 0.28,
+          "z": -0.88,
+          "pct": 16.0
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107225fffff",
-      "shift_score": 89.9,
+      "shift_score": 86.5,
       "band": "yellow",
       "top_features": [
         {
@@ -4105,7 +4105,7 @@
     },
     {
       "h3": "882a107227fffff",
-      "shift_score": 99.8,
+      "shift_score": 99.6,
       "band": "red",
       "top_features": [
         {
@@ -4134,7 +4134,7 @@
     },
     {
       "h3": "882a107229fffff",
-      "shift_score": 79.1,
+      "shift_score": 75.8,
       "band": "green",
       "top_features": [
         {
@@ -4152,18 +4152,18 @@
           "pct": 5.9
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.16,
-          "ref_median": 1.33,
-          "z": -1.4,
-          "pct": 3.0
+          "name": "arterial_share",
+          "value": 0.51,
+          "ref_median": 0.28,
+          "z": 1.15,
+          "pct": 88.7
         }
       ],
       "novel": []
     },
     {
       "h3": "882a10722bfffff",
-      "shift_score": 71.9,
+      "shift_score": 61.8,
       "band": "green",
       "top_features": [
         {
@@ -4174,25 +4174,25 @@
           "pct": 95.0
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 6.06,
-          "ref_median": 1.33,
-          "z": 1.88,
-          "pct": 94.6
-        },
-        {
           "name": "oneway_share",
           "value": 0.54,
           "ref_median": 0.1,
           "z": 1.46,
           "pct": 88.9
+        },
+        {
+          "name": "signal_density",
+          "value": 17.54,
+          "ref_median": 3.52,
+          "z": 1.24,
+          "pct": 87.7
         }
       ],
       "novel": []
     },
     {
       "h3": "882a10722dfffff",
-      "shift_score": 77.4,
+      "shift_score": 75.5,
       "band": "green",
       "top_features": [
         {
@@ -4221,7 +4221,7 @@
     },
     {
       "h3": "882a107231fffff",
-      "shift_score": 84.5,
+      "shift_score": 87.3,
       "band": "yellow",
       "top_features": [
         {
@@ -4250,8 +4250,8 @@
     },
     {
       "h3": "882a107233fffff",
-      "shift_score": 93.0,
-      "band": "yellow",
+      "shift_score": 95.9,
+      "band": "red",
       "top_features": [
         {
           "name": "tunnel_count",
@@ -4279,7 +4279,7 @@
     },
     {
       "h3": "882a107235fffff",
-      "shift_score": 67.6,
+      "shift_score": 72.6,
       "band": "green",
       "top_features": [
         {
@@ -4308,7 +4308,7 @@
     },
     {
       "h3": "882a107237fffff",
-      "shift_score": 89.3,
+      "shift_score": 91.4,
       "band": "yellow",
       "top_features": [
         {
@@ -4337,8 +4337,8 @@
     },
     {
       "h3": "882a107239fffff",
-      "shift_score": 79.1,
-      "band": "green",
+      "shift_score": 84.1,
+      "band": "yellow",
       "top_features": [
         {
           "name": "oneway_share",
@@ -4355,18 +4355,18 @@
           "pct": 98.1
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 4.17,
-          "ref_median": 1.33,
-          "z": 1.31,
-          "pct": 89.2
+          "name": "crosswalk_density",
+          "value": 307.6,
+          "ref_median": 74.42,
+          "z": 1.17,
+          "pct": 96.8
         }
       ],
       "novel": []
     },
     {
       "h3": "882a10723bfffff",
-      "shift_score": 87.0,
+      "shift_score": 89.3,
       "band": "yellow",
       "top_features": [
         {
@@ -4395,7 +4395,7 @@
     },
     {
       "h3": "882a10723dfffff",
-      "shift_score": 57.2,
+      "shift_score": 58.8,
       "band": "green",
       "top_features": [
         {
@@ -4424,7 +4424,7 @@
     },
     {
       "h3": "882a107241fffff",
-      "shift_score": 73.3,
+      "shift_score": 67.9,
       "band": "green",
       "top_features": [
         {
@@ -4453,16 +4453,9 @@
     },
     {
       "h3": "882a107243fffff",
-      "shift_score": 41.6,
+      "shift_score": 19.0,
       "band": "green",
       "top_features": [
-        {
-          "name": "terrain_slope_pct",
-          "value": 5.15,
-          "ref_median": 1.33,
-          "z": 1.63,
-          "pct": 92.2
-        },
         {
           "name": "school_density",
           "value": 2.7,
@@ -4476,22 +4469,22 @@
           "ref_median": 3.52,
           "z": 1.03,
           "pct": 83.2
+        },
+        {
+          "name": "transit_stop_density",
+          "value": 17.53,
+          "ref_median": 5.94,
+          "z": 0.89,
+          "pct": 78.8
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107245fffff",
-      "shift_score": 51.5,
+      "shift_score": 40.3,
       "band": "green",
       "top_features": [
-        {
-          "name": "terrain_slope_pct",
-          "value": 5.31,
-          "ref_median": 1.33,
-          "z": 1.68,
-          "pct": 92.7
-        },
         {
           "name": "signal_density",
           "value": 24.27,
@@ -4505,13 +4498,20 @@
           "ref_median": 0.1,
           "z": 1.24,
           "pct": 86.2
+        },
+        {
+          "name": "intersection_density",
+          "value": 90.33,
+          "ref_median": 45.72,
+          "z": 1.1,
+          "pct": 94.1
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107247fffff",
-      "shift_score": 97.7,
+      "shift_score": 99.3,
       "band": "red",
       "top_features": [
         {
@@ -4540,7 +4540,7 @@
     },
     {
       "h3": "882a107249fffff",
-      "shift_score": 82.3,
+      "shift_score": 89.2,
       "band": "yellow",
       "top_features": [
         {
@@ -4558,18 +4558,18 @@
           "pct": 97.7
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 3.75,
-          "ref_median": 1.33,
-          "z": 1.16,
-          "pct": 87.1
+          "name": "oneway_share",
+          "value": 0.45,
+          "ref_median": 0.1,
+          "z": 1.14,
+          "pct": 83.9
         }
       ],
       "novel": []
     },
     {
       "h3": "882a10724bfffff",
-      "shift_score": 63.8,
+      "shift_score": 73.2,
       "band": "green",
       "top_features": [
         {
@@ -4587,18 +4587,18 @@
           "pct": 93.7
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.0,
-          "ref_median": 1.33,
-          "z": -1.67,
-          "pct": 1.3
+          "name": "intersection_density",
+          "value": 17.53,
+          "ref_median": 45.72,
+          "z": -0.9,
+          "pct": 13.7
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107251fffff",
-      "shift_score": 83.7,
+      "shift_score": 82.1,
       "band": "yellow",
       "top_features": [
         {
@@ -4627,7 +4627,7 @@
     },
     {
       "h3": "882a107253fffff",
-      "shift_score": 97.1,
+      "shift_score": 98.8,
       "band": "red",
       "top_features": [
         {
@@ -4656,7 +4656,7 @@
     },
     {
       "h3": "882a107255fffff",
-      "shift_score": 99.7,
+      "shift_score": 99.4,
       "band": "red",
       "top_features": [
         {
@@ -4685,7 +4685,7 @@
     },
     {
       "h3": "882a107257fffff",
-      "shift_score": 99.1,
+      "shift_score": 98.8,
       "band": "red",
       "top_features": [
         {
@@ -4714,7 +4714,7 @@
     },
     {
       "h3": "882a107259fffff",
-      "shift_score": 96.9,
+      "shift_score": 98.8,
       "band": "red",
       "top_features": [
         {
@@ -4743,7 +4743,7 @@
     },
     {
       "h3": "882a10725bfffff",
-      "shift_score": 99.7,
+      "shift_score": 99.9,
       "band": "red",
       "top_features": [
         {
@@ -4772,8 +4772,8 @@
     },
     {
       "h3": "882a107263fffff",
-      "shift_score": 85.5,
-      "band": "yellow",
+      "shift_score": 73.2,
+      "band": "green",
       "top_features": [
         {
           "name": "motorway_share",
@@ -4783,25 +4783,25 @@
           "pct": 95.5
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 6.65,
-          "ref_median": 1.33,
-          "z": 2.02,
-          "pct": 95.2
-        },
-        {
           "name": "oneway_share",
           "value": 0.58,
           "ref_median": 0.1,
           "z": 1.63,
           "pct": 90.7
+        },
+        {
+          "name": "intersection_density",
+          "value": 12.14,
+          "ref_median": 45.72,
+          "z": -1.33,
+          "pct": 9.0
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107267fffff",
-      "shift_score": 71.1,
+      "shift_score": 73.6,
       "band": "green",
       "top_features": [
         {
@@ -4830,7 +4830,7 @@
     },
     {
       "h3": "882a10726bfffff",
-      "shift_score": 92.7,
+      "shift_score": 87.1,
       "band": "yellow",
       "top_features": [
         {
@@ -4859,7 +4859,7 @@
     },
     {
       "h3": "882a107281fffff",
-      "shift_score": 99.8,
+      "shift_score": 100.0,
       "band": "red",
       "top_features": [
         {
@@ -4888,7 +4888,7 @@
     },
     {
       "h3": "882a107283fffff",
-      "shift_score": 99.8,
+      "shift_score": 100.0,
       "band": "red",
       "top_features": [
         {
@@ -4917,7 +4917,7 @@
     },
     {
       "h3": "882a107289fffff",
-      "shift_score": 99.7,
+      "shift_score": 99.9,
       "band": "red",
       "top_features": [
         {
@@ -4946,7 +4946,7 @@
     },
     {
       "h3": "882a10728bfffff",
-      "shift_score": 97.1,
+      "shift_score": 96.7,
       "band": "red",
       "top_features": [
         {
@@ -4975,8 +4975,8 @@
     },
     {
       "h3": "882a10728dfffff",
-      "shift_score": 94.2,
-      "band": "yellow",
+      "shift_score": 96.6,
+      "band": "red",
       "top_features": [
         {
           "name": "tourism_density",
@@ -5004,7 +5004,7 @@
     },
     {
       "h3": "882a107291fffff",
-      "shift_score": 84.9,
+      "shift_score": 85.5,
       "band": "yellow",
       "top_features": [
         {
@@ -5033,7 +5033,7 @@
     },
     {
       "h3": "882a107293fffff",
-      "shift_score": 97.4,
+      "shift_score": 98.1,
       "band": "red",
       "top_features": [
         {
@@ -5062,7 +5062,7 @@
     },
     {
       "h3": "882a107297fffff",
-      "shift_score": 91.2,
+      "shift_score": 93.4,
       "band": "yellow",
       "top_features": [
         {
@@ -5091,7 +5091,7 @@
     },
     {
       "h3": "882a107299fffff",
-      "shift_score": 98.3,
+      "shift_score": 99.4,
       "band": "red",
       "top_features": [
         {
@@ -5120,8 +5120,8 @@
     },
     {
       "h3": "882a10729bfffff",
-      "shift_score": 90.0,
-      "band": "yellow",
+      "shift_score": 96.8,
+      "band": "red",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -5149,8 +5149,8 @@
     },
     {
       "h3": "882a10729dfffff",
-      "shift_score": 97.0,
-      "band": "red",
+      "shift_score": 94.4,
+      "band": "yellow",
       "top_features": [
         {
           "name": "tunnel_count",
@@ -5178,7 +5178,7 @@
     },
     {
       "h3": "882a1072a1fffff",
-      "shift_score": 86.1,
+      "shift_score": 84.2,
       "band": "yellow",
       "top_features": [
         {
@@ -5207,8 +5207,8 @@
     },
     {
       "h3": "882a1072a5fffff",
-      "shift_score": 84.3,
-      "band": "yellow",
+      "shift_score": 69.6,
+      "band": "green",
       "top_features": [
         {
           "name": "motorway_share",
@@ -5236,7 +5236,7 @@
     },
     {
       "h3": "882a1072a7fffff",
-      "shift_score": 72.9,
+      "shift_score": 71.2,
       "band": "green",
       "top_features": [
         {
@@ -5265,7 +5265,7 @@
     },
     {
       "h3": "882a1072a9fffff",
-      "shift_score": 68.2,
+      "shift_score": 65.4,
       "band": "green",
       "top_features": [
         {
@@ -5283,18 +5283,18 @@
           "pct": 4.2
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.0,
-          "ref_median": 1.33,
-          "z": -1.67,
-          "pct": 1.3
+          "name": "intersection_density",
+          "value": 10.8,
+          "ref_median": 45.72,
+          "z": -1.47,
+          "pct": 8.2
         }
       ],
       "novel": []
     },
     {
       "h3": "882a1072adfffff",
-      "shift_score": 67.6,
+      "shift_score": 71.4,
       "band": "green",
       "top_features": [
         {
@@ -5323,7 +5323,7 @@
     },
     {
       "h3": "882a1072c1fffff",
-      "shift_score": 97.9,
+      "shift_score": 98.8,
       "band": "red",
       "top_features": [
         {
@@ -5352,7 +5352,7 @@
     },
     {
       "h3": "882a1072c3fffff",
-      "shift_score": 99.6,
+      "shift_score": 99.9,
       "band": "red",
       "top_features": [
         {
@@ -5381,7 +5381,7 @@
     },
     {
       "h3": "882a1072c5fffff",
-      "shift_score": 93.5,
+      "shift_score": 90.7,
       "band": "yellow",
       "top_features": [
         {
@@ -5410,7 +5410,7 @@
     },
     {
       "h3": "882a1072c7fffff",
-      "shift_score": 96.6,
+      "shift_score": 98.4,
       "band": "red",
       "top_features": [
         {
@@ -5439,7 +5439,7 @@
     },
     {
       "h3": "882a1072c9fffff",
-      "shift_score": 98.2,
+      "shift_score": 99.4,
       "band": "red",
       "top_features": [
         {
@@ -5468,7 +5468,7 @@
     },
     {
       "h3": "882a1072cbfffff",
-      "shift_score": 99.5,
+      "shift_score": 99.9,
       "band": "red",
       "top_features": [
         {
@@ -5497,7 +5497,7 @@
     },
     {
       "h3": "882a1072cdfffff",
-      "shift_score": 98.3,
+      "shift_score": 99.6,
       "band": "red",
       "top_features": [
         {
@@ -5526,8 +5526,8 @@
     },
     {
       "h3": "882a1072d1fffff",
-      "shift_score": 93.8,
-      "band": "yellow",
+      "shift_score": 96.6,
+      "band": "red",
       "top_features": [
         {
           "name": "oneway_share",
@@ -5555,7 +5555,7 @@
     },
     {
       "h3": "882a1072d3fffff",
-      "shift_score": 99.6,
+      "shift_score": 99.4,
       "band": "red",
       "top_features": [
         {
@@ -5584,8 +5584,8 @@
     },
     {
       "h3": "882a1072d5fffff",
-      "shift_score": 96.8,
-      "band": "red",
+      "shift_score": 92.6,
+      "band": "yellow",
       "top_features": [
         {
           "name": "tourism_density",
@@ -5613,7 +5613,7 @@
     },
     {
       "h3": "882a1072d7fffff",
-      "shift_score": 98.7,
+      "shift_score": 99.3,
       "band": "red",
       "top_features": [
         {
@@ -5642,7 +5642,7 @@
     },
     {
       "h3": "882a1072d9fffff",
-      "shift_score": 85.0,
+      "shift_score": 84.8,
       "band": "yellow",
       "top_features": [
         {
@@ -5660,18 +5660,18 @@
           "pct": 97.4
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.0,
-          "ref_median": 1.33,
-          "z": -1.67,
-          "pct": 1.3
+          "name": "arterial_share",
+          "value": 0.09,
+          "ref_median": 0.28,
+          "z": -1.23,
+          "pct": 9.6
         }
       ],
       "novel": []
     },
     {
       "h3": "882a1072ddfffff",
-      "shift_score": 98.8,
+      "shift_score": 98.4,
       "band": "red",
       "top_features": [
         {
@@ -5700,8 +5700,8 @@
     },
     {
       "h3": "882a1072e1fffff",
-      "shift_score": 64.0,
-      "band": "green",
+      "shift_score": 84.1,
+      "band": "yellow",
       "top_features": [
         {
           "name": "tourism_density",
@@ -5729,7 +5729,7 @@
     },
     {
       "h3": "882a1072e3fffff",
-      "shift_score": 84.8,
+      "shift_score": 90.8,
       "band": "yellow",
       "top_features": [
         {
@@ -5758,7 +5758,7 @@
     },
     {
       "h3": "882a1072e5fffff",
-      "shift_score": 87.9,
+      "shift_score": 92.5,
       "band": "yellow",
       "top_features": [
         {
@@ -5787,7 +5787,7 @@
     },
     {
       "h3": "882a1072e7fffff",
-      "shift_score": 82.1,
+      "shift_score": 89.1,
       "band": "yellow",
       "top_features": [
         {
@@ -5845,7 +5845,7 @@
     },
     {
       "h3": "882a1072edfffff",
-      "shift_score": 62.4,
+      "shift_score": 72.2,
       "band": "green",
       "top_features": [
         {
@@ -5874,7 +5874,7 @@
     },
     {
       "h3": "882a107701fffff",
-      "shift_score": 64.9,
+      "shift_score": 77.4,
       "band": "green",
       "top_features": [
         {
@@ -5903,7 +5903,7 @@
     },
     {
       "h3": "882a107703fffff",
-      "shift_score": 59.3,
+      "shift_score": 74.4,
       "band": "green",
       "top_features": [
         {
@@ -5932,7 +5932,7 @@
     },
     {
       "h3": "882a107705fffff",
-      "shift_score": 96.8,
+      "shift_score": 97.5,
       "band": "red",
       "top_features": [
         {
@@ -5961,7 +5961,7 @@
     },
     {
       "h3": "882a107707fffff",
-      "shift_score": 68.6,
+      "shift_score": 70.7,
       "band": "green",
       "top_features": [
         {
@@ -5990,7 +5990,7 @@
     },
     {
       "h3": "882a10770bfffff",
-      "shift_score": 50.7,
+      "shift_score": 56.9,
       "band": "green",
       "top_features": [
         {
@@ -6019,7 +6019,7 @@
     },
     {
       "h3": "882a10770dfffff",
-      "shift_score": 95.3,
+      "shift_score": 95.6,
       "band": "red",
       "top_features": [
         {
@@ -6048,7 +6048,7 @@
     },
     {
       "h3": "882a107729fffff",
-      "shift_score": 41.2,
+      "shift_score": 42.9,
       "band": "green",
       "top_features": [
         {
@@ -6077,7 +6077,7 @@
     },
     {
       "h3": "882a10772bfffff",
-      "shift_score": 85.8,
+      "shift_score": 89.3,
       "band": "yellow",
       "top_features": [
         {
@@ -6106,7 +6106,7 @@
     },
     {
       "h3": "882a107741fffff",
-      "shift_score": 89.2,
+      "shift_score": 93.4,
       "band": "yellow",
       "top_features": [
         {
@@ -6135,7 +6135,7 @@
     },
     {
       "h3": "882a107743fffff",
-      "shift_score": 95.8,
+      "shift_score": 97.5,
       "band": "red",
       "top_features": [
         {
@@ -6164,7 +6164,7 @@
     },
     {
       "h3": "882a107745fffff",
-      "shift_score": 88.1,
+      "shift_score": 86.3,
       "band": "yellow",
       "top_features": [
         {
@@ -6195,7 +6195,7 @@
     },
     {
       "h3": "882a107747fffff",
-      "shift_score": 97.5,
+      "shift_score": 97.9,
       "band": "red",
       "top_features": [
         {
@@ -6224,7 +6224,7 @@
     },
     {
       "h3": "882a107749fffff",
-      "shift_score": 82.0,
+      "shift_score": 88.7,
       "band": "yellow",
       "top_features": [
         {
@@ -6253,7 +6253,7 @@
     },
     {
       "h3": "882a10774bfffff",
-      "shift_score": 84.5,
+      "shift_score": 88.8,
       "band": "yellow",
       "top_features": [
         {
@@ -6282,7 +6282,7 @@
     },
     {
       "h3": "882a10774dfffff",
-      "shift_score": 81.5,
+      "shift_score": 90.7,
       "band": "yellow",
       "top_features": [
         {
@@ -6313,7 +6313,7 @@
     },
     {
       "h3": "882a107751fffff",
-      "shift_score": 83.7,
+      "shift_score": 87.3,
       "band": "yellow",
       "top_features": [
         {
@@ -6342,8 +6342,8 @@
     },
     {
       "h3": "882a107755fffff",
-      "shift_score": 80.0,
-      "band": "yellow",
+      "shift_score": 73.2,
+      "band": "green",
       "top_features": [
         {
           "name": "oneway_share",
@@ -6371,7 +6371,7 @@
     },
     {
       "h3": "882a107757fffff",
-      "shift_score": 76.8,
+      "shift_score": 71.6,
       "band": "green",
       "top_features": [
         {
@@ -6400,7 +6400,7 @@
     },
     {
       "h3": "882a107759fffff",
-      "shift_score": 72.9,
+      "shift_score": 79.4,
       "band": "green",
       "top_features": [
         {
@@ -6429,7 +6429,7 @@
     },
     {
       "h3": "882a10775dfffff",
-      "shift_score": 48.8,
+      "shift_score": 61.3,
       "band": "green",
       "top_features": [
         {
@@ -6447,19 +6447,19 @@
           "pct": 91.2
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 3.81,
-          "ref_median": 1.33,
-          "z": 1.18,
-          "pct": 87.6
+          "name": "intersection_density",
+          "value": 20.27,
+          "ref_median": 45.72,
+          "z": -0.73,
+          "pct": 17.4
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107761fffff",
-      "shift_score": 96.1,
-      "band": "red",
+      "shift_score": 92.0,
+      "band": "yellow",
       "top_features": [
         {
           "name": "intersection_density",
@@ -6487,7 +6487,7 @@
     },
     {
       "h3": "882a107763fffff",
-      "shift_score": 77.6,
+      "shift_score": 70.8,
       "band": "green",
       "top_features": [
         {
@@ -6498,34 +6498,27 @@
           "pct": 2.9
         },
         {
-          "name": "terrain_slope_pct",
-          "value": 0.0,
-          "ref_median": 1.33,
-          "z": -1.67,
-          "pct": 1.3
-        },
-        {
           "name": "intersection_density",
           "value": 12.16,
           "ref_median": 45.72,
           "z": -1.33,
           "pct": 9.0
+        },
+        {
+          "name": "signal_density",
+          "value": 0.0,
+          "ref_median": 3.52,
+          "z": -1.24,
+          "pct": 27.2
         }
       ],
       "novel": []
     },
     {
       "h3": "882a107769fffff",
-      "shift_score": 41.6,
+      "shift_score": 40.0,
       "band": "green",
       "top_features": [
-        {
-          "name": "terrain_slope_pct",
-          "value": 0.32,
-          "ref_median": 1.33,
-          "z": -1.16,
-          "pct": 10.3
-        },
         {
           "name": "oneway_share",
           "value": 0.43,
@@ -6539,13 +6532,20 @@
           "ref_median": 3.52,
           "z": 0.95,
           "pct": 80.7
+        },
+        {
+          "name": "crosswalk_density",
+          "value": 166.18,
+          "ref_median": 74.42,
+          "z": 0.78,
+          "pct": 77.5
         }
       ],
       "novel": []
     },
     {
       "h3": "882a10776bfffff",
-      "shift_score": 36.4,
+      "shift_score": 55.2,
       "band": "green",
       "top_features": [
         {
@@ -6574,8 +6574,8 @@
     },
     {
       "h3": "882a10776dfffff",
-      "shift_score": 78.1,
-      "band": "green",
+      "shift_score": 87.7,
+      "band": "yellow",
       "top_features": [
         {
           "name": "nightlife_density",
@@ -6611,7 +6611,7 @@
     },
     "radius_km": 8.0,
     "n_hexes": 227,
-    "pct_red": 26.0,
+    "pct_red": 30.4,
     "climate": {
       "target": {
         "rain_days_per_year": 127.2,
@@ -6917,22 +6917,30 @@
       "scope": "hex"
     },
     {
-      "id": "steep_grade",
-      "priority": 17.9,
-      "title": "Steep grade with a limited sight line over the crest",
-      "description": "8 hexes have a grade above z = 2 against Waymo's established cities, the steepest at 10.1%.",
+      "id": "crosswalk_wide_arterial",
+      "priority": 20.2,
+      "title": "Pedestrian crossing a wide arterial",
+      "description": "15 hexes combine dense crosswalks with wide arterial roads.",
       "triggered_by": [
-        "terrain_slope_pct z > 2 in 8 hexes (max 10.1%)"
+        "crosswalk_density z > 1 in 15 hexes (mean z 1.2)",
+        "arterial_share z > 1 in the same hexes (mean z 1.5)"
       ],
       "hex_ids": [
+        "882a1008b3fffff",
+        "882a1008bbfffff",
         "882a100d29fffff",
+        "882a100d2dfffff",
         "882a100d61fffff",
         "882a100d63fffff",
-        "882a107201fffff",
-        "882a107205fffff",
-        "882a107209fffff",
-        "882a10725bfffff",
-        "882a107263fffff"
+        "882a100d65fffff",
+        "882a100d67fffff",
+        "882a100d69fffff",
+        "882a107203fffff",
+        "882a107207fffff",
+        "882a107215fffff",
+        "882a10723bfffff",
+        "882a1072cbfffff",
+        "882a107747fffff"
       ],
       "scope": "hex"
     },
