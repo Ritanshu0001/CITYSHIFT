@@ -45,10 +45,13 @@ export function ChatPanel({ cityName, slug, uiState, onActions }: ChatPanelProps
   const [waiting, setWaiting] = useState(false);
   const [error, setError] = useState("");
   const nextId = useRef(1);
-  const endRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
 
+  // Scroll only the message list. scrollIntoView would also scroll .evidence-panel sideways toward the
+  // closed (off-panel) drawer, hiding the tabs.
   useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    const list = messagesRef.current;
+    list?.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
   }, [entries, waiting, error]);
 
   async function send(text: string) {
@@ -103,7 +106,7 @@ export function ChatPanel({ cityName, slug, uiState, onActions }: ChatPanelProps
           <button type="button" aria-label="Close assistant" onClick={() => setOpen(false)}><X size={18} /></button>
         </header>
 
-        <div className="chat-messages" aria-live="polite">
+        <div className="chat-messages" aria-live="polite" ref={messagesRef}>
           {entries.length === 0 && (
             <div className="chat-welcome">
               <Bot size={22} />
@@ -134,7 +137,6 @@ export function ChatPanel({ cityName, slug, uiState, onActions }: ChatPanelProps
 
           {waiting && <div className="chat-typing"><span /><span /><span /><b>Reading city data</b></div>}
           {error && <p className="chat-error" role="alert">{error}</p>}
-          <div ref={endRef} />
         </div>
 
         <form className="chat-composer" onSubmit={(event) => { event.preventDefault(); void send(input); }}>
