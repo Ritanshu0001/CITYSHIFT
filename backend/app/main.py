@@ -27,7 +27,7 @@ _SLUG_RE = re.compile(r"^[a-z0-9-]+$")
 
 @app.post("/analyze", response_model=AnalyzeResponse)
 def analyze(req: AnalyzeRequest) -> AnalyzeResponse:
-    job = jobs.submit(req.name, req.lat, req.lng, req.country_code)
+    job = jobs.submit(req.name, req.lat, req.lng, req.country_code, req.supersedes_job_id)
     return AnalyzeResponse(job_id=job.job_id, slug=job.slug, status=job.status, cached=job.cached)
 
 

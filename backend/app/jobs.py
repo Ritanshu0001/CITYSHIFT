@@ -8,6 +8,7 @@ import uuid
 from dataclasses import dataclass, field
 
 from app import cache
+from app.cancellation import AnalysisCancelled
 from app.pipeline import analyze_city
 from app.schemas import JOB_STEPS
 
@@ -30,12 +31,13 @@ class JobState:
     lat: float
     lng: float
     country_code: str | None
-    status: str = "queued"  # queued -> running -> done | error
+    status: str = "queued"  # queued -> running -> done | error | cancelled
     step: str | None = None
     steps_done: list[str] = field(default_factory=list)
     message: str | None = "Waiting for the previous city to finish"
     error: str | None = None
     cached: bool = False
+    cancel_event: threading.Event = field(default_factory=threading.Event, repr=False, compare=False)
 
     def status_dict(self) -> dict:
         return {
@@ -55,19 +57,43 @@ _lock = threading.Lock()
 _worker: threading.Thread | None = None
 
 
-def submit(name: str, lat: float, lng: float, country_code: str | None) -> JobState:
-    """Returns immediately. A cached city gets a job already in 'done'."""
+def _cancel(job: JobState) -> None:
+    """Mark an active job as superseded. Queue entries are skipped as tombstones."""
+    if job.status not in ("queued", "running"):
+        return
+    job.cancel_event.set()
+    job.status = "cancelled"
+    job.step = None
+    job.message = "Replaced by a newer city search"
+    job.error = None
+
+
+def submit(
+    name: str,
+    lat: float,
+    lng: float,
+    country_code: str | None,
+    supersedes_job_id: str | None = None,
+) -> JobState:
+    """Returns immediately; a new search may supersede that browser tab's prior job."""
     slug = cache.slugify(name)
     with _lock:
+        previous = _jobs.get(supersedes_job_id) if supersedes_job_id else None
+        # A second click on the same city joins the job already in flight.
+        for job in _jobs.values():
+            if job.slug == slug and job.status in ("queued", "running"):
+                if previous is not None and previous is not job:
+                    _cancel(previous)
+                return job
+
+        if previous is not None:
+            _cancel(previous)
+
         if cache.has_result(slug):
             job = JobState(uuid.uuid4().hex, slug, name, lat, lng, country_code, status="done",
                            steps_done=list(JOB_STEPS), message="Loaded from cache", cached=True)
             _jobs[job.job_id] = job
             return job
-        # A second click on the same city joins the job already in flight.
-        for job in _jobs.values():
-            if job.slug == slug and job.status in ("queued", "running"):
-                return job
         job = JobState(uuid.uuid4().hex, slug, name, lat, lng, country_code)
         _jobs[job.job_id] = job
         _ensure_worker()
@@ -97,6 +123,8 @@ def _run_forever() -> None:
 
 def _run(job: JobState) -> None:
     def progress(step: str) -> None:
+        if job.cancel_event.is_set():
+            raise AnalysisCancelled("Replaced by a newer city search")
         with _lock:
             if job.step and job.step not in job.steps_done:
                 job.steps_done.append(job.step)
@@ -104,18 +132,32 @@ def _run(job: JobState) -> None:
             job.message = STEP_MESSAGES.get(step, step)
 
     with _lock:
+        if job.status == "cancelled" or job.cancel_event.is_set():
+            return
         job.status = "running"
     log.info("job %s: analyzing %s (%s)", job.job_id, job.name, job.slug)
     try:
-        analyze_city(job.name, job.lat, job.lng, job.country_code, progress)
-    except Exception as exc:  # noqa: BLE001 - every failure becomes a readable job error
-        log.exception("job %s failed", job.job_id)
+        analyze_city(job.name, job.lat, job.lng, job.country_code, progress, job.cancel_event)
+    except AnalysisCancelled:
         with _lock:
+            _cancel(job)
+        log.info("job %s: superseded", job.job_id)
+        return
+    except Exception as exc:  # noqa: BLE001 - every failure becomes a readable job error
+        with _lock:
+            if job.cancel_event.is_set():
+                _cancel(job)
+                log.info("job %s: superseded", job.job_id)
+                return
             job.status = "error"
             job.error = str(exc) or type(exc).__name__
             job.message = None
+        log.exception("job %s failed", job.job_id)
         return
     with _lock:
+        if job.cancel_event.is_set():
+            _cancel(job)
+            return
         job.status = "done"
         job.steps_done = list(JOB_STEPS)
         job.step = None

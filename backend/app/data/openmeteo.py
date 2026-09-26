@@ -18,10 +18,16 @@ from typing import Callable
 
 import requests
 
+from app.cancellation import checkpoint, interruptible_wait
+
 log = logging.getLogger(__name__)
 
 CACHE_DIR = Path(__file__).resolve().parents[2] / "openmeteo_cache"
-MINUTE_BUDGET = 500.0  # stay under the 600/minute limit
+# Leave 20 calls of headroom under the free-tier limit. A city typically needs
+# one 130-call weather request plus 8-10 100-point elevation batches. At 500,
+# batch granularity left unused capacity in each window and forced a third
+# minute for the final partial batch; 580 completes the same work in two.
+MINUTE_BUDGET = 580.0
 
 _lock = threading.Lock()
 _window: deque[tuple[float, float]] = deque()  # (monotonic time, cost) of network calls
@@ -46,8 +52,9 @@ def run_total() -> float:
     return _run_total
 
 
-def _wait_for_budget(cost: float) -> None:
+def _wait_for_budget(cost: float, cancel_event: threading.Event | None = None) -> None:
     while True:
+        checkpoint(cancel_event)
         with _lock:
             now = time.monotonic()
             while _window and now - _window[0][0] >= 60:
@@ -58,7 +65,7 @@ def _wait_for_budget(cost: float) -> None:
                 return
             sleep_for = 60 - (now - _window[0][0]) + 0.1
         log.info("Open-Meteo: %.0f calls in the last minute, pausing %.0f s", used, sleep_for)
-        time.sleep(sleep_for)
+        interruptible_wait(cancel_event, sleep_for)
 
 
 def _reason(resp: requests.Response) -> str:
@@ -69,19 +76,21 @@ def _reason(resp: requests.Response) -> str:
 
 
 def get_json(url: str, params: dict, *, cost: float, what: str,
-             validate: Callable[[dict], None] | None = None) -> dict:
+             validate: Callable[[dict], None] | None = None,
+             cancel_event: threading.Event | None = None) -> dict:
     """GET url with params, from the disk cache when possible. Raises OpenMeteoError.
 
     `validate` runs before anything is cached, so a garbled response raises instead
     of being stored and replayed forever.
     """
     global _run_total
+    checkpoint(cancel_event)
     full_url = str(requests.Request("GET", url, params=params).prepare().url)
     path = CACHE_DIR / (hashlib.sha1(full_url.encode("utf-8")).hexdigest() + ".json")
     if path.is_file():
         return json.loads(path.read_text(encoding="utf-8"))
 
-    _wait_for_budget(cost)
+    _wait_for_budget(cost, cancel_event)
     try:
         resp = requests.get(full_url, timeout=60)
     except requests.RequestException as exc:

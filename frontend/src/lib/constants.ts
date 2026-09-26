@@ -2,6 +2,7 @@ import type { Band, JobStep } from "./types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api/backend";
 export const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "1";
+export const USE_CHAT_MOCK = process.env.NEXT_PUBLIC_USE_CHAT_MOCK !== "0";
 export const MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? "";
 
 export const POLL_MS = 1500;
@@ -37,6 +38,12 @@ export const BAND_COLORS: Record<Band, { hex: string; rgb: [number, number, numb
   green: { hex: "#18C6A3", rgb: [24, 198, 163] },
   yellow: { hex: "#F8BF47", rgb: [248, 191, 71] },
   red: { hex: "#FF5262", rgb: [255, 82, 98] },
+};
+
+export const CRASH_COUNT_COLORS = {
+  one: { hex: "#4A2632", rgb: [74, 38, 50] as [number, number, number] },
+  few: { hex: "#71293A", rgb: [113, 41, 58] as [number, number, number] },
+  many: { hex: "#982A40", rgb: [152, 42, 64] as [number, number, number] },
 };
 
 export const FEATURE_LABELS: Record<string, string> = {

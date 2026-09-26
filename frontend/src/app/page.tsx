@@ -82,7 +82,7 @@ export default function Home() {
       <footer className="site-footer">
         <BrandMark compact />
         <p>Public signals. Comparable cities. Testable scenarios.</p>
-        <span>Reference · {REFERENCE_LABEL}</span>
+        <span>Reference · {REFERENCE_LABEL}<br />Crash data: NHTSA FARS 2020-2024 (2024 preliminary)</span>
       </footer>
     </main>
   );

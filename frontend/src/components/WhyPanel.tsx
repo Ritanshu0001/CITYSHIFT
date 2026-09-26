@@ -1,10 +1,28 @@
-import { AlertTriangle, Crosshair, Mountain, X } from "lucide-react";
+import { AlertTriangle, CircleDot, Crosshair, Mountain, X } from "lucide-react";
 import { bandLabel, compactNumber, featureLabel, REFERENCE_LABEL } from "@/lib/constants";
 import type { LiveTerrain } from "@/lib/terrain";
-import type { CityHex } from "@/lib/types";
+import type { CityHex, CrashesResponse } from "@/lib/types";
 import { StreetViewPanel } from "./StreetViewPanel";
 
-export function WhyPanel({ hex, terrain, onClear }: { hex: CityHex | null; terrain?: LiveTerrain | null; onClear: () => void }) {
+function crashContext(crashes: CrashesResponse, h3: string) {
+  if (!crashes.available) return "Crash data: US cities only";
+  const area = crashes.by_hex[h3];
+  if (!area) return "No fatal crashes recorded 2020–24";
+  if (area.pct >= 100) return `Fatal crashes 2020–24 here: ${area.count} (the highest area count in this city)`;
+  return `Fatal crashes 2020–24 here: ${area.count} (more than ${Math.floor(area.pct)}% of areas in this city)`;
+}
+
+export function WhyPanel({
+  hex,
+  terrain,
+  crashes,
+  onClear,
+}: {
+  hex: CityHex | null;
+  terrain?: LiveTerrain | null;
+  crashes?: CrashesResponse | null;
+  onClear: () => void;
+}) {
   if (!hex) {
     return (
       <div className="panel-empty">
@@ -55,6 +73,16 @@ export function WhyPanel({ hex, terrain, onClear }: { hex: CityHex | null; terra
             <strong>{Math.round(terrain.centerElevationM)} m elevation, steepest grade about {Math.round(terrain.steepestGradePct)}% toward the {terrain.direction}</strong>
             {terrain.coarse ? " (coarse data here)" : ""}
           </p>
+        </section>
+      )}
+
+      {crashes && (
+        <section className="crash-context">
+          <div className="mini-heading">
+            <span><CircleDot size={14} /> Fatal crashes</span>
+            <small>City context · not scored</small>
+          </div>
+          <p>{crashContext(crashes, hex.h3)}</p>
         </section>
       )}
 

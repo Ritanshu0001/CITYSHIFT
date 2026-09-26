@@ -5,6 +5,7 @@ climate comparison and scenario (e.g. "0 rain days"), so the job errors instead.
 """
 from __future__ import annotations
 
+import threading
 from datetime import date
 
 from app.data.openmeteo import OpenMeteoError, get_json, weather_cost
@@ -28,7 +29,7 @@ def _series(data: dict, n_days: int) -> tuple[list[float], list[float]]:
     return precip, snow
 
 
-def climate_for(lat: float, lng: float) -> dict:
+def climate_for(lat: float, lng: float, cancel_event: threading.Event | None = None) -> dict:
     """Rain, heavy-rain and snow days per year. Raises OpenMeteoError on any failure."""
     params = {
         "latitude": lat,
@@ -40,7 +41,7 @@ def climate_for(lat: float, lng: float) -> dict:
     }
     n_days = (date.fromisoformat(WEATHER_END) - date.fromisoformat(WEATHER_START)).days + 1
     data = get_json(ARCHIVE_URL, params, cost=weather_cost(n_days, len(DAILY)), what="weather",
-                    validate=lambda d: _series(d, n_days))
+                    validate=lambda d: _series(d, n_days), cancel_event=cancel_event)
     precip, snow = _series(data, n_days)
 
     return {

@@ -2,11 +2,12 @@
 
 import { H3HexagonLayer } from "@deck.gl/geo-layers";
 import { GoogleMapsOverlay } from "@deck.gl/google-maps";
+import { ScatterplotLayer } from "@deck.gl/layers";
 import { APILoadingStatus, Map, useApiLoadingStatus, useMap } from "@vis.gl/react-google-maps";
 import { cellToBoundary } from "h3-js";
 import { useEffect, useMemo, useState } from "react";
-import { BAND_COLORS, MAPS_API_KEY } from "@/lib/constants";
-import type { Center, CityHex } from "@/lib/types";
+import { BAND_COLORS, CRASH_COUNT_COLORS, MAPS_API_KEY } from "@/lib/constants";
+import type { Center, CityHex, CrashPoint, CrashesResponse } from "@/lib/types";
 import { Legend } from "./Legend";
 
 interface HexMapProps {
@@ -14,13 +15,47 @@ interface HexMapProps {
   hexes: CityHex[];
   selectedHex: CityHex | null;
   highlightedIds: string[];
+  crashes?: CrashesResponse | null;
+  showCrashes?: boolean;
+  flyTo?: { lat: number; lng: number; zoom: number; key: number } | null;
+  onToggleCrashes?: () => void;
   onSelect: (hex: CityHex) => void;
+}
+
+interface CrashHover {
+  point: CrashPoint;
+  x: number;
+  y: number;
 }
 
 const FALLBACK_ZOOM = 12;
 const TILE_SIZE = 256;
 const FALLBACK_WIDTH = 1000;
 const FALLBACK_HEIGHT = 700;
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+function crashFillColor(count: number): [number, number, number, number] {
+  const color = count >= 4 ? CRASH_COUNT_COLORS.many : count >= 2 ? CRASH_COUNT_COLORS.few : CRASH_COUNT_COLORS.one;
+  return [...color.rgb, 245];
+}
+
+function crashRingColor(point: CrashPoint): [number, number, number, number] {
+  if (point.pedestrian && point.cyclist) return [248, 191, 71, 255];
+  if (point.cyclist) return [24, 198, 163, 255];
+  if (point.pedestrian) return [255, 255, 255, 255];
+  return [255, 255, 255, 105];
+}
+
+function crashTime(hour: number | null) {
+  if (hour === null || hour < 0 || hour > 23) return "Time unknown";
+  const suffix = hour >= 12 ? "PM" : "AM";
+  return `${hour % 12 || 12}:00 ${suffix}`;
+}
+
+function crashInvolvement(point: CrashPoint) {
+  const involved = [point.pedestrian ? "Pedestrian involved" : null, point.cyclist ? "Cyclist involved" : null].filter(Boolean);
+  return involved.length ? involved.join(" · ") : "No pedestrian or cyclist involvement recorded";
+}
 
 function projectToWorld(lat: number, lng: number, zoom: number) {
   const scale = TILE_SIZE * 2 ** zoom;
@@ -53,7 +88,11 @@ const DARK_MAP_STYLES = [
   { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#86ace0" }] },
 ];
 
-function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexMapProps, "center">) {
+type DeckOverlayProps = Omit<HexMapProps, "center" | "onToggleCrashes"> & {
+  onCrashHover: (hover: CrashHover | null) => void;
+};
+
+function DeckOverlay({ hexes, selectedHex, highlightedIds, crashes, showCrashes = false, onCrashHover, onSelect }: DeckOverlayProps) {
   const map = useMap();
   const highlighted = useMemo(() => new Set(highlightedIds), [highlightedIds]);
   const overlay = useMemo(() => new GoogleMapsOverlay({ layers: [], interleaved: false }), []);
@@ -76,9 +115,9 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
       getHexagon: (hex) => hex.h3,
       getFillColor: (hex) => {
         const [r, g, b] = BAND_COLORS[hex.band].rgb;
-        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 155];
-        if (highlighted.has(hex.h3)) return [31, 111, 255, 175];
-        const alpha = hex.band === "red" ? 150 : hex.band === "yellow" ? 132 : 112;
+        if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 135];
+        if (highlighted.has(hex.h3)) return [31, 111, 255, 145];
+        const alpha = hex.band === "red" ? 122 : hex.band === "yellow" ? 108 : 82;
         return [r, g, b, alpha];
       },
       stroked: false,
@@ -95,11 +134,11 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
       getFillColor: [0, 0, 0, 0],
       getLineColor: (hex) => {
         if (selectedHex?.h3 === hex.h3) return [255, 255, 255, 255];
-        if (highlighted.has(hex.h3)) return [145, 190, 255, 255];
-        return [5, 10, 24, 242];
+        if (highlighted.has(hex.h3)) return [118, 166, 255, 255];
+        return [3, 6, 16, 255];
       },
-      lineWidthMinPixels: 2.4,
-      lineWidthMaxPixels: 4,
+      lineWidthMinPixels: 3.5,
+      lineWidthMaxPixels: 5.5,
       stroked: true,
       filled: false,
       pickable: false,
@@ -118,8 +157,42 @@ function DeckOverlay({ hexes, selectedHex, highlightedIds, onSelect }: Omit<HexM
       pickable: false,
     });
 
-    overlay.setProps({ layers: [fillLayer, outlineLayer, novelLayer] });
-  }, [hexes, highlighted, highlightedIds, onSelect, overlay, selectedHex]);
+    const crashLayer = crashes?.available ? new ScatterplotLayer<CrashPoint>({
+      id: "fatal-crashes",
+      data: crashes.points,
+      visible: showCrashes,
+      getPosition: (point) => [point.lng, point.lat],
+      getRadius: 8,
+      radiusUnits: "meters",
+      radiusMinPixels: 3,
+      radiusMaxPixels: 7,
+      getFillColor: (point) => crashFillColor(crashes.by_hex[point.h3]?.count ?? 1),
+      getLineColor: crashRingColor,
+      getLineWidth: (point) => point.pedestrian || point.cyclist ? 2 : 1,
+      lineWidthUnits: "pixels",
+      stroked: true,
+      filled: true,
+      parameters: { depthCompare: "always", depthWriteEnabled: false },
+      pickable: showCrashes,
+      autoHighlight: true,
+      highlightColor: [255, 255, 255, 220],
+      onHover: ({ object, x, y }) => onCrashHover(object ? { point: object, x, y } : null),
+      onClick: ({ object, x, y }) => onCrashHover(object ? { point: object, x, y } : null),
+    }) : null;
+
+    overlay.setProps({ layers: [fillLayer, outlineLayer, novelLayer, ...(crashLayer ? [crashLayer] : [])] });
+  }, [crashes, hexes, highlighted, highlightedIds, onCrashHover, onSelect, overlay, selectedHex, showCrashes]);
+
+  return null;
+}
+
+function FlyToController({ command }: { command?: HexMapProps["flyTo"] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map || !command) return;
+    map.moveCamera({ center: { lat: command.lat, lng: command.lng }, zoom: command.zoom });
+  }, [command, map]);
 
   return null;
 }
@@ -207,6 +280,7 @@ function FallbackMap({
 export function HexMap(props: HexMapProps) {
   const apiStatus = useApiLoadingStatus();
   const [online, setOnline] = useState(true);
+  const [crashHover, setCrashHover] = useState<CrashHover | null>(null);
 
   useEffect(() => {
     const update = () => setOnline(navigator.onLine);
@@ -223,6 +297,7 @@ export function HexMap(props: HexMapProps) {
   const googleUnavailable = Boolean(MAPS_API_KEY) && (
     !online || apiStatus === APILoadingStatus.FAILED || apiStatus === APILoadingStatus.AUTH_FAILURE
   );
+  const crashLayerAvailable = googleReady && Boolean(props.crashes?.available && props.crashes.points.length);
 
   return (
     <div className="map-wrap">
@@ -236,12 +311,35 @@ export function HexMap(props: HexMapProps) {
           styles={DARK_MAP_STYLES}
           className="google-map"
         >
-          <DeckOverlay {...props} />
+          <FlyToController command={props.flyTo} />
+          <DeckOverlay {...props} onCrashHover={setCrashHover} />
         </Map>
       ) : (
         <FallbackMap {...props} offline={!online || googleUnavailable || Boolean(MAPS_API_KEY)} />
       )}
-      <Legend />
+      {crashLayerAvailable && props.onToggleCrashes && (
+        <button
+          type="button"
+          className={`crash-toggle${props.showCrashes ? " is-active" : ""}`}
+          aria-pressed={Boolean(props.showCrashes)}
+          onClick={() => {
+            setCrashHover(null);
+            props.onToggleCrashes?.();
+          }}
+        >
+          <span aria-hidden="true" /> Fatal crashes (NHTSA FARS 2020–24) <b>{props.showCrashes ? "ON" : "OFF"}</b>
+        </button>
+      )}
+      {props.showCrashes && crashHover && (
+        <div className="crash-tooltip" style={{ left: crashHover.x + 12, top: crashHover.y + 12 }} role="status">
+          <b>Fatal crash record</b>
+          <span>{MONTHS[crashHover.point.month - 1] ?? "Unknown month"} {crashHover.point.year} · {crashTime(crashHover.point.hour)}</span>
+          <strong>{crashHover.point.fatalities} {crashHover.point.fatalities === 1 ? "fatality" : "fatalities"}</strong>
+          <span>{crashInvolvement(crashHover.point)}</span>
+          <span>{crashHover.point.dark ? "Dark conditions" : "Daylight"}</span>
+        </div>
+      )}
+      <Legend showCrashes={Boolean(props.showCrashes && crashLayerAvailable)} />
     </div>
   );
 }

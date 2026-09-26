@@ -1,19 +1,20 @@
 "use client";
 
-import { ArrowLeft, CircleHelp, GitCompareArrows, Layers3, ListChecks, Search, Sparkles } from "lucide-react";
+import { ArrowLeft, CircleHelp, Download, FileJson, FileText, GitCompareArrows, Layers3, ListChecks, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
+import { ChatPanel } from "@/components/ChatPanel";
 import { ComparisonView } from "@/components/ComparisonView";
 import { HexMap } from "@/components/HexMap";
 import { ProgressScreen } from "@/components/ProgressScreen";
 import { ScenarioCards } from "@/components/ScenarioCards";
 import { WhyPanel } from "@/components/WhyPanel";
-import { ApiError, getCity, getJob } from "@/lib/api";
+import { ApiError, briefingUrl, clearActiveJob, getCity, getCrashes, getJob } from "@/lib/api";
 import { MAPS_API_KEY, POLL_MS, REFERENCE_LABEL, REFERENCE_SLUGS } from "@/lib/constants";
 import { getLiveTerrain, type LiveTerrain } from "@/lib/terrain";
-import type { CityHex, CityResult, JobStatus, Scenario } from "@/lib/types";
+import type { ChatAction, CityHex, CityResult, CrashesResponse, JobStatus, Scenario, UiState } from "@/lib/types";
 
 type PanelTab = "why" | "compare" | "scenarios";
 type Phase = "loading" | "progress" | "result" | "missing" | "error";
@@ -24,6 +25,7 @@ function wait(ms: number) {
 
 export default function CityPage() {
   const { slug } = useParams<{ slug: string }>();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const jobId = searchParams.get("job");
   const [phase, setPhase] = useState<Phase>("loading");
@@ -35,39 +37,29 @@ export default function CityPage() {
   const [activeScenario, setActiveScenario] = useState<string | null>(null);
   const [highlightedIds, setHighlightedIds] = useState<string[]>([]);
   const [terrainByH3, setTerrainByH3] = useState<Record<string, LiveTerrain | null>>({});
+  const [crashes, setCrashes] = useState<CrashesResponse | null>(null);
+  const [showCrashes, setShowCrashes] = useState(false);
+  const [flyTo, setFlyTo] = useState<{ lat: number; lng: number; zoom: number; key: number } | null>(null);
   const terrainRequests = useRef(new Set<string>());
+  const flyCommandId = useRef(0);
 
   useEffect(() => {
     let active = true;
 
     async function load() {
-      try {
-        const city = await getCity(slug);
-        if (!active) return;
-        setResult(city);
-        setPhase("result");
-      } catch (caught) {
-        if (!(caught instanceof ApiError) || caught.status !== 404) {
-          if (active) {
-            setMessage(caught instanceof Error ? caught.message : "Could not load this city.");
-            setPhase("error");
-          }
-          return;
-        }
-
-        if (!jobId) {
-          if (active) setPhase("missing");
-          return;
-        }
-
+      if (jobId) {
         if (active) setPhase("progress");
         while (active) {
           try {
             const nextJob = await getJob(jobId);
             if (!active) return;
             setJob(nextJob);
-            if (nextJob.status === "error") return;
+            if (nextJob.status === "error" || nextJob.status === "cancelled") {
+              clearActiveJob(nextJob.job_id);
+              return;
+            }
             if (nextJob.status === "done") {
+              clearActiveJob(nextJob.job_id);
               const city = await getCity(slug);
               if (!active) return;
               setResult(city);
@@ -83,6 +75,22 @@ export default function CityPage() {
           }
           await wait(POLL_MS);
         }
+        return;
+      }
+
+      try {
+        const city = await getCity(slug);
+        if (!active) return;
+        setResult(city);
+        setPhase("result");
+      } catch (caught) {
+        if (!active) return;
+        if (caught instanceof ApiError && caught.status === 404) {
+          setPhase("missing");
+          return;
+        }
+        setMessage(caught instanceof Error ? caught.message : "Could not load this city.");
+        setPhase("error");
       }
     }
 
@@ -91,6 +99,23 @@ export default function CityPage() {
       active = false;
     };
   }, [jobId, slug]);
+
+  useEffect(() => {
+    if (phase !== "result" || result?.summary.slug !== slug) return;
+
+    let active = true;
+    void getCrashes(slug).then(
+      (nextCrashes) => {
+        if (!active) return;
+        setCrashes(nextCrashes);
+        setShowCrashes(false);
+      },
+      () => active && setCrashes(null),
+    );
+    return () => {
+      active = false;
+    };
+  }, [phase, result?.summary.slug, slug]);
 
   useEffect(() => {
     const h3 = selectedHex?.h3;
@@ -113,7 +138,76 @@ export default function CityPage() {
     setHighlightedIds(scenario?.hex_ids ?? []);
   }, []);
 
+  const downloadBriefing = useCallback((format: "md" | "json") => {
+    const link = document.createElement("a");
+    link.href = briefingUrl(slug, format);
+    link.download = `cityshift-${slug}-briefing.${format}`;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }, [slug]);
+
+  const dispatchChatActions = useCallback((actions: ChatAction[]) => {
+    for (const action of actions) {
+      try {
+        switch (action.type) {
+          case "select_hex": {
+            if (typeof action.h3 !== "string") break;
+            const hex = result?.hexes.find((candidate) => candidate.h3 === action.h3);
+            if (!hex) break;
+            setSelectedHex(hex);
+            setActiveTab("why");
+            break;
+          }
+          case "highlight_scenario": {
+            if (typeof action.id !== "string") break;
+            const scenario = result?.scenarios.find((candidate) => candidate.id === action.id);
+            if (!scenario) break;
+            setActiveScenario(scenario.id);
+            setHighlightedIds(scenario.hex_ids);
+            setActiveTab("scenarios");
+            break;
+          }
+          case "open_panel":
+            if (action.panel === "comparison") setActiveTab("compare");
+            else if (action.panel === "why" || action.panel === "scenarios") setActiveTab(action.panel);
+            break;
+          case "toggle_crashes":
+            if (typeof action.on === "boolean" && crashes?.slug === slug && crashes.available) setShowCrashes(action.on);
+            break;
+          case "fly_to":
+            if (
+              Number.isFinite(action.lat) && action.lat >= -90 && action.lat <= 90
+              && Number.isFinite(action.lng) && action.lng >= -180 && action.lng <= 180
+              && Number.isFinite(action.zoom) && action.zoom >= 3 && action.zoom <= 20
+            ) {
+              flyCommandId.current += 1;
+              setFlyTo({ lat: action.lat, lng: action.lng, zoom: action.zoom, key: flyCommandId.current });
+            }
+            break;
+          case "open_city":
+            if (typeof action.slug === "string" && /^[a-z0-9-]+$/.test(action.slug)) router.push(`/city/${action.slug}`);
+            break;
+          case "download_briefing":
+            if (action.format === "md" || action.format === "json") downloadBriefing(action.format);
+            break;
+          default:
+            break;
+        }
+      } catch {
+        // A malformed model action must never interrupt the core city page.
+      }
+    }
+  }, [crashes, downloadBriefing, result, router, slug]);
+
   const cityLabel = useMemo(() => slug.replaceAll("-", " "), [slug]);
+  const cityCrashes = crashes?.slug === slug ? crashes : null;
+  const chatUiState = useMemo<UiState>(() => ({
+    selected_hex: selectedHex?.h3 ?? null,
+    open_panel: activeTab === "compare" ? "comparison" : activeTab,
+    crashes_on: showCrashes,
+  }), [activeTab, selectedHex?.h3, showCrashes]);
 
   if (phase === "loading") return <ProgressScreen cityName={cityLabel} job={null} />;
   if (phase === "progress") return <ProgressScreen cityName={cityLabel} job={job} />;
@@ -161,7 +255,15 @@ export default function CityPage() {
         <div className="summary-metric"><small>Study area</small><b>{summary.radius_km} km</b><span>fixed radius</span></div>
         <div className="summary-metric"><small>Mapped areas</small><b>{summary.n_hexes}</b><span>road-bearing H3 cells</span></div>
         <div className="summary-metric summary-alert"><small>Strong shift</small><b>{summary.pct_red.toFixed(1)}%</b><span>of areas differ strongly</span></div>
-        <div className="summary-reference"><Sparkles size={16} /><span><b>{REFERENCE_LABEL}</b>{REFERENCE_SLUGS.length}-city pooled baseline</span></div>
+        <div className="summary-reference">
+          <Sparkles size={16} />
+          <div className="summary-reference-copy"><b>{REFERENCE_LABEL}</b><span>{REFERENCE_SLUGS.length}-city pooled baseline</span></div>
+          <div className="briefing-download" title="City readiness briefing: candidate test plan from public data.">
+            <span><Download size={13} /> Download briefing</span>
+            <button type="button" onClick={() => downloadBriefing("md")} aria-label="Download Markdown briefing"><FileText size={12} /> .md</button>
+            <button type="button" onClick={() => downloadBriefing("json")} aria-label="Download JSON briefing"><FileJson size={12} /> .json</button>
+          </div>
+        </div>
       </section>
 
       <div className="analysis-workspace">
@@ -175,6 +277,10 @@ export default function CityPage() {
             hexes={hexes}
             selectedHex={selectedHex}
             highlightedIds={highlightedIds}
+            crashes={cityCrashes}
+            showCrashes={showCrashes}
+            flyTo={flyTo}
+            onToggleCrashes={() => setShowCrashes((current) => !current)}
             onSelect={handleSelectHex}
           />
         </section>
@@ -197,6 +303,7 @@ export default function CityPage() {
               <WhyPanel
                 hex={selectedHex}
                 terrain={selectedHex ? terrainByH3[selectedHex.h3] : undefined}
+                crashes={cityCrashes}
                 onClear={() => { setSelectedHex(null); setActiveTab("compare"); }}
               />
             )}
@@ -205,6 +312,7 @@ export default function CityPage() {
               <ScenarioCards scenarios={scenarios} activeScenario={activeScenario} onHighlight={handleScenarioHighlight} />
             )}
           </div>
+          <ChatPanel key={slug} cityName={summary.city} slug={slug} uiState={chatUiState} onActions={dispatchChatActions} />
         </aside>
       </div>
     </main>

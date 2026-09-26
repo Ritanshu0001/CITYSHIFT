@@ -185,6 +185,7 @@ class AnalyzeRequest(BaseModel):
     lat: float
     lng: float
     country_code: str | None = None
+    supersedes_job_id: str | None = None
 
 
 class AnalyzeResponse(BaseModel):
@@ -197,7 +198,7 @@ class AnalyzeResponse(BaseModel):
 class JobStatus(BaseModel):
     job_id: str
     slug: str
-    status: Literal["queued", "running", "done", "error"]
+    status: Literal["queued", "running", "done", "error", "cancelled"]
     step: str | None
     steps_done: list[str]
     message: str | None
