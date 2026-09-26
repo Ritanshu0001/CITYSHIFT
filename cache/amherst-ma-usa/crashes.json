@@ -1,0 +1,149 @@
+{
+  "slug": "amherst-ma-usa",
+  "available": true,
+  "source": "NHTSA FARS",
+  "years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "preliminary_years": [
+    2024
+  ],
+  "note": "Fatal crashes only",
+  "total": 8,
+  "points": [
+    {
+      "lat": 42.325614,
+      "lng": -72.524442,
+      "year": 2020,
+      "month": 6,
+      "hour": 19,
+      "fatalities": 2,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a322935fffff"
+    },
+    {
+      "lat": 42.385025,
+      "lng": -72.526589,
+      "year": 2022,
+      "month": 2,
+      "hour": 20,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a3274b9fffff"
+    },
+    {
+      "lat": 42.347969,
+      "lng": -72.541811,
+      "year": 2022,
+      "month": 3,
+      "hour": 1,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a32292dfffff"
+    },
+    {
+      "lat": 42.400367,
+      "lng": -72.495936,
+      "year": 2022,
+      "month": 5,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a3274d5fffff"
+    },
+    {
+      "lat": 42.422108,
+      "lng": -72.537408,
+      "year": 2022,
+      "month": 8,
+      "hour": 8,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a3274edfffff"
+    },
+    {
+      "lat": 42.387958,
+      "lng": -72.540611,
+      "year": 2024,
+      "month": 1,
+      "hour": 5,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a3274bdfffff"
+    },
+    {
+      "lat": 42.431853,
+      "lng": -72.544111,
+      "year": 2024,
+      "month": 5,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a32743bfffff"
+    },
+    {
+      "lat": 42.340597,
+      "lng": -72.581772,
+      "year": 2024,
+      "month": 8,
+      "hour": 12,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a326615fffff"
+    }
+  ],
+  "by_hex": {
+    "882a32292dfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a322935fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a326615fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a32743bfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a3274b9fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a3274bdfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a3274d5fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a3274edfffff": {
+      "count": 1,
+      "pct": 100.0
+    }
+  }
+}

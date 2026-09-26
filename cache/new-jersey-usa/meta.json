@@ -1,0 +1,32 @@
+{
+  "slug": "new-jersey-usa",
+  "created_at": "2026-09-26T22:07:05Z",
+  "timings_s": {
+    "grid": 0.01,
+    "weather": 0.02,
+    "roads": 4.19,
+    "infrastructure": 9.38,
+    "downloads_wall": 9.4,
+    "features": 0.16,
+    "elevation": 60.86
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 856,
+  "n_graph_edges": 2074,
+  "n_osm_features": 162,
+  "climate_source": "Open-Meteo",
+  "elevation": {
+    "points": 893,
+    "requests": 9,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo",
+    "status": "done"
+  },
+  "openmeteo_calls_estimate": 493.0,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "slug": "new-jersey-usa",
+  "available": true,
+  "source": "NHTSA FARS",
+  "years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "preliminary_years": [
+    2024
+  ],
+  "note": "Fatal crashes only",
+  "total": 13,
+  "points": [
+    {
+      "lat": 40.112681,
+      "lng": -74.380728,
+      "year": 2020,
+      "month": 9,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a13131dfffff"
+    },
+    {
+      "lat": 40.066769,
+      "lng": -74.475936,
+      "year": 2020,
+      "month": 11,
+      "hour": 17,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a131135fffff"
+    },
+    {
+      "lat": 40.075842,
+      "lng": -74.473325,
+      "year": 2021,
+      "month": 6,
+      "hour": 18,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a131123fffff"
+    },
+    {
+      "lat": 40.052814,
+      "lng": -74.341494,
+      "year": 2021,
+      "month": 8,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a1312a5fffff"
+    },
+    {
+      "lat": 40.042944,
+      "lng": -74.315067,
+      "year": 2022,
+      "month": 4,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a1312bdfffff"
+    },
+    {
+      "lat": 40.085567,
+      "lng": -74.467578,
+      "year": 2022,
+      "month": 9,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a131129fffff"
+    },
+    {
+      "lat": 40.078425,
+      "lng": -74.378011,
+      "year": 2023,
+      "month": 5,
+      "hour": 17,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a13100dfffff"
+    },
+    {
+      "lat": 40.0803,
+      "lng": -74.327225,
+      "year": 2023,
+      "month": 6,
+      "hour": 13,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a131233fffff"
+    },
+    {
+      "lat": 40.103217,
+      "lng": -74.343347,
+      "year": 2023,
+      "month": 8,
+      "hour": 10,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a131221fffff"
+    },
+    {
+      "lat": 40.060594,
+      "lng": -74.462414,
+      "year": 2023,
+      "month": 5,
+      "hour": 17,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a131131fffff"
+    },
+    {
+      "lat": 40.067,
+      "lng": -74.363867,
+      "year": 2024,
+      "month": 4,
+      "hour": 6,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a13100bfffff"
+    },
+    {
+      "lat": 40.11375,
+      "lng": -74.463236,
+      "year": 2024,
+      "month": 6,
+      "hour": 15,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a13c497fffff"
+    },
+    {
+      "lat": 40.030528,
+      "lng": -74.443858,
+      "year": 2024,
+      "month": 2,
+      "hour": 12,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a131185fffff"
+    }
+  ],
+  "by_hex": {
+    "882a13100bfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a13100dfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a131123fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a131129fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a131131fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a131135fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a131185fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a131221fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a131233fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a1312a5fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a1312bdfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a13131dfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "882a13c497fffff": {
+      "count": 1,
+      "pct": 100.0
+    }
+  }
+}
