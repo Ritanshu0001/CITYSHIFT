@@ -34,7 +34,7 @@ def _points(cell: str) -> list[tuple[float, float]]:
 
 
 def _fetch_batch(
-    batch: list[tuple[float, float]], cancel_event: threading.Event | None = None
+    batch: list[tuple[float, float]], cancel_event: threading.Event | None = None, background: bool = False
 ) -> list[float | None]:
     params = {
         "latitude": ",".join(f"{lat:.6f}" for lat, _ in batch),
@@ -50,7 +50,7 @@ def _fetch_batch(
         try:
             return get_json(
                 ELEVATION_URL, params, cost=len(batch), what="elevation", validate=validate,
-                cancel_event=cancel_event,
+                cancel_event=cancel_event, background=background,
             )["elevation"]
         except OpenMeteoQuotaError:
             raise
@@ -82,19 +82,21 @@ def _slope(cell: str, elevation: dict[tuple[float, float], float | None]) -> flo
 
 
 def terrain_slopes(
-    hex_ids: list[str], stats: dict | None = None, cancel_event: threading.Event | None = None
+    hex_ids: list[str], stats: dict | None = None, cancel_event: threading.Event | None = None,
+    background: bool = False,
 ) -> dict[str, float]:
     """terrain_slope_pct for every hex id. Raises OpenMeteoError (never returns zeros for a failure).
 
     Pass the full grid (hexes_for) so the batches, and therefore the cache keys, are
     the same on every run. `stats`, if given, receives points and request counts.
+    `background` requests yield Open-Meteo budget to foreground ones.
     """
     points = sorted({p for cell in hex_ids for p in _points(cell)})
     elevation: dict[tuple[float, float], float | None] = {}
     for start in range(0, len(points), BATCH):
         checkpoint(cancel_event)
         batch = points[start:start + BATCH]
-        elevation.update(zip(batch, _fetch_batch(batch, cancel_event)))
+        elevation.update(zip(batch, _fetch_batch(batch, cancel_event, background)))
     if stats is not None:
         stats.update(points=len(points), requests=math.ceil(len(points) / BATCH))
     return {cell: _slope(cell, elevation) for cell in hex_ids}

@@ -109,11 +109,12 @@ def _dedupe_two_way(edges: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 
 
 def build_features(
-    hex_ids: list[str], G: nx.MultiDiGraph, feats: gpd.GeoDataFrame, slopes: dict[str, float]
+    hex_ids: list[str], G: nx.MultiDiGraph, feats: gpd.GeoDataFrame, slopes: dict[str, float] | None
 ) -> tuple[pd.DataFrame, float]:
     """Feature table (FEATURE_CSV_COLUMNS, hexes with road_km >= MIN_ROAD_KM) and osm_completeness.
 
-    `slopes` is terrain_slope_pct per hex id from app.data.elevation (CR-011).
+    `slopes` is terrain_slope_pct per hex id from app.data.elevation (CR-011). None leaves
+    the column empty (NaN) for fill_slopes to complete once elevation arrives.
     """
     hex_set = set(hex_ids)
     out = pd.DataFrame(index=pd.Index(sorted(hex_set), name="h3"))
@@ -210,10 +211,10 @@ def build_features(
     out["school_density"] = out["n_schools"] / area
     out["nightlife_density"] = out["n_nightlife"] / area
     out["tourism_density"] = out["n_tourism"] / area
-    missing = [h for h in out.index if h not in slopes]
-    if missing:
-        raise ValueError(f"terrain slope missing for {len(missing)} hexes")  # never fill with zeros
-    out["terrain_slope_pct"] = [slopes[h] for h in out.index]
+    if slopes is None:
+        out["terrain_slope_pct"] = np.nan
+    else:
+        out["terrain_slope_pct"] = _slope_column(out.index, slopes)
 
     out = out.reset_index()
     int_cols = ["bridge_count", "movable_bridge_count", "tunnel_count", "roundabout_count", "stadium_count"]
@@ -221,3 +222,15 @@ def build_features(
     float_cols = [c for c in FEATURE_CSV_COLUMNS if c not in int_cols and c != "h3"]
     out[float_cols] = out[float_cols].astype(float).round(6)
     return out[FEATURE_CSV_COLUMNS], osm_completeness
+
+
+def _slope_column(hexes, slopes: dict[str, float]) -> list[float]:
+    missing = [h for h in hexes if h not in slopes]
+    if missing:
+        raise ValueError(f"terrain slope missing for {len(missing)} hexes")  # never fill with zeros
+    return [slopes[h] for h in hexes]
+
+
+def fill_slopes(df: pd.DataFrame, slopes: dict[str, float]) -> pd.DataFrame:
+    """A features.csv frame with terrain_slope_pct set from `slopes`; every other column untouched."""
+    return df.assign(terrain_slope_pct=np.round(np.array(_slope_column(df["h3"], slopes), dtype=float), 6))

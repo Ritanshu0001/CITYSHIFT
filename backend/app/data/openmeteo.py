@@ -28,6 +28,9 @@ CACHE_DIR = Path(__file__).resolve().parents[2] / "openmeteo_cache"
 # batch granularity left unused capacity in each window and forced a third
 # minute for the final partial batch; 580 completes the same work in two.
 MINUTE_BUDGET = 580.0
+# Background requests (a finished city's elevation) leave room for one 5-year weather
+# request (~130.5 calls), so the next city's weather never waits behind them.
+FOREGROUND_RESERVE = 131.0
 
 _lock = threading.Lock()
 _window: deque[tuple[float, float]] = deque()  # (monotonic time, cost) of network calls
@@ -52,7 +55,8 @@ def run_total() -> float:
     return _run_total
 
 
-def _wait_for_budget(cost: float, cancel_event: threading.Event | None = None) -> None:
+def _wait_for_budget(cost: float, cancel_event: threading.Event | None = None, background: bool = False) -> None:
+    budget = MINUTE_BUDGET - FOREGROUND_RESERVE if background else MINUTE_BUDGET
     while True:
         checkpoint(cancel_event)
         with _lock:
@@ -60,7 +64,7 @@ def _wait_for_budget(cost: float, cancel_event: threading.Event | None = None) -
             while _window and now - _window[0][0] >= 60:
                 _window.popleft()
             used = sum(c for _, c in _window)
-            if not _window or used + cost <= MINUTE_BUDGET:
+            if not _window or used + cost <= budget:
                 _window.append((now, cost))
                 return
             sleep_for = 60 - (now - _window[0][0]) + 0.1
@@ -77,11 +81,13 @@ def _reason(resp: requests.Response) -> str:
 
 def get_json(url: str, params: dict, *, cost: float, what: str,
              validate: Callable[[dict], None] | None = None,
-             cancel_event: threading.Event | None = None) -> dict:
+             cancel_event: threading.Event | None = None,
+             background: bool = False) -> dict:
     """GET url with params, from the disk cache when possible. Raises OpenMeteoError.
 
     `validate` runs before anything is cached, so a garbled response raises instead
-    of being stored and replayed forever.
+    of being stored and replayed forever. `background` requests yield budget to
+    foreground ones (see FOREGROUND_RESERVE).
     """
     global _run_total
     checkpoint(cancel_event)
@@ -91,7 +97,7 @@ def get_json(url: str, params: dict, *, cost: float, what: str,
         log.debug("Open-Meteo %s: disk cache hit %s", what, path.name)
         return json.loads(path.read_text(encoding="utf-8"))
 
-    _wait_for_budget(cost, cancel_event)
+    _wait_for_budget(cost, cancel_event, background)
     t = time.perf_counter()
     try:
         resp = requests.get(full_url, timeout=60)

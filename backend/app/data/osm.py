@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import queue
 import threading
 import time
 from pathlib import Path
@@ -10,6 +11,7 @@ from typing import Callable, TypeVar
 import geopandas as gpd
 import networkx as nx
 import osmnx as ox
+from osmnx import _overpass
 from osmnx._errors import InsufficientResponseError
 
 from app.schemas import RADIUS_KM
@@ -49,9 +51,9 @@ ox.settings.log_console = True
 # unreachable, so an overloaded server never raises. Each attempt gets a wall-clock limit.
 # Uncached London takes ~90 s on a healthy server.
 ATTEMPT_TIMEOUT_S = 150
-
-# ox.settings is process-global; only one thread may swap the Overpass URL at a time.
-_url_lock = threading.Lock()
+# Healthy default-server runs in the cached cities' meta.json took 10-40 s including graph
+# building. With no answer after this long, the fallback starts alongside; first to finish wins.
+HEDGE_AFTER_S = 30
 
 T = TypeVar("T")
 
@@ -60,57 +62,125 @@ class OSMError(RuntimeError):
     """Both Overpass servers failed. The message is readable in the UI."""
 
 
-def _call_with_timeout(fn: Callable[[], T], server: str) -> T:
-    """Run fn on a daemon thread. On timeout the thread is abandoned (it can't be killed)."""
-    box: dict = {}
+class _Abandoned(RuntimeError):
+    """Stops a losing or timed-out attempt at its next Overpass request."""
 
-    def target() -> None:
-        try:
-            box["result"] = fn()
-        except BaseException as exc:  # noqa: BLE001 - re-raised in the caller's thread
-            box["error"] = exc
 
-    t = threading.Thread(target=target, name="overpass", daemon=True)
-    t.start()
-    t.join(ATTEMPT_TIMEOUT_S)
-    if t.is_alive():
-        raise TimeoutError(f"{server} did not answer within {ATTEMPT_TIMEOUT_S} s")
-    if "error" in box:
-        raise box["error"]
-    return box["result"]
+class _Attempt:
+    def __init__(self, server: str, overrides: dict) -> None:
+        self.server = server
+        self.overrides = overrides
+        self.started = time.perf_counter()
+        self.answered = threading.Event()  # an Overpass response arrived; the rest is local work
+        self.abandoned = threading.Event()
+        self.outcome: str | None = None
+
+
+_current = threading.local()
+
+
+class _PerAttemptSettings:
+    """osmnx.settings as osmnx._overpass sees it: each download thread's attempt picks its
+    own server, so two attempts (or roads and infrastructure) can use different servers
+    at the same time. Everything else reads through to ox.settings."""
+
+    def __getattr__(self, name: str):
+        attempt = getattr(_current, "attempt", None)
+        if attempt is not None and name in attempt.overrides:
+            return attempt.overrides[name]
+        return getattr(ox.settings, name)
+
+
+_overpass.settings = _PerAttemptSettings()
+_overpass_request = _overpass._overpass_request
+
+
+def _tracked_overpass_request(data):
+    attempt = getattr(_current, "attempt", None)
+    if attempt is not None and attempt.abandoned.is_set():
+        raise _Abandoned(attempt.server)
+    response = _overpass_request(data)
+    if attempt is not None:
+        if attempt.abandoned.is_set():
+            raise _Abandoned(attempt.server)
+        attempt.answered.set()
+    return response
+
+
+# OSMnx's 429 retry calls the module global, so an abandoned attempt stops there too.
+_overpass._overpass_request = _tracked_overpass_request
 
 
 def _with_fallback(what: str, fn: Callable[[], T]) -> tuple[T, str]:
-    """Run fn on the default Overpass server, then once on the fallback. Returns (result, server)."""
-    server = ox.settings.overpass_url
-    log.info("%s: querying %s (%d m radius, %d s limit)", what, server, DIST_M, ATTEMPT_TIMEOUT_S)
-    t = time.perf_counter()
-    try:
-        result = _call_with_timeout(fn, server)
-        log.info("%s answered by %s in %.1f s", what, server, time.perf_counter() - t)
-        return result, server
-    except InsufficientResponseError:
-        raise
-    except Exception as first:  # noqa: BLE001
-        log.warning("%s failed on %s after %.1f s: %s; retrying on %s",
-                    what, server, time.perf_counter() - t, first, FALLBACK_OVERPASS_URL)
-    with _url_lock:
-        ox.settings.overpass_url = FALLBACK_OVERPASS_URL
-        # Servers without per-IP limits print no "slots available" line in /status, and
-        # OSMnx then re-polls /status every 5 s forever. Skip that check on the fallback.
-        ox.settings.overpass_rate_limit = False
-        t = time.perf_counter()
+    """Run fn on the default Overpass server; start the fallback as well if the default fails,
+    times out, or has not answered within HEDGE_AFTER_S. First success wins. Returns (result, server)."""
+    finished: queue.Queue = queue.Queue()
+    attempts: list[_Attempt] = []
+    errors: list[str] = []
+
+    def start(server: str, overrides: dict) -> None:
+        attempt = _Attempt(server, {"overpass_url": server, **overrides})
+        attempts.append(attempt)
+        log.info("%s: querying %s (%d m radius, %d s limit)", what, server, DIST_M, ATTEMPT_TIMEOUT_S)
+
+        def target() -> None:
+            _current.attempt = attempt
+            try:
+                finished.put((attempt, True, fn()))
+            except BaseException as exc:  # noqa: BLE001 - handed back to the caller's thread
+                finished.put((attempt, False, exc))
+
+        threading.Thread(target=target, name=f"overpass-{what}", daemon=True).start()
+
+    def abandon_all() -> None:
+        for attempt in attempts:
+            attempt.abandoned.set()
+
+    start(DEFAULT_OVERPASS_URL, {})
+    default = attempts[0]
+    hedge_at = default.started + HEDGE_AFTER_S
+    while True:
+        now = time.perf_counter()
+        for attempt in attempts:
+            if attempt.outcome is None and now - attempt.started >= ATTEMPT_TIMEOUT_S:
+                attempt.outcome = "timeout"
+                attempt.abandoned.set()
+                errors.append(f"{attempt.server} did not answer within {ATTEMPT_TIMEOUT_S} s")
+                log.warning("%s: %s", what, errors[-1])
+        if len(attempts) == 1 and (default.outcome is not None
+                                   or (not default.answered.is_set() and now >= hedge_at)):
+            if default.outcome is None:
+                log.warning("%s: no answer from %s after %d s; also trying %s",
+                            what, default.server, HEDGE_AFTER_S, FALLBACK_OVERPASS_URL)
+            # Servers without per-IP limits print no "slots available" line in /status, and
+            # OSMnx then re-polls /status every 5 s forever. Skip that check on the fallback.
+            start(FALLBACK_OVERPASS_URL, {"overpass_rate_limit": False})
+            continue
+        running = [a for a in attempts if a.outcome is None]
+        if not running:
+            abandon_all()
+            raise OSMError(f"OpenStreetMap download failed on both Overpass servers: {'; '.join(errors)}")
+        wake = min(a.started + ATTEMPT_TIMEOUT_S for a in running)
+        if len(attempts) == 1 and not default.answered.is_set():
+            wake = min(wake, hedge_at)
         try:
-            result = _call_with_timeout(fn, FALLBACK_OVERPASS_URL)
-            log.info("%s answered by %s in %.1f s", what, FALLBACK_OVERPASS_URL, time.perf_counter() - t)
-            return result, FALLBACK_OVERPASS_URL
-        except InsufficientResponseError:
-            raise
-        except Exception as second:  # noqa: BLE001
-            raise OSMError(f"OpenStreetMap download failed on both Overpass servers: {second}") from second
-        finally:
-            ox.settings.overpass_url = DEFAULT_OVERPASS_URL
-            ox.settings.overpass_rate_limit = True
+            attempt, ok, value = finished.get(timeout=max(0.0, wake - now))
+        except queue.Empty:
+            continue
+        if attempt.outcome is not None:
+            continue  # already given up on as timed out
+        elapsed = time.perf_counter() - attempt.started
+        if ok:
+            attempt.outcome = "ok"
+            abandon_all()
+            log.info("%s answered by %s in %.1f s", what, attempt.server, elapsed)
+            return value, attempt.server
+        if isinstance(value, InsufficientResponseError):
+            abandon_all()
+            raise value
+        attempt.outcome = "error"
+        errors.append(f"{attempt.server}: {value}")
+        log.warning("%s failed on %s after %.1f s: %s", what, attempt.server, elapsed, value)
 
 
 def drive_graph(lat: float, lng: float) -> tuple[nx.MultiDiGraph, str]:

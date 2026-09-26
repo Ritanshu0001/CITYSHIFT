@@ -147,7 +147,8 @@ def _run(job: JobState) -> None:
     log.info("job %s: analyzing %s (%s) after %.1f s in the queue",
              job.job_id, job.name, job.slug, started - job.submitted_at)
     try:
-        analyze_city(job.name, job.lat, job.lng, job.country_code, progress, job.cancel_event)
+        analyze_city(job.name, job.lat, job.lng, job.country_code, progress, job.cancel_event,
+                     background_elevation=True)
     except AnalysisCancelled:
         with _lock:
             _cancel(job)
