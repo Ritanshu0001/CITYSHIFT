@@ -7,6 +7,9 @@ __pycache__/
 osmnx_cache/
 backend/osmnx_cache/
 
+# Open-Meteo raw responses (weather, elevation): rebuildable, and quota-costly to rebuild.
+backend/openmeteo_cache/
+
 # Frontend
 frontend/node_modules/
 frontend/.next/

@@ -1,0 +1,110 @@
+"""Open-Meteo HTTP: on-disk cache, per-minute call budget, loud errors.
+
+Free tier: fewer than 600 calls per minute, 5,000 per hour, 10,000 per day. Open-Meteo
+counts every 2 weeks of data per location as about 1 call, so one 5-year weather
+request is ~130 calls, and each elevation coordinate is 1 call. Responses are cached
+forever on disk: 2020-2024 history and terrain never change.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import logging
+import threading
+import time
+from collections import deque
+from pathlib import Path
+from typing import Callable
+
+import requests
+
+log = logging.getLogger(__name__)
+
+CACHE_DIR = Path(__file__).resolve().parents[2] / "openmeteo_cache"
+MINUTE_BUDGET = 500.0  # stay under the 600/minute limit
+
+_lock = threading.Lock()
+_window: deque[tuple[float, float]] = deque()  # (monotonic time, cost) of network calls
+_run_total = 0.0
+
+
+class OpenMeteoError(RuntimeError):
+    """Open-Meteo did not answer usefully. The message is readable in the UI."""
+
+
+class OpenMeteoQuotaError(OpenMeteoError):
+    """HTTP 429 / limit exceeded. Callers stop the whole batch; never retry this."""
+
+
+def weather_cost(n_days: int, n_variables: int, n_locations: int = 1) -> float:
+    """Open-Meteo's fractional call count: 2 weeks and 10 variables per location per call."""
+    return max(1.0, n_days / 14) * max(1.0, n_variables / 10) * n_locations
+
+
+def run_total() -> float:
+    """Estimated calls sent over the network by this process (cache hits cost nothing)."""
+    return _run_total
+
+
+def _wait_for_budget(cost: float) -> None:
+    while True:
+        with _lock:
+            now = time.monotonic()
+            while _window and now - _window[0][0] >= 60:
+                _window.popleft()
+            used = sum(c for _, c in _window)
+            if not _window or used + cost <= MINUTE_BUDGET:
+                _window.append((now, cost))
+                return
+            sleep_for = 60 - (now - _window[0][0]) + 0.1
+        log.info("Open-Meteo: %.0f calls in the last minute, pausing %.0f s", used, sleep_for)
+        time.sleep(sleep_for)
+
+
+def _reason(resp: requests.Response) -> str:
+    try:
+        return str(resp.json().get("reason", "")) or resp.text[:200]
+    except ValueError:
+        return resp.text[:200]
+
+
+def get_json(url: str, params: dict, *, cost: float, what: str,
+             validate: Callable[[dict], None] | None = None) -> dict:
+    """GET url with params, from the disk cache when possible. Raises OpenMeteoError.
+
+    `validate` runs before anything is cached, so a garbled response raises instead
+    of being stored and replayed forever.
+    """
+    global _run_total
+    full_url = str(requests.Request("GET", url, params=params).prepare().url)
+    path = CACHE_DIR / (hashlib.sha1(full_url.encode("utf-8")).hexdigest() + ".json")
+    if path.is_file():
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    _wait_for_budget(cost)
+    try:
+        resp = requests.get(full_url, timeout=60)
+    except requests.RequestException as exc:
+        raise OpenMeteoError(f"Open-Meteo {what} request failed: {exc}") from exc
+    if resp.status_code == 429 or (resp.status_code != 200 and "limit exceeded" in resp.text.lower()):
+        raise OpenMeteoQuotaError(f"Open-Meteo quota exceeded (429): {_reason(resp)}")
+    if resp.status_code != 200:
+        raise OpenMeteoError(f"Open-Meteo {what} returned HTTP {resp.status_code}: {_reason(resp)}")
+    try:
+        data = resp.json()
+    except ValueError as exc:
+        raise OpenMeteoError(f"Open-Meteo {what} returned invalid JSON") from exc
+    if isinstance(data, dict) and data.get("error"):
+        raise OpenMeteoError(f"Open-Meteo {what} error: {data.get('reason', 'unknown')}")
+    if validate is not None:
+        validate(data)
+
+    with _lock:
+        _run_total += cost
+        total = _run_total
+    log.info("Open-Meteo %s: ~%.1f calls (run total ~%.1f)", what, cost, total)
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".tmp")
+    tmp.write_text(resp.text, encoding="utf-8")
+    tmp.replace(path)
+    return data

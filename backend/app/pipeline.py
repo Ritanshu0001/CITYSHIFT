@@ -12,6 +12,7 @@ import osmnx as ox
 import pandas as pd
 
 from app import cache
+from app.data import openmeteo
 from app.data.driving_side import country_for, driving_side
 from app.data.features import build_features
 from app.data.grid import hexes_for
@@ -46,12 +47,16 @@ def build_city_data(
     lng: float,
     country_code: str | None = None,
     progress: Progress = _noop,
+    climate: dict | None = None,
 ) -> tuple[pd.DataFrame, dict, dict]:
     """Data half: pull OSM + weather, build features, write features.csv, city.json, meta.json.
 
     Returns (features, city, meta). Calls progress() for roads, infrastructure, weather.
+    Pass `climate` (the three *_days_per_year values from an existing city.json) to skip
+    the weather download: 2020-2024 history never changes and costs ~130 Open-Meteo calls.
     """
     slug = cache.slugify(name)
+    calls_before = openmeteo.run_total()
     timings: dict[str, float] = {}
 
     def timed(key: str, fn, *args):
@@ -70,7 +75,7 @@ def build_city_data(
         progress("roads")
         roads_f = pool.submit(timed, "roads", drive_graph, lat, lng)
         feats_f = pool.submit(timed, "infrastructure", osm_features, lat, lng)
-        weather_f = pool.submit(timed, "weather", climate_for, lat, lng)
+        weather_f = None if climate else pool.submit(timed, "weather", climate_for, lat, lng)
         G, roads_server = roads_f.result()
 
         step = "infrastructure"
@@ -79,7 +84,8 @@ def build_city_data(
 
         step = "weather"
         progress("weather")
-        climate = weather_f.result()
+        climate_source = "reused from city.json" if climate else "Open-Meteo"
+        climate = climate or weather_f.result()
         timings["downloads_wall"] = time.perf_counter() - t_wall
 
         country = country_code.strip().upper() if country_code else country_for(lat, lng)
@@ -118,6 +124,8 @@ def build_city_data(
         "n_graph_nodes": G.number_of_nodes(),
         "n_graph_edges": G.number_of_edges(),
         "n_osm_features": len(feats),
+        "climate_source": climate_source,
+        "openmeteo_calls_estimate": round(openmeteo.run_total() - calls_before, 1),
         "versions": {"osmnx": ox.__version__, "h3": h3.__version__},
     }
     cache.write_features(slug, df)

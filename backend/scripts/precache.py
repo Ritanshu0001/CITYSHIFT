@@ -2,6 +2,7 @@
 
     python scripts/precache.py              # full analyze_city; skips cities with result.json
     python scripts/precache.py --data-only  # features.csv + city.json only (before P2's model exists)
+    python scripts/precache.py --data-only --refresh-data  # rebuild data even if it exists; reuses climate
     python scripts/precache.py --rescore    # re-score cached features after a model/rule change (offline)
     python scripts/precache.py --only tokyo-japan london-uk
 
@@ -18,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app import cache  # noqa: E402
+from app.data import openmeteo  # noqa: E402
 from app.pipeline import analyze_city, build_city_data, score_cached  # noqa: E402
 
 CITIES = [
@@ -53,22 +55,51 @@ def _rescore(slug: str) -> None:
           flush=True)
 
 
+def _known_climate(slug: str) -> dict | None:
+    """Climate from an existing city.json when it is present and non-zero, else None.
+
+    2020-2024 history never changes, so a refresh reuses it instead of spending
+    ~130 Open-Meteo calls per city. Zero rain would be a failed fetch: refetch it.
+    """
+    path = cache.city_dir(slug) / "city.json"
+    if not path.is_file():
+        return None
+    city = cache.read_json(slug, "city.json")
+    keys = ["rain_days_per_year", "heavy_rain_days_per_year", "snow_days_per_year"]
+    if any(k not in city for k in keys) or city["rain_days_per_year"] <= 0 or city["heavy_rain_days_per_year"] <= 0:
+        return None
+    return {k: city[k] for k in keys}
+
+
+def _quota_error(exc: BaseException) -> BaseException | None:
+    """The OpenMeteoQuotaError behind exc (pipeline wraps errors in StepError), if any."""
+    while exc is not None:
+        if isinstance(exc, openmeteo.OpenMeteoQuotaError):
+            return exc
+        exc = exc.__cause__
+    return None
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data-only", action="store_true", help="skip P2's scoring; write features.csv + city.json")
     ap.add_argument("--rescore", action="store_true",
                     help="rebuild result.json from cached features.csv + city.json (no downloads)")
+    ap.add_argument("--refresh-data", action="store_true",
+                    help="with --data-only: rebuild features.csv, city.json, meta.json even if they exist "
+                         "(OSM from osmnx_cache; climate reused from city.json)")
     ap.add_argument("--only", nargs="*", metavar="SLUG", help="run just these slugs")
     args = ap.parse_args()
     if args.rescore and args.data_only:
         ap.error("--rescore and --data-only are opposites; pick one")
+    if args.refresh_data and not args.data_only:
+        ap.error("--refresh-data goes with --data-only (then --rescore once the model is refit)")
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     failed = 0
-    for name, lat, lng, cc in CITIES:
+    todo = [c for c in CITIES if not args.only or cache.slugify(c[0]) in args.only]
+    for index, (name, lat, lng, cc) in enumerate(todo):
         slug = cache.slugify(name)
-        if args.only and slug not in args.only:
-            continue
         if args.rescore:
             try:
                 _rescore(slug)
@@ -76,7 +107,7 @@ def main() -> None:
                 failed += 1
                 print(f"FAIL  {slug:28s} {exc}", flush=True)
             continue
-        if args.data_only and (cache.city_dir(slug) / "features.csv").is_file():
+        if args.data_only and not args.refresh_data and (cache.city_dir(slug) / "features.csv").is_file():
             print(f"skip  {slug:28s} features.csv exists")
             continue
         if not args.data_only and cache.has_result(slug):
@@ -85,8 +116,10 @@ def main() -> None:
         t = time.perf_counter()
         try:
             if args.data_only:
-                _, city, _ = build_city_data(name, lat, lng, cc)
-                detail = f"{city['n_hexes_kept']} hexes, driving {city['driving_side']}"
+                known = _known_climate(slug) if args.refresh_data else None
+                _, city, meta = build_city_data(name, lat, lng, cc, climate=known)
+                detail = (f"{city['n_hexes_kept']} hexes, driving {city['driving_side']}, "
+                          f"climate {meta['climate_source']}, ~{meta['openmeteo_calls_estimate']:.0f} Open-Meteo calls")
             else:
                 analyze_city(name, lat, lng, cc)
                 summary = cache.read_json(slug, "result.json")["summary"]
@@ -95,6 +128,12 @@ def main() -> None:
         except Exception as exc:  # noqa: BLE001 - keep going; report at the end
             failed += 1
             print(f"FAIL  {slug:28s} {exc}  ({time.perf_counter() - t:.0f}s)", flush=True)
+            if _quota_error(exc):
+                # Retrying against a quota error only burns more of it: stop the batch now.
+                left = [cache.slugify(c[0]) for c in todo[index + 1:]]
+                print(f"STOP  Open-Meteo quota exceeded; not attempted: {', '.join(left) or 'none'}", flush=True)
+                break
+    print(f"Open-Meteo: ~{openmeteo.run_total():.0f} calls sent this run (cache hits are free)")
     sys.exit(1 if failed else 0)
 
 
