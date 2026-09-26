@@ -51,7 +51,7 @@ NEXT_PUBLIC_API_BASE=http://localhost:8000
 NEXT_PUBLIC_USE_MOCK=0
 ```
 
-The Google key must have Maps JavaScript API, Places API, and Geocoding API enabled. `.env.local` is ignored and must never be committed.
+The Google key must have Maps JavaScript API, Places API (New), and Geocoding API enabled. `.env.local` is ignored and must never be committed.
 
 ## What is implemented
 

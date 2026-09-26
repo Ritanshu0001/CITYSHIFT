@@ -12,6 +12,12 @@ interface SelectedPlace {
   country_code: string | null;
 }
 
+interface CitySuggestion {
+  prediction: google.maps.places.PlacePrediction;
+  main: string;
+  secondary: string;
+}
+
 const DEMO_PLACES: Record<string, SelectedPlace> = {
   "new york": { name: "New York, NY, USA", lat: 40.7128, lng: -74.006, country_code: "US" },
   london: { name: "London, UK", lat: 51.5072, lng: -0.1276, country_code: "GB" },
@@ -26,48 +32,105 @@ function countryCode(components?: google.maps.GeocoderAddressComponent[]) {
 export function SearchBox({ hero = false }: { hero?: boolean }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionApiRef = useRef<typeof google.maps.places.AutocompleteSuggestion | null>(null);
+  const tokenFactoryRef = useRef<typeof google.maps.places.AutocompleteSessionToken | null>(null);
+  const sessionTokenRef = useRef<google.maps.places.AutocompleteSessionToken | null>(null);
+  const requestSequenceRef = useRef(0);
   const [query, setQuery] = useState("");
   const [selection, setSelection] = useState<SelectedPlace | null>(null);
+  const [placesReady, setPlacesReady] = useState(false);
+  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
+  const [searchFocused, setSearchFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let autocomplete: google.maps.places.Autocomplete | undefined;
-    let tries = 0;
+    let active = true;
 
-    const attach = () => {
-      if (!inputRef.current || !window.google?.maps?.places?.Autocomplete) return false;
-      autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
-        types: ["(cities)"],
-        fields: ["geometry", "name", "formatted_address", "address_components"],
-      });
-      autocomplete.addListener("place_changed", () => {
-        const place = autocomplete?.getPlace();
-        const location = place?.geometry?.location;
-        if (!place || !location) return;
-        const picked = {
-          name: place.formatted_address ?? place.name ?? inputRef.current?.value ?? "Selected city",
-          lat: location.lat(),
-          lng: location.lng(),
-          country_code: countryCode(place.address_components),
-        };
-        setSelection(picked);
-        setQuery(picked.name);
-      });
-      return true;
-    };
+    async function loadPlaces() {
+      if (!window.google?.maps?.importLibrary) return;
+      try {
+        const { AutocompleteSessionToken, AutocompleteSuggestion } = await google.maps.importLibrary("places") as google.maps.PlacesLibrary;
+        if (!active) return;
+        suggestionApiRef.current = AutocompleteSuggestion;
+        tokenFactoryRef.current = AutocompleteSessionToken;
+        sessionTokenRef.current = new AutocompleteSessionToken();
+        setPlacesReady(true);
+      } catch {
+        if (active) setPlacesReady(false);
+      }
+    }
 
-    if (attach()) return () => google.maps.event.clearInstanceListeners(autocomplete!);
-    const timer = window.setInterval(() => {
-      tries += 1;
-      if (attach() || tries > 20) window.clearInterval(timer);
-    }, 400);
+    loadPlaces();
 
     return () => {
-      window.clearInterval(timer);
-      if (autocomplete && window.google) google.maps.event.clearInstanceListeners(autocomplete);
+      active = false;
+      requestSequenceRef.current += 1;
+      suggestionApiRef.current = null;
+      tokenFactoryRef.current = null;
+      sessionTokenRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const text = query.trim();
+    if (!placesReady || selection || text.length < 2 || !suggestionApiRef.current) {
+      setSuggestions([]);
+      return;
+    }
+
+    const sequence = ++requestSequenceRef.current;
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await suggestionApiRef.current!.fetchAutocompleteSuggestions({
+          input: text,
+          includedPrimaryTypes: ["locality", "sublocality", "administrative_area_level_1", "administrative_area_level_2", "country"],
+          sessionToken: sessionTokenRef.current ?? undefined,
+        });
+        if (sequence !== requestSequenceRef.current) return;
+        setSuggestions(response.suggestions.flatMap((suggestion) => {
+          const prediction = suggestion.placePrediction;
+          if (!prediction) return [];
+          return [{
+            prediction,
+            main: prediction.mainText?.text ?? prediction.text.text,
+            secondary: prediction.secondaryText?.text ?? "",
+          }];
+        }).slice(0, 5));
+      } catch {
+        if (sequence === requestSequenceRef.current) setSuggestions([]);
+      }
+    }, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [placesReady, query, selection]);
+
+  async function chooseSuggestion(suggestion: CitySuggestion) {
+    setSuggestions([]);
+    setError(null);
+    try {
+      const place = suggestion.prediction.toPlace();
+      await place.fetchFields({
+        fields: ["displayName", "formattedAddress", "location", "addressComponents"],
+      });
+      if (!place.location) throw new Error("That city did not include map coordinates.");
+
+      const name = place.formattedAddress ?? place.displayName ?? suggestion.prediction.text.text;
+      const picked = {
+        name,
+        lat: place.location.lat(),
+        lng: place.location.lng(),
+        country_code: place.addressComponents
+          ?.find((component) => component.types.includes("country"))
+          ?.shortText ?? null,
+      };
+      setSelection(picked);
+      setQuery(name);
+      if (tokenFactoryRef.current) sessionTokenRef.current = new tokenFactoryRef.current();
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "City lookup failed. Try a more specific name.");
+    }
+  }
 
   async function resolvePlace(): Promise<SelectedPlace> {
     if (selection) return selection;
@@ -116,20 +179,54 @@ export function SearchBox({ hero = false }: { hero?: boolean }) {
     <div className={hero ? "search-shell search-shell-hero" : "search-shell"}>
       <form className="search-form" onSubmit={handleSubmit}>
         <LocateFixed size={18} aria-hidden="true" />
-        <label htmlFor={hero ? "hero-city-search" : "city-search"} className="sr-only">
-          Search for a city
-        </label>
-        <input
-          ref={inputRef}
-          id={hero ? "hero-city-search" : "city-search"}
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setSelection(null);
-          }}
-          placeholder="Enter any city"
-          autoComplete="off"
-        />
+        <div className="search-input-slot">
+          <label htmlFor={hero ? "hero-city-search" : "city-search"} className="sr-only">
+            Search for a city
+          </label>
+          <input
+            ref={inputRef}
+            id={hero ? "hero-city-search" : "city-search"}
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setSelection(null);
+              setError(null);
+            }}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => window.setTimeout(() => setSearchFocused(false), 120)}
+            placeholder="Enter any city"
+            autoComplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls={`${hero ? "hero-" : ""}city-suggestions`}
+            aria-expanded={searchFocused && suggestions.length > 0}
+          />
+          {searchFocused && suggestions.length > 0 && (
+            <div
+              id={`${hero ? "hero-" : ""}city-suggestions`}
+              className="city-suggestions"
+              role="listbox"
+              aria-label="City suggestions"
+            >
+              {suggestions.map((suggestion) => (
+                <button
+                  key={suggestion.prediction.placeId}
+                  type="button"
+                  role="option"
+                  aria-selected="false"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => chooseSuggestion(suggestion)}
+                >
+                  <LocateFixed size={15} aria-hidden="true" />
+                  <span>
+                    <strong>{suggestion.main}</strong>
+                    {suggestion.secondary && <small>{suggestion.secondary}</small>}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <button type="submit" disabled={isLoading}>
           {isLoading ? <LoaderCircle className="spin" size={18} /> : <ArrowRight size={18} />}
           <span>{isLoading ? "Starting" : "Analyze"}</span>

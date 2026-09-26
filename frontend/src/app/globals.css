@@ -107,6 +107,17 @@ button:focus-visible, a:focus-visible, input:focus-visible, [role="button"]:focu
 .search-form > svg { color: var(--orange); }
 .search-form input { background: transparent; border: 0; color: var(--ink); font-size: 15px; height: 44px; min-width: 0; outline: none; padding: 0 13px; }
 .search-form input::placeholder { color: #7a8a84; }
+.search-input-slot { min-width: 0; position: relative; width: 100%; }
+.search-input-slot > input { width: 100%; }
+.city-suggestions { background: var(--white); border: 1px solid var(--ink); box-shadow: 7px 7px 0 var(--aqua); left: -37px; min-width: calc(100% + 44px); position: absolute; top: calc(100% + 13px); z-index: 30; }
+.city-suggestions button { align-items: center; background: var(--white); border: 0; border-bottom: 1px solid var(--line); color: var(--ink); cursor: pointer; display: grid; grid-template-columns: 22px 1fr; min-height: 55px; padding: 9px 13px; text-align: left; width: 100%; }
+.city-suggestions button:last-child { border-bottom: 0; }
+.city-suggestions button:hover, .city-suggestions button:focus-visible { background: var(--orange-soft); outline: 0; }
+.city-suggestions svg { color: var(--orange); }
+.city-suggestions span { display: grid; gap: 2px; min-width: 0; }
+.city-suggestions strong, .city-suggestions small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.city-suggestions strong { font-size: 13px; font-weight: 680; }
+.city-suggestions small { color: var(--ink-soft); font-size: 11px; }
 .search-form button { align-items: center; background: var(--ink); border: 0; color: var(--white); cursor: pointer; display: inline-flex; gap: 9px; height: 44px; justify-content: center; min-width: 126px; padding: 0 18px; transition: background .2s, transform .2s; }
 .search-form button:hover { background: var(--orange); transform: translateY(-1px); }
 .search-form button:disabled { cursor: wait; opacity: .72; }
