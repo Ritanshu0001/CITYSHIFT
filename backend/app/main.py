@@ -8,7 +8,7 @@ import re
 from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from app import ai_summary, cache, chat, jobs
+from app import ai_summary, cache, chat, jobs, ride_api
 from app.briefing import build_briefing, render_markdown
 from app.pipeline import write_crashes
 from app.schemas import AnalyzeRequest, AnalyzeResponse, CitiesResponse, JobStatus
@@ -24,6 +24,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(ride_api.router)  # rider-facing Safe Journey routing
 
 _SLUG_RE = re.compile(r"^[a-z0-9-]+$")
 

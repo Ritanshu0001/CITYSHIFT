@@ -7,6 +7,9 @@ __pycache__/
 osmnx_cache/
 backend/osmnx_cache/
 
+# Safe Journey routing graphs (pickled drive network + crash exposure): rebuildable from the OSMnx cache.
+backend/route_cache/
+
 # Open-Meteo raw responses (weather, elevation): rebuildable, and quota-costly to rebuild.
 backend/openmeteo_cache/
 
