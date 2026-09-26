@@ -290,7 +290,7 @@ def test_rain_rule_needs_a_genuinely_rainier_city():
     assert not [c for c in _full_result(target, dry)["scenarios"] if c["id"] == "rain_dense_intersection"]
     wet = _target_city(city, rain_days_per_year=120.4)
     card = next(c for c in _full_result(target, wet)["scenarios"] if c["id"] == "rain_dense_intersection")
-    assert "3.6x reference" in card["triggered_by"][0]
+    assert card["triggered_by"][0] == "rain_days_per_year 120.4 vs max reference 33.0 (Phoenix)"
 
 
 def test_rain_rule_does_not_divide_by_a_zero_reference():
@@ -306,6 +306,118 @@ def test_rain_rule_does_not_divide_by_a_zero_reference():
 
 
 # --------------------------------------------------------------------------
+# Multi-city reference (CR-010)
+# --------------------------------------------------------------------------
+def _second_reference_city(city: dict, **overrides) -> dict:
+    second = dict(city)
+    second.update(name="Refville, XX", slug="refville-xx")
+    second.update(overrides)
+    return second
+
+
+def _use_pooled_reference(frames: list[pd.DataFrame], cities: list[dict]) -> dict:
+    reference.reset_reference_cache()
+    reference._CACHE = reference.fit_pooled_reference(frames, cities)
+    return reference._CACHE
+
+
+def test_pooled_reference_holds_every_hex_with_equal_weight():
+    phoenix, _, city = _fixtures()
+    second = phoenix.iloc[:100].copy()
+    artifact = _use_pooled_reference([phoenix, second], [city, _second_reference_city(city)])
+    assert len(artifact["phoenix_raw"]) == len(phoenix) + len(second)
+    assert len(artifact["phoenix_scores_sorted"]) == len(phoenix) + len(second)
+    assert artifact["reference_slugs"] == ["phoenix-az-usa", "refville-xx"]
+    assert artifact["reference_hex_counts"] == [len(phoenix), len(second)]
+    assert artifact["phoenix_city"] == city  # first city kept under the legacy key
+
+
+def test_pooled_self_score_is_about_five_percent_red():
+    """Contract 4.6 carried to the pool: the reference cities together land at about 5% red."""
+    phoenix, target, city = _fixtures()
+    second_city = _second_reference_city(city)
+    _use_pooled_reference([phoenix, target], [city, second_city])
+    red = total = 0
+    for features, source in ((phoenix, city), (target, second_city)):
+        hexes = score_city(features, source)
+        red += sum(item["band"] == "red" for item in hexes)
+        total += len(hexes)
+    assert 3.0 <= red / total * 100 <= 8.0, red / total * 100
+
+
+def test_rare_features_are_decided_on_the_pooled_hexes():
+    """3 of 270 hexes is 1.1% on one city (modeled) but 0.56% of a 540-hex pool (rare)."""
+    phoenix, _, city = _fixtures()
+    one = phoenix.copy()
+    one["movable_bridge_count"] = 0.0
+    one.loc[:2, "movable_bridge_count"] = 1.0
+    two = phoenix.copy()
+    two["movable_bridge_count"] = 0.0
+    assert "movable_bridge_count" in reference.fit_reference(one, city)["feature_order"]
+    pooled = reference.fit_pooled_reference([one, two], [city, _second_reference_city(city)])
+    assert "movable_bridge_count" in pooled["rare_features"]
+
+
+def test_climate_reference_is_the_per_metric_max_across_cities():
+    phoenix, target, city = _fixtures()
+    wet = _second_reference_city(city, rain_days_per_year=141.0, heavy_rain_days_per_year=24.6,
+                                 snow_days_per_year=0.8)
+    artifact = _use_pooled_reference([phoenix, phoenix.copy()], [city, wet])
+    assert artifact["reference_climate"] == {"rain_days_per_year": 141.0, "heavy_rain_days_per_year": 24.6,
+                                             "snow_days_per_year": 0.8}
+    assert artifact["reference_climate_source"]["rain_days_per_year"] == "Refville, XX"
+    snowy_target = _target_city(city, snow_days_per_year=3.0)
+    summary = build_summary(target, snowy_target, score_city(target, snowy_target))
+    assert summary["climate"]["reference"] == artifact["reference_climate"]
+    assert "snow" in summary["novel_city"]  # 3.0 >= 2 and the snowiest reference city is under 1
+
+
+def test_snow_is_not_novel_when_any_reference_city_has_snow():
+    phoenix, target, city = _fixtures()
+    _use_pooled_reference([phoenix, phoenix.copy()], [city, _second_reference_city(city, snow_days_per_year=1.5)])
+    snowy_target = _target_city(city, snow_days_per_year=3.0)
+    summary = build_summary(target, snowy_target, score_city(target, snowy_target))
+    assert "snow" not in summary["novel_city"]
+
+
+def test_much_rainier_means_wetter_than_the_wettest_reference_city():
+    """CR-010 replaces "2x Phoenix" with "above the max across the reference cities"."""
+    phoenix, target, city = _fixtures()
+    _use_pooled_reference([phoenix, phoenix.copy()], [city, _second_reference_city(city, rain_days_per_year=141.0)])
+    # 120.4 is 3.6x Phoenix's 33.0, which fired under the old rule, but the car
+    # already drives in a 141-day city.
+    between = _target_city(city, rain_days_per_year=120.4)
+    assert not [c for c in _full_result(target, between)["scenarios"] if c["id"] == "rain_dense_intersection"]
+    wetter = _target_city(city, rain_days_per_year=203.8)
+    card = next(c for c in _full_result(target, wetter)["scenarios"] if c["id"] == "rain_dense_intersection")
+    assert card["triggered_by"][0] == "rain_days_per_year 203.8 vs max reference 141.0 (Refville)"
+
+
+def test_a_fixture_anywhere_in_the_pool_marks_the_fit_as_fixture():
+    phoenix, _, city = _fixtures()
+    real = dict(city, created_at="2026-09-26T06:09:07Z")
+    assert reference._is_fixture_fit(reference.fit_pooled_reference(
+        [phoenix, phoenix], [real, _second_reference_city(city)]))
+    assert not reference._is_fixture_fit(reference.fit_pooled_reference(
+        [phoenix, phoenix], [real, _second_reference_city(real)]))
+
+
+def test_a_pre_cr010_single_city_artifact_still_scores():
+    """An artifact without the reference_* keys falls back to its one city's climate."""
+    phoenix, target, city = _fixtures()
+    artifact = reference.fit_reference(phoenix, city)
+    for key in ("reference_slugs", "reference_cities", "reference_hex_counts",
+                "reference_climate", "reference_climate_source"):
+        artifact.pop(key)
+    reference.reset_reference_cache()
+    reference._CACHE = artifact
+    target_city = _target_city(city)
+    summary = build_summary(target, target_city, score_city(target, target_city))
+    assert summary["climate"]["reference"]["rain_days_per_year"] == city["rain_days_per_year"]
+    CityResult.model_validate(_full_result(target, target_city))
+
+
+# --------------------------------------------------------------------------
 # Reference artifact
 # --------------------------------------------------------------------------
 def test_artifact_holds_every_key_the_contract_lists():
@@ -313,6 +425,9 @@ def test_artifact_holds_every_key_the_contract_lists():
     artifact = reference.fit_reference(phoenix, city)
     assert {"feature_order", "rare_features", "scaler", "iforest", "phoenix_scores_sorted",
             "phoenix_log_mean", "phoenix_log_std", "phoenix_raw", "phoenix_city"} <= set(artifact)
+    # CR-010 additions
+    assert {"reference_slugs", "reference_cities", "reference_hex_counts", "reference_climate",
+            "reference_climate_source"} <= set(artifact)
     assert set(artifact["feature_order"]) | set(artifact["rare_features"]) == set(HEX_FEATURES)
     assert not set(artifact["feature_order"]) & set(artifact["rare_features"])
 

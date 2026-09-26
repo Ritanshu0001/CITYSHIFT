@@ -14,7 +14,7 @@ import pandas as pd
 from app.model.scenarios import build_scenarios
 from app.model.scoring import score_city
 from app.model.summary import build_summary
-from app.schemas import REFERENCE_SLUG
+from app.schemas import REFERENCE_LABEL, REFERENCE_SLUGS
 
 
 def _result(cache: Path, slug: str, recompute: bool) -> tuple[dict, str]:
@@ -65,8 +65,6 @@ def main() -> None:
     parser.add_argument("--cache", type=Path, default=Path(__file__).resolve().parents[2] / "cache")
     parser.add_argument("--recompute", action="store_true",
                         help="ignore any cached result.json and score from features.csv")
-    parser.add_argument("--reference-slug", default=REFERENCE_SLUG,
-                        help="slug of the reference city whose self-score is reported")
     args = parser.parse_args()
 
     print("| City | Hexes | Red | Top median shifts | Novel | Scenarios | Top card |")
@@ -78,19 +76,24 @@ def main() -> None:
         print(_row(result["summary"], result.get("scenarios", [])))
 
     # The reference self-score is the answer to "does the score mean anything",
-    # so it is always reported even when it is not one of the requested slugs.
-    reference = args.reference_slug
-    if reference in args.slugs:
-        print(f"\n{reference} is in the table above; contract 4.6 expects about 5% red.")
-    elif (args.cache / reference / "features.csv").exists() or (args.cache / reference / "result.json").exists():
-        result, source = _result(args.cache, reference, args.recompute)
-        sources.append((reference, source))
-        summary = result["summary"]
-        print(f"\nReference self-score: {summary['city']} {summary['pct_red']:.1f}% red "
-              f"over {summary['n_hexes']} hexes (contract 4.6 expects about 5).")
+    # so it is always reported. CR-010: it is pooled over the reference cities,
+    # which together land at about 5% red by construction.
+    red = total = 0
+    per_city = []
+    for slug in REFERENCE_SLUGS:
+        if not ((args.cache / slug / "features.csv").exists() or (args.cache / slug / "result.json").exists()):
+            print(f"\nReference self-score: {slug} is not in {args.cache}; run it through the pipeline first.")
+            break
+        result, source = _result(args.cache, slug, args.recompute)
+        if slug not in args.slugs:
+            sources.append((slug, source))
+        n_red = sum(item["band"] == "red" for item in result["hexes"])
+        red, total = red + n_red, total + len(result["hexes"])
+        per_city.append(f"{result['summary']['city']} {result['summary']['pct_red']:.1f}%")
     else:
-        print(f"\nReference self-score: {reference} is not in {args.cache}; "
-              "run it through the pipeline to get the number.")
+        print(f"\nReference self-score ({REFERENCE_LABEL}, pooled): {red / total * 100:.1f}% red over "
+              f"{total} hexes (contract 4.6 expects about 5).")
+        print("Per reference city: " + ", ".join(per_city))
 
     # Provenance goes to stderr so stdout stays a paste-ready Markdown table.
     for slug, source in sources:

@@ -1,4 +1,4 @@
-"""Score city feature rows against the saved Phoenix reference."""
+"""Score city feature rows against the saved reference (pooled established cities, CR-010)."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import pandas as pd
 from app.schemas import HEX_FEATURES, TOP_FEATURES_N, band_for
 from .reference import cached_reference, sanitize_features
 
-# Phoenix-side statistics derived from the artifact. They do not change while the
+# Reference-side statistics derived from the artifact. They do not change while the
 # artifact does not, so they are computed once instead of once per hex per
 # feature, and re-derived only if a refit swaps the cached artifact out.
 _STATS: dict | None = None
@@ -22,7 +22,7 @@ def _reference_stats(artifact: dict) -> dict:
         _STATS = {
             "artifact": artifact,
             "medians": [round(float(reference[name].median()), 2) for name in modeled],
-            # Sorted Phoenix columns turn each percentile into a binary search.
+            # Sorted reference columns turn each percentile into a binary search.
             "sorted_columns": [np.sort(reference[name].to_numpy()) for name in modeled],
             "n_reference": len(reference),
         }
@@ -59,7 +59,7 @@ def score_city(features: pd.DataFrame, city: dict) -> list[dict]:
     percentiles = np.searchsorted(phoenix_scores, anomaly_scores, side="left") / len(phoenix_scores) * 100
 
     stats = _reference_stats(artifact)
-    # pct: share of Phoenix raw values at or below this one, per contract 4.2.
+    # pct: share of reference raw values at or below this one, per contract 4.2.
     percentile_of_raw = np.column_stack([
         np.searchsorted(column, values[:, index], side="right") / stats["n_reference"] * 100
         for index, column in enumerate(stats["sorted_columns"])

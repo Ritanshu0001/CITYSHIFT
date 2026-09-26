@@ -5,10 +5,7 @@ from __future__ import annotations
 import pandas as pd
 
 from app.schemas import HEX_FEATURES
-from .reference import cached_reference, sanitize_features
-
-_CLIMATE_KEYS = ("rain_days_per_year", "heavy_rain_days_per_year", "snow_days_per_year")
-
+from .reference import CLIMATE_KEYS, cached_reference, reference_climate, sanitize_features
 
 def _median(values: pd.Series) -> float:
     """Median as a finite rounded float; 0.0 when there is nothing to take it of."""
@@ -30,13 +27,14 @@ def _driving_side(city: dict) -> str:
 
 def build_summary(features: pd.DataFrame, city: dict, hexes: list[dict]) -> dict:
     artifact = cached_reference()
-    reference_city = artifact["phoenix_city"]
+    # CR-010: per-metric max across the reference cities, not one city's values.
+    climate_reference, _ = reference_climate(artifact)
     target = sanitize_features(features.loc[:, HEX_FEATURES].astype(float))
-    reference = artifact["phoenix_raw"]
+    reference = artifact["phoenix_raw"]  # pooled reference hexes
     pct_red = sum(item["band"] == "red" for item in hexes) / len(hexes) * 100 if hexes else 0.0
     driving_side = _driving_side(city)
     novel_city = []
-    if float(city.get("snow_days_per_year", 0)) >= 2 and float(reference_city.get("snow_days_per_year", 0)) < 1:
+    if float(city.get("snow_days_per_year", 0)) >= 2 and climate_reference["snow_days_per_year"] < 1:
         novel_city.append("snow")
     if driving_side == "left":
         novel_city.append("left_hand_traffic")
@@ -63,8 +61,8 @@ def build_summary(features: pd.DataFrame, city: dict, hexes: list[dict]) -> dict
         "n_hexes": int(len(features)),
         "pct_red": round(float(pct_red), 1),
         "climate": {
-            "target": {key: float(city[key]) for key in _CLIMATE_KEYS},
-            "reference": {key: float(reference_city[key]) for key in _CLIMATE_KEYS},
+            "target": {key: float(city[key]) for key in CLIMATE_KEYS},
+            "reference": {key: float(climate_reference[key]) for key in CLIMATE_KEYS},
         },
         "driving_side": driving_side,
         "feature_comparison": feature_comparison,

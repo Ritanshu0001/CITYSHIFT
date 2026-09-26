@@ -5,7 +5,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from app.schemas import NOVEL_Z_EQUIVALENT
+from app.schemas import NOVEL_Z_EQUIVALENT, REFERENCE_LABEL
+from .reference import cached_reference, reference_climate
 from .scoring import z_matrix
 
 
@@ -51,7 +52,7 @@ def _novel_ids(hexes: list[dict], *names: str) -> list[str]:
     movable_bridge_count in novel", so the trigger follows novel[] rather than a
     raw count. That keeps a card's hex_ids in step with the warning markers the
     frontend draws, and means the rule goes quiet when the feature turns out to
-    be common enough on Phoenix to be modeled instead of flagged.
+    be common enough on the reference to be modeled instead of flagged.
     """
     wanted = set(names)
     return [str(item["h3"]) for item in hexes if wanted.intersection(item.get("novel", ()))]
@@ -62,7 +63,7 @@ def _mean_abs(z_values: pd.DataFrame, feature: str, mask: pd.Series) -> float:
 
 
 def _modeled(z_values: pd.DataFrame, *features: str) -> bool:
-    """True when every feature the rule needs is modeled (not rare on Phoenix)."""
+    """True when every feature the rule needs is modeled (not rare on the reference)."""
     return all(feature in z_values.columns for feature in features)
 
 
@@ -72,32 +73,28 @@ def movable_bridge(features: pd.DataFrame, city: dict, hexes: list[dict], summar
         return None
     return _card("movable_bridge", TITLES["movable_bridge"],
                  [f"movable_bridge_count novel in {len(ids)} hexes"],
-                 f"{len(ids)} hexes contain a movable bridge, which Phoenix has too few of to model.",
+                 f"{len(ids)} hexes contain a movable bridge, which {REFERENCE_LABEL} have too few of to model.",
                  ids, NOVEL_Z_EQUIVALENT)
 
 
 def rain_dense_intersection(features: pd.DataFrame, city: dict, hexes: list[dict], summary: dict, z_values: pd.DataFrame) -> dict | None:
     if not _modeled(z_values, "intersection_density"):
         return None
+    # summary.climate.reference holds the per-metric max over the reference cities.
     reference = summary["climate"]["reference"]["rain_days_per_year"]
     target = summary["climate"]["target"]["rain_days_per_year"]
     mask = z_values["intersection_density"] > 2
     ids = _ids(features, mask)
-    # "Much rainier" = target >= 2x reference (contract 4.7). A zero reference
-    # would make that trivially true for a bone-dry city and render the ratio as
-    # "inf", so compare on absolute rain days instead.
-    much_rainier = target >= 2 * reference if reference > 0 else target > 0
-    if not much_rainier or not ids:
+    # CR-010: "much rainier" = wetter than the wettest reference city (replaces
+    # 2x Phoenix). Absolute days, so a zero reference never divides.
+    if not target > reference or not ids:
         return None
-    if reference > 0:
-        rain_trigger = f"rain_days_per_year {target / reference:.1f}x reference"
-        rain_phrase = f"has {target / reference:.1f}x Phoenix's rain days"
-    else:
-        rain_trigger = f"rain_days_per_year {target:.1f} vs reference 0.0"
-        rain_phrase = f"has {target:.1f} rain days a year against Phoenix's none"
+    wettest = reference_climate(cached_reference())[1]["rain_days_per_year"].split(",")[0]
     return _card("rain_dense_intersection", TITLES["rain_dense_intersection"],
-                 [rain_trigger, f"intersection_density z > 2 in {len(ids)} hexes"],
-                 f"{city['name']} {rain_phrase}. {len(ids)} hexes have intersection density above z = 2.",
+                 [f"rain_days_per_year {target:.1f} vs max reference {reference:.1f} ({wettest})",
+                  f"intersection_density z > 2 in {len(ids)} hexes"],
+                 f"{city['name']} has {target:.1f} rain days a year, more than any of {REFERENCE_LABEL} "
+                 f"(wettest: {wettest}, {reference:.1f}). {len(ids)} hexes have intersection density above z = 2.",
                  ids, _mean_abs(z_values, "intersection_density", mask))
 
 
@@ -177,9 +174,10 @@ def snow_traction(features: pd.DataFrame, city: dict, hexes: list[dict], summary
     target = summary["climate"]["target"]["snow_days_per_year"]
     reference = summary["climate"]["reference"]["snow_days_per_year"]
     return _card("snow_traction", TITLES["snow_traction"],
-                 [f"snow_days_per_year {target:.1f} vs reference {reference:.1f}",
+                 [f"snow_days_per_year {target:.1f} vs max reference {reference:.1f}",
                   "snow in novel_city"],
-                 f"{city['name']} has {target:.1f} snow days per year versus Phoenix's {reference:.1f}.",
+                 f"{city['name']} has {target:.1f} snow days per year versus at most {reference:.1f} "
+                 f"in {REFERENCE_LABEL}.",
                  [], NOVEL_Z_EQUIVALENT, "city", n_affected=int(summary["n_hexes"]))
 
 
@@ -188,7 +186,7 @@ def left_hand_traffic(features: pd.DataFrame, city: dict, hexes: list[dict], sum
         return None
     return _card("left_hand_traffic", TITLES["left_hand_traffic"],
                  ["driving_side left vs reference right", "left_hand_traffic in novel_city"],
-                 f"{city['name']} drives on the left, unlike Phoenix's right-hand traffic.",
+                 f"{city['name']} drives on the left; {REFERENCE_LABEL} all drive on the right.",
                  [], NOVEL_Z_EQUIVALENT, "city", n_affected=int(summary["n_hexes"]))
 
 
