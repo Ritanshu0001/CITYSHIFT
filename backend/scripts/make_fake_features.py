@@ -62,6 +62,11 @@ def _table(rng: np.random.Generator, n_rows: int, target: bool = False) -> pd.Da
         for name, count in (("movable_bridge_count", 4), ("tunnel_count", 3), ("roundabout_count", 5), ("stadium_count", 2)):
             data[name] = np.zeros(n_rows)
             data[name][:count] = 1
+    # CR-011. Percent grade, log-normal with a ~1% median: most hexes are gentle
+    # and a thin tail is steep, which is the shape the real DEM-derived values
+    # have. Drawn last on purpose so adding it leaves every other column's draws
+    # byte-identical, keeping the fixture diff to one new column.
+    data["terrain_slope_pct"] = rng.lognormal(np.log(1.0), 0.6, n_rows)
     return pd.DataFrame(data, columns=FEATURE_CSV_COLUMNS)
 
 
