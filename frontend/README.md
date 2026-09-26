@@ -13,7 +13,7 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Mock mode is enabled by default and does not require a backend or Google Maps key.
+Open [http://localhost:3000](http://localhost:3000). Mock mode is enabled by default and uses dark-filtered OpenStreetMap tiles without a key. Add a Google key for the contract's production map, Places, and Street View path.
 
 ## Environment
 

@@ -59,7 +59,7 @@ The Google key must have Maps JavaScript API, Places API, and Geocoding API enab
 - `/city/[slug]`: cached → polling → error → result state machine, polling every 1500 ms.
 - Five-step progress screen using the exact contract step names.
 - Google Maps + deck.gl `H3HexagonLayer` when a key is present.
-- Interactive SVG/H3 cartographic fallback when no Maps key is present.
+- Interactive H3 overlay on real, dark-filtered OpenStreetMap tiles when no Google key is present; this is the local/demo fallback and Google Maps remains the contract-mandated production path.
 - Shift legend using the locked `<80`, `80–95`, and `≥95` bands.
 - Clickable hex evidence panel with top features, Phoenix medians, z-scores, percentiles, and novel-feature warnings.
 - Street View lookup within 100 m, isolated so failure cannot break the evidence panel.
@@ -83,7 +83,7 @@ Manual browser checks passed for:
 - Homepage layout and cached-city navigation.
 - Search → mock progress → result transition.
 - Hex selection and evidence rendering.
-- Novel feature warning and no-key Street View fallback.
+- Novel feature warning, real no-key street basemap, and no-key Street View fallback.
 - Comparison rendering including a zero-value Phoenix snow baseline.
 - Scenario selection and six-hex map highlighting.
 - Desktop at 1440 × 900.
