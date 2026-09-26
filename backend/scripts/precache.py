@@ -28,6 +28,7 @@ CITIES = [
     ("Tucson, AZ, USA", 32.2226, -110.9747, "US"),
     ("San Francisco, CA, USA", 37.7749, -122.4194, "US"),
     ("Los Angeles, CA, USA", 34.0522, -118.2437, "US"),
+    ("San Diego, CA, USA", 32.7157, -117.1611, "US"),
     ("Austin, TX, USA", 30.2672, -97.7431, "US"),
     ("Atlanta, GA, USA", 33.7490, -84.3880, "US"),
     ("Miami, FL, USA", 25.7617, -80.1918, "US"),

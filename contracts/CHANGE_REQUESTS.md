@@ -163,3 +163,18 @@ Status: approved at sync
   only one Phoenix hex. P3 will verify the re-scored scenario cards in the UI after P2
   ships the rule.
 Status: approved by P3
+
+## CR-011  (all, sync)  Terrain slope hex metric (Open-Meteo Elevation) + San Diego
+(Proposed as "CR-009"; renumbered because CR-009 is P2's responses. Its "CR-008 multi-city" is CR-010, already shipped.)
+Decision: new hex feature `terrain_slope_pct` after stadium_count (HEX_FEATURES 17 -> 18,
+FEATURE_CSV_COLUMNS 21 -> 22, avg_lanes stays last). Elevation at hex center + 6 corners
+(Copernicus GLO-90 via Open-Meteo), least-squares plane, 100 * sqrt(b^2 + c^2); points <= 0 m
+dropped; < 4 points -> 0. Fetched in the "weather" step; failure fails the city, never zeros.
+New card `steep_grade` (terrain_slope_pct z > 2). San Diego added to the pre-cache list.
+Attribution: "Elevation: Copernicus DEM GLO-90 via Open-Meteo".
+Gate (P1, scratch, all grid hexes): median / p95 / max terrain_slope_pct
+  Phoenix 0.44 / 1.15 / 2.23 · Chicago 0.17 / 1.18 / 4.40 · San Diego 1.04 / 7.33 / 11.25 ·
+  San Francisco 1.42 / 9.02 / 18.71. PASS.
+Caveat: GLO-90 is a surface model. Chicago's 5 steepest hexes are all downtown (Loop 3.47%,
+West Loop 4.23%, South Loop 4.40%) on flat ground: buildings, under the 8% stop line.
+Status: approved at sync; gate passed

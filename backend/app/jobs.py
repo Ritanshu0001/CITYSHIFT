@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 STEP_MESSAGES = {
     "roads": "Downloading the road network",
     "infrastructure": "Downloading signals, crossings, transit and places",
-    "weather": "Fetching five years of weather",
+    "weather": "Pulling weather and elevation",
     "scoring": "Scoring hexes against Waymo's established cities",
     "scenarios": "Building test scenarios",
 }

@@ -74,11 +74,13 @@ HEX_FEATURES = [
     "tunnel_count",
     "roundabout_count",
     "stadium_count",
+    # Terrain (CR-011): Copernicus DEM GLO-90 via Open-Meteo
+    "terrain_slope_pct",
 ]
-assert len(HEX_FEATURES) == 17
+assert len(HEX_FEATURES) == 18
 
 FEATURE_CSV_COLUMNS = ["h3", "area_km2", "road_km", *HEX_FEATURES, "avg_lanes"]
-assert len(FEATURE_CSV_COLUMNS) == 21
+assert len(FEATURE_CSV_COLUMNS) == 22
 
 # Keys of cache/{slug}/city.json (contract 4.3)
 CITY_JSON_KEYS = [

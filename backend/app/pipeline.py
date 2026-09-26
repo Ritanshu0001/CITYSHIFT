@@ -14,6 +14,7 @@ import pandas as pd
 from app import cache
 from app.data import openmeteo
 from app.data.driving_side import country_for, driving_side
+from app.data.elevation import terrain_slopes
 from app.data.features import build_features
 from app.data.grid import hexes_for
 from app.data.osm import drive_graph, osm_features
@@ -69,13 +70,16 @@ def build_city_data(
     step = "roads"
     t_wall = time.perf_counter()
     # The three downloads are independent: run them together, report progress in JOB_STEPS order.
-    pool = ThreadPoolExecutor(max_workers=3, thread_name_prefix="fetch")
+    elevation_stats: dict = {}
+    pool = ThreadPoolExecutor(max_workers=4, thread_name_prefix="fetch")
     try:
         hex_ids = timed("grid", hexes_for, lat, lng)
         progress("roads")
         roads_f = pool.submit(timed, "roads", drive_graph, lat, lng)
         feats_f = pool.submit(timed, "infrastructure", osm_features, lat, lng)
         weather_f = None if climate else pool.submit(timed, "weather", climate_for, lat, lng)
+        # CR-011: elevation is part of the "weather" step (JOB_STEPS unchanged).
+        elevation_f = pool.submit(timed, "elevation", terrain_slopes, hex_ids, elevation_stats)
         G, roads_server = roads_f.result()
 
         step = "infrastructure"
@@ -86,10 +90,14 @@ def build_city_data(
         progress("weather")
         climate_source = "reused from city.json" if climate else "Open-Meteo"
         climate = climate or weather_f.result()
+        try:
+            slopes = elevation_f.result()
+        except Exception as exc:
+            raise StepError("weather", RuntimeError(f"elevation: {exc}")) from exc
         timings["downloads_wall"] = time.perf_counter() - t_wall
 
         country = country_code.strip().upper() if country_code else country_for(lat, lng)
-        df, osm_completeness = timed("features", build_features, hex_ids, G, feats)
+        df, osm_completeness = timed("features", build_features, hex_ids, G, feats, slopes)
     except StepError:
         raise
     except Exception as exc:
@@ -125,6 +133,8 @@ def build_city_data(
         "n_graph_edges": G.number_of_edges(),
         "n_osm_features": len(feats),
         "climate_source": climate_source,
+        "elevation": {"points": elevation_stats.get("points"), "requests": elevation_stats.get("requests"),
+                      "source": "Copernicus DEM GLO-90 via Open-Meteo"},
         "openmeteo_calls_estimate": round(openmeteo.run_total() - calls_before, 1),
         "versions": {"osmnx": ox.__version__, "h3": h3.__version__},
     }

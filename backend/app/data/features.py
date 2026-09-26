@@ -108,8 +108,13 @@ def _dedupe_two_way(edges: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     return edges[~key.duplicated().to_numpy()]
 
 
-def build_features(hex_ids: list[str], G: nx.MultiDiGraph, feats: gpd.GeoDataFrame) -> tuple[pd.DataFrame, float]:
-    """Feature table (FEATURE_CSV_COLUMNS, hexes with road_km >= MIN_ROAD_KM) and osm_completeness."""
+def build_features(
+    hex_ids: list[str], G: nx.MultiDiGraph, feats: gpd.GeoDataFrame, slopes: dict[str, float]
+) -> tuple[pd.DataFrame, float]:
+    """Feature table (FEATURE_CSV_COLUMNS, hexes with road_km >= MIN_ROAD_KM) and osm_completeness.
+
+    `slopes` is terrain_slope_pct per hex id from app.data.elevation (CR-011).
+    """
     hex_set = set(hex_ids)
     out = pd.DataFrame(index=pd.Index(sorted(hex_set), name="h3"))
     out["area_km2"] = [h3.cell_area(h, unit="km^2") for h in out.index]
@@ -205,6 +210,10 @@ def build_features(hex_ids: list[str], G: nx.MultiDiGraph, feats: gpd.GeoDataFra
     out["school_density"] = out["n_schools"] / area
     out["nightlife_density"] = out["n_nightlife"] / area
     out["tourism_density"] = out["n_tourism"] / area
+    missing = [h for h in out.index if h not in slopes]
+    if missing:
+        raise ValueError(f"terrain slope missing for {len(missing)} hexes")  # never fill with zeros
+    out["terrain_slope_pct"] = [slopes[h] for h in out.index]
 
     out = out.reset_index()
     int_cols = ["bridge_count", "movable_bridge_count", "tunnel_count", "roundabout_count", "stadium_count"]

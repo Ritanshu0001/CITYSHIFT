@@ -1,0 +1,31 @@
+{
+  "slug": "san-diego-ca-usa",
+  "created_at": "2026-09-26T10:19:34Z",
+  "timings_s": {
+    "grid": 0.0,
+    "elevation": 0.02,
+    "weather": 0.71,
+    "roads": 142.65,
+    "infrastructure": 273.45,
+    "downloads_wall": 273.45,
+    "features": 1.01
+  },
+  "overpass": {
+    "roads": "https://maps.mail.ru/osm/tools/overpass/api",
+    "infrastructure": "https://maps.mail.ru/osm/tools/overpass/api"
+  },
+  "n_graph_nodes": 10247,
+  "n_graph_edges": 26001,
+  "n_osm_features": 15115,
+  "climate_source": "Open-Meteo",
+  "elevation": {
+    "points": 777,
+    "requests": 8,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo"
+  },
+  "openmeteo_calls_estimate": 130.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

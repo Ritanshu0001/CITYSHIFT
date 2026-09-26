@@ -45,6 +45,8 @@ curl localhost:8000/cities/phoenix-az-usa
 
 Slugs come from the `name` sent to `POST /analyze`. Send Google Places' formatted address ("New York, NY, USA", "London, UK") to hit the pre-cached cities.
 
+Data: OpenStreetMap (ODbL) via OSMnx; weather from Open-Meteo (CC BY 4.0); Elevation: Copernicus DEM GLO-90 via Open-Meteo. Open-Meteo responses are cached in `backend/openmeteo_cache/` (free tier: 10,000 calls a day; a 5-year weather pull is ~130).
+
 ## Frontend (P3)
 
 Node 20. `frontend/` does not exist yet on purpose; generate it with `npx create-next-app@latest frontend --ts --app --src-dir --eslint --tailwind`, copy `frontend/.env.local.example` to `frontend/.env.local`, set `NEXT_PUBLIC_GOOGLE_MAPS_KEY`, then `npm run dev` from `frontend/`.
