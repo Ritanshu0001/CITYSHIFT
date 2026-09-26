@@ -91,10 +91,10 @@ Manual browser checks passed for:
 
 ## External checks still required
 
-These cannot be honestly completed from the current P3-only checkout:
+P1's API and feature caches for seven cities are now on `main`, but P2's model output is not: no `cache/*/result.json` files exist yet. The following checks therefore remain for the next account after P2 lands results and a Maps key is available:
 
 1. Start P1's FastAPI service on port 8000 and set `NEXT_PUBLIC_USE_MOCK=0`.
-2. Run a cached Phoenix result, then one uncached city, confirming the API matches `src/lib/types.ts`.
+2. After P2 produces `result.json`, run a cached Phoenix result, then one uncached city, confirming the API matches `src/lib/types.ts`.
 3. Add a valid Google Maps key and confirm Google basemap rendering, Places selection, and at least one Street View panorama.
 4. Validate cached Phoenix, Tucson, New York, and London once P1/P2 results exist. Expected qualitative pattern: Phoenix and Tucson mostly green; New York and London more yellow/red; London shows left-hand traffic.
 5. Record the final demo only after those live checks. The script is in `demo/DEMO-SCRIPT.md`.
