@@ -74,12 +74,16 @@ HEX_FEATURES = [
     "tunnel_count",
     "roundabout_count",
     "stadium_count",
-    # Terrain (CR-011): Copernicus DEM GLO-90 via Open-Meteo
-    "terrain_slope_pct",
 ]
-assert len(HEX_FEATURES) == 18
+assert len(HEX_FEATURES) == 17
 
-FEATURE_CSV_COLUMNS = ["h3", "area_km2", "road_km", *HEX_FEATURES, "avg_lanes"]
+# Written to features.csv but never scored (CR-014): terrain slope is collected
+# (CR-011, Copernicus DEM GLO-90 via Open-Meteo) and kept for display, but the
+# 90 m surface model reads dense towers as slope, so it stays out of the model.
+UNSCORED_FEATURES = ["terrain_slope_pct"]
+
+# Column order is unchanged from CR-011, so existing features.csv files stay valid.
+FEATURE_CSV_COLUMNS = ["h3", "area_km2", "road_km", *HEX_FEATURES, *UNSCORED_FEATURES, "avg_lanes"]
 assert len(FEATURE_CSV_COLUMNS) == 22
 
 # Keys of cache/{slug}/city.json (contract 4.3)

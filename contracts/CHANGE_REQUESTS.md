@@ -225,3 +225,19 @@ Options:
 P2 agrees with (a) for v1. Filed so the choice is recorded rather than implicit, and so
 that anyone reading a score knows Atlanta carries a quarter of the reference.
 Status: open, for the next sync
+
+## CR-014  (P1, hour 14)  Turn slope scoring off; keep terrain_slope_pct as an unscored column
+Why: GLO-90 is a surface model. With slope scored, steep_grade's top New York hexes are
+Midtown Manhattan (7.1-10.1%: towers plus a little real relief) and the gate the sync set
+for the Chicago Loop (8%) is exceeded. Dropping the worst-fitting point per hex does not
+separate towers from hills, so there is no cheap data fix before the demo.
+Decision: schemas.py removes terrain_slope_pct from HEX_FEATURES (18 -> 17) and adds
+UNSCORED_FEATURES = ["terrain_slope_pct"]. FEATURE_CSV_COLUMNS keeps 22 columns in the same
+order, so every features.csv stays valid byte for byte; elevation is still fetched.
+Effects: the model is back to the CR-010 feature set. steep_grade goes quiet (it is guarded
+on slope being modeled). Slope no longer appears in top_features or feature_comparison.
+Previewed with a scratch refit: pooled self-score 5.0%; the 12 original cities reproduce
+the CR-010 results (519fd30) byte for byte; San Diego 13.1% red.
+Needs from P2: refit, update the 3 slope tests. Optional: show slope as a display-only
+feature_comparison row, like avg_lanes.
+Status: decided by P1 for the demo; revisit after (e.g. a bare-earth DTM).
