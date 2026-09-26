@@ -1,13 +1,13 @@
 {
   "slug": "london-uk",
-  "created_at": "2026-09-26T06:11:32Z",
+  "created_at": "2026-09-26T11:01:09Z",
   "timings_s": {
     "grid": 0.0,
-    "weather": 0.64,
-    "infrastructure": 82.3,
-    "roads": 87.84,
-    "downloads_wall": 87.85,
-    "features": 4.83
+    "infrastructure": 33.59,
+    "roads": 41.37,
+    "elevation": 117.06,
+    "downloads_wall": 117.06,
+    "features": 5.6
   },
   "overpass": {
     "roads": "https://overpass-api.de/api",
@@ -16,6 +16,13 @@
   "n_graph_nodes": 33514,
   "n_graph_edges": 78197,
   "n_osm_features": 57396,
+  "climate_source": "reused from city.json",
+  "elevation": {
+    "points": 963,
+    "requests": 10,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo"
+  },
+  "openmeteo_calls_estimate": 963.0,
   "versions": {
     "osmnx": "2.1.1",
     "h3": "4.5.0"
