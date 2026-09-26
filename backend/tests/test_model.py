@@ -454,6 +454,36 @@ def test_a_pre_cr010_single_city_artifact_still_scores():
 # --------------------------------------------------------------------------
 # Reference artifact
 # --------------------------------------------------------------------------
+def test_a_stale_artifact_names_the_missing_feature_instead_of_a_keyerror():
+    """A saved artifact fitted before a HEX_FEATURES change must fail clearly.
+
+    Regression guard for CR-011: HEX_FEATURES gained terrain_slope_pct while the
+    committed artifact predated it, and every real city died on a bare KeyError
+    inside build_summary. The suite stayed green because tests always fit a fresh
+    fixture reference, so only the on-disk artifact was ever stale.
+    """
+    import joblib
+    phoenix, _, city = _fixtures()
+    # Shape of the real pre-CR-011 pickle: fitted when HEX_FEATURES was shorter.
+    stale = reference.fit_reference(phoenix, city)
+    stale["phoenix_raw"] = stale["phoenix_raw"].drop(columns=["terrain_slope_pct"])
+    stale["feature_order"] = [name for name in stale["feature_order"]
+                              if name != "terrain_slope_pct"]
+    directory = FIXTURES / "stale_artifact"
+    directory.mkdir(parents=True, exist_ok=True)
+    joblib.dump(stale, directory / "phoenix_reference.joblib")
+    try:
+        reference.load_reference(directory)
+    except ValueError as error:
+        assert "terrain_slope_pct" in str(error)
+        assert "fit_reference.py" in str(error)
+    else:
+        raise AssertionError("a stale artifact must not load silently")
+    finally:
+        (directory / "phoenix_reference.joblib").unlink(missing_ok=True)
+        directory.rmdir()
+
+
 def test_artifact_holds_every_key_the_contract_lists():
     phoenix, _, city = _fixtures()
     artifact = reference.fit_reference(phoenix, city)

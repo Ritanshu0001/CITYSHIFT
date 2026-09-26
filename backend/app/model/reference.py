@@ -192,6 +192,28 @@ def _warn_on_version_drift(meta_path: Path) -> None:
         )
 
 
+def _check_artifact_covers_hex_features(artifact: dict, artifact_path: Path) -> None:
+    """Fail clearly when the saved artifact predates a HEX_FEATURES change.
+
+    build_summary walks HEX_FEATURES and indexes the reference frame for each
+    one, so an artifact fitted before a feature was added dies on a bare
+    KeyError several frames deep, in a place that says nothing about refitting.
+    The model tests do not catch it either: they always fit a fresh reference
+    from the fixtures, so only the committed artifact is ever stale.
+    """
+    raw = artifact.get("phoenix_raw")
+    if raw is None:
+        return
+    missing = [name for name in HEX_FEATURES if name not in raw.columns]
+    if missing:
+        raise ValueError(
+            f"Reference artifact at {artifact_path} was fitted before "
+            f"{', '.join(missing)} joined HEX_FEATURES, so it cannot score or summarise "
+            "any city. Refit it from the reference cities with "
+            "`python scripts/fit_reference.py --out app/model/reference --force`."
+        )
+
+
 def reference_dir(directory: str | Path | None = None) -> Path:
     """Resolve where the artifact lives: explicit arg, env override, then default."""
     if directory is not None:
@@ -212,6 +234,7 @@ def load_reference(directory: str | Path | None = None) -> dict:
             f"or point {REFERENCE_DIR_ENV} at a fixture-fitted reference for local development."
         )
     artifact = joblib.load(artifact_path)
+    _check_artifact_covers_hex_features(artifact, artifact_path)
     if _is_fixture_fit(artifact):
         warnings.warn(
             f"Reference artifact at {artifact_path} was fitted on the fake fixture, not on the real "
