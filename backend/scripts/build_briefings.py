@@ -23,7 +23,7 @@ def main() -> int:
     ap.add_argument("--force-ai", action="store_true", help="with --ai-summary: regenerate existing summaries")
     args = ap.parse_args()
     if args.ai_summary and not gemini.configured():
-        print("error: --ai-summary needs GEMINI_API_KEY and GEMINI_MODEL in backend/.env", file=sys.stderr)
+        print("error: --ai-summary needs GEMINI_API_KEY in backend/.env", file=sys.stderr)
         return 2
     from app import ai_summary
 

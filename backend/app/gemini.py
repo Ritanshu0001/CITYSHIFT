@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(ENV_PATH)
 
+DEFAULT_MODEL = "gemini-3.5-flash-lite"  # team choice; GEMINI_MODEL in backend/.env overrides it
 TEMPERATURE = 0.2
 TIMEOUT_MS = 15_000
 
@@ -25,8 +26,8 @@ def api_key() -> str | None:
     return os.environ.get("GEMINI_API_KEY", "").strip() or None
 
 
-def model_name() -> str | None:
-    return os.environ.get("GEMINI_MODEL", "").strip() or None
+def model_name() -> str:
+    return os.environ.get("GEMINI_MODEL", "").strip() or DEFAULT_MODEL
 
 
 def configured() -> bool:
@@ -58,7 +59,7 @@ def generate(contents: list, *, system: str, tools: list | None = None, force_te
     global _thinking_supported
     model = model_name()
     if not model or not api_key():
-        raise RuntimeError("Gemini is not configured (GEMINI_API_KEY / GEMINI_MODEL in backend/.env)")
+        raise RuntimeError("Gemini is not configured (GEMINI_API_KEY in backend/.env)")
 
     def config() -> types.GenerateContentConfig:
         return types.GenerateContentConfig(
