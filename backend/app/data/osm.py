@@ -34,6 +34,11 @@ DEFAULT_OVERPASS_URL = ox.settings.overpass_url
 # Checked 2026-09-26: kumi.systems and private.coffee were hanging; maps.mail.ru answered in 4 s.
 FALLBACK_OVERPASS_URL = "https://maps.mail.ru/osm/tools/overpass/api"
 
+# Before every request OSMnx pins the Overpass hostname to one IP from gethostbyname.
+# overpass-api.de round-robins two machines; on 2026-09-26 one refused connections and
+# every pinned request to it failed. Unpinned, urllib3 tries each A record in turn.
+ox._http._config_dns = lambda _url: None
+
 ox.settings.use_cache = True
 ox.settings.cache_folder = str(Path(__file__).resolve().parents[2] / "osmnx_cache")
 ox.settings.requests_timeout = 180
