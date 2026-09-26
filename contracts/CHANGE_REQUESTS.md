@@ -178,3 +178,50 @@ Gate (P1, scratch, all grid hexes): median / p95 / max terrain_slope_pct
 Caveat: GLO-90 is a surface model. Chicago's 5 steepest hexes are all downtown (Loop 3.47%,
 West Loop 4.23%, South Loop 4.40%) on flat ground: buildings, under the 8% stop line.
 Status: approved at sync; gate passed
+
+## CR-012  (P2, hour 14)  The "much rainier" bar drops the rain card from 3 cities to 1
+Why: CR-010 replaced "2x Phoenix" with "wetter than the wettest reference city". That bar
+is now Atlanta at 141.0 rain days a year, and only Miami (203.8) clears it. Measured
+against the committed caches, rain_dense_intersection went from 3 cities to 1.
+The two cities that now miss it miss by very little:
+  London 136.6 rain days, short by 4.4
+  Tokyo  138.2 rain days, short by 2.8
+P1's view, for the record: keep the max. The card is about heavy rain, and London's
+heavy-rain days are 3.6 against Atlanta's 24.6, so London is not a heavy-rain city and
+the car already drives in wetter conditions in Atlanta.
+P2 agrees for London, and notes the argument does not transfer to Tokyo: Tokyo's
+heavy-rain days are 24.4, effectively level with Atlanta's 24.6. So Tokyo is as much a
+heavy-rain city as the reference's wettest, and it misses the card on a 2.8-day margin
+of ordinary rain days rather than on heavy rain. If we keep the max, that is the case a
+judge is most likely to find.
+Options:
+  a) Keep "wetter than the wettest" (P1's preference, and what the sync approved).
+     Add a Q&A line explaining why a rainy-looking city can legitimately have no rain card.
+  b) Use the reference median rain days instead of the max, which restores London and
+     Tokyo but weakens the "the car already drives in this" framing.
+  c) Keep the max for rain_days but add heavy_rain_days as a second trigger, which is the
+     only option that separates London from Tokyo on the evidence.
+Ask: confirm (a) and P2 will write the Q&A line, or pick (b) or (c).
+Status: open, for the next sync
+
+## CR-013  (P2, hour 14)  Equal weight per hex gives Atlanta the largest share of the reference
+Why: fit_pooled_reference concatenates the five reference cities, so each hex carries
+equal weight and a city's influence is proportional to how many hexes it kept:
+  Atlanta       286 hexes  24.8%
+  Los Angeles   245 hexes  21.2%
+  Austin        232 hexes  20.1%
+  Phoenix       229 hexes  19.9%
+  San Francisco 161 hexes  14.0%
+Atlanta is both the largest contributor to the fitted model and the city that sets the
+rain and heavy-rain climate bars (CR-012), so it drives two things at once, while San
+Francisco, the most distinctive of the five, carries the least weight. Hex counts differ
+because H3 cell area varies with latitude (CR-001), not because of anything meaningful
+about the cities.
+Options:
+  a) Keep it. It is the documented CR-010 choice, the behaviour is understood, and
+     changing it means a refit and a full rescore. P1's view: leave it for v1.
+  b) Weight each city equally by reweighting hexes to 1/n_hexes per city, so the
+     reference is "the five cities" rather than "the 1,153 hexes".
+P2 agrees with (a) for v1. Filed so the choice is recorded rather than implicit, and so
+that anyone reading a score knows Atlanta carries a quarter of the reference.
+Status: open, for the next sync
