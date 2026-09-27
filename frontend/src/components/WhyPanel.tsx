@@ -1,4 +1,4 @@
-import { AlertTriangle, CircleDot, Crosshair, Mountain, X } from "lucide-react";
+import { AlertTriangle, CircleDot, Hexagon, Mountain, X } from "lucide-react";
 import { bandLabel, compactNumber, featureLabel, REFERENCE_LABEL } from "@/lib/constants";
 import type { LiveTerrain } from "@/lib/terrain";
 import type { CityHex, CrashesResponse } from "@/lib/types";
@@ -26,7 +26,7 @@ export function WhyPanel({
   if (!hex) {
     return (
       <div className="panel-empty">
-        <Crosshair size={28} strokeWidth={1.5} />
+        <Hexagon size={32} strokeWidth={1.8} />
         <h3>Select an area on the map</h3>
         <p>Pick any hex to see the three strongest differences from {REFERENCE_LABEL} and the evidence behind its score.</p>
       </div>
@@ -46,9 +46,9 @@ export function WhyPanel({
         <strong>{hex.shift_score.toFixed(1)}</strong>
         <span>/ 100</span>
       </div>
-      <p className="score-explainer">More unusual than <b>{hex.shift_score.toFixed(1)}%</b> of areas across {REFERENCE_LABEL}.</p>
+      <p className="score-explainer">More unusual than <b>{hex.shift_score.toFixed(1)}%</b> of areas in the Waymo benchmark.</p>
       <div className="panel-rule" />
-      <div className="mini-heading"><span>Strongest signals</span><small>Target vs reference</small></div>
+      <div className="mini-heading"><span>Strongest signals</span><small>City compared with benchmark</small></div>
       <div className="feature-table">
         {topFeatures.map((feature) => (
           <div className="feature-row" key={feature.name}>
@@ -56,7 +56,7 @@ export function WhyPanel({
             <div className="feature-values">
               <b>{compactNumber(feature.value)}</b>
               {/* A zero median means most reference areas have none of this (schools, bars, tunnels). */}
-              <small>{feature.ref_median > 0 ? `Reference ${compactNumber(feature.ref_median)}` : "Reference: usually none"}</small>
+              <small>{feature.ref_median > 0 ? `Benchmark ${compactNumber(feature.ref_median)}` : "Usually none in benchmark"}</small>
             </div>
             <span className={feature.z >= 0 ? "z-score positive" : "z-score negative"}>{feature.z >= 0 ? "+" : ""}{feature.z.toFixed(1)}σ</span>
           </div>

@@ -1,0 +1,32 @@
+{
+  "slug": "charleston-wv-usa",
+  "created_at": "2026-09-27T02:29:58Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.59,
+    "infrastructure": 6.18,
+    "roads": 146.48,
+    "downloads_wall": 146.48,
+    "features": 0.1,
+    "elevation": 162.38
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 4434,
+  "n_graph_edges": 10537,
+  "n_osm_features": 2741,
+  "climate_source": "Open-Meteo",
+  "elevation": {
+    "points": 923,
+    "requests": 10,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo",
+    "status": "done"
+  },
+  "openmeteo_calls_estimate": 1053.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

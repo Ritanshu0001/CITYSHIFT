@@ -16,7 +16,7 @@ export const REFERENCE_SLUGS = [
   "austin-tx-usa",
   "atlanta-ga-usa",
 ] as const;
-export const REFERENCE_LABEL = "Waymo's established cities";
+export const REFERENCE_LABEL = "Waymo benchmark cities";
 
 export const JOB_STEPS: JobStep[] = [
   "roads",

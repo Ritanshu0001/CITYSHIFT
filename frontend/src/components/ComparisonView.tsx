@@ -1,10 +1,10 @@
 import { ArrowDownRight, ArrowUpRight, CloudRain, Compass, Database, Snowflake } from "lucide-react";
-import { compactNumber, featureLabel, REFERENCE_LABEL } from "@/lib/constants";
+import { compactNumber, featureLabel } from "@/lib/constants";
 import type { Summary } from "@/lib/types";
 
 const climateRows = [
-  { key: "rain_days_per_year", label: "Rain days / year", icon: CloudRain },
-  { key: "heavy_rain_days_per_year", label: "Heavy rain / year", icon: CloudRain },
+  { key: "rain_days_per_year", label: "Rainy days per year", icon: CloudRain },
+  { key: "heavy_rain_days_per_year", label: "Heavy-rain days per year", icon: CloudRain },
   { key: "snow_days_per_year", label: "Snow days / year", icon: Snowflake },
 ] as const;
 
@@ -18,7 +18,7 @@ export function ComparisonView({ summary }: { summary: Summary }) {
   return (
     <div className="comparison-view">
       <section className="comparison-section">
-        <div className="mini-heading"><span>Climate profile</span><small>Annual average</small></div>
+        <div className="mini-heading"><span>Climate profile</span><small>Typical year</small></div>
         <div className="climate-list">
           {climateRows.map(({ key, label, icon: Icon }) => {
             const target = summary.climate.target[key];
@@ -31,7 +31,7 @@ export function ComparisonView({ summary }: { summary: Summary }) {
                   <div><span style={{ width: `${(target / max) * 100}%` }} /><b>{compactNumber(target)}</b></div>
                   <div><span style={{ width: `${(reference / max) * 100}%` }} /><b>{compactNumber(reference)}</b></div>
                 </div>
-                <div className="pair-key"><span>City</span><span>{REFERENCE_LABEL}</span></div>
+                <div className="pair-key"><span>This city</span><span>Waymo benchmark</span></div>
               </div>
             );
           })}
@@ -40,18 +40,18 @@ export function ComparisonView({ summary }: { summary: Summary }) {
 
       <section className="context-grid">
         <div><Compass size={17} /><small>Driving side</small><b>{summary.driving_side === "left" ? "Left-hand" : "Right-hand"}</b></div>
-        <div><Database size={17} /><small>OSM completeness</small><b>{Math.round(summary.osm_completeness * 100)}%</b></div>
+        <div><Database size={17} /><small>OpenStreetMap coverage</small><b>{Math.round(summary.osm_completeness * 100)}%</b></div>
       </section>
 
       {summary.novel_city.length > 0 && (
         <div className="novel-city-row">
-          <span>Novel city conditions</span>
+          <span>Rare city conditions</span>
           {summary.novel_city.map((flag) => <b key={flag}>{flag === "snow" ? "Snow" : "Left-hand traffic"}</b>)}
         </div>
       )}
 
       <section className="comparison-section shift-section">
-        <div className="mini-heading"><span>Biggest shifts</span><small>Median signal ratio</small></div>
+        <div className="mini-heading"><span>Biggest shifts</span><small>City compared with benchmark</small></div>
         <div className="shift-list">
           {shifts.map((row) => {
             const isUp = row.ratio >= 1;

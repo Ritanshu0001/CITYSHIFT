@@ -1,0 +1,32 @@
+{
+  "slug": "fergana-fergana-region-uzbekistan",
+  "created_at": "2026-09-27T02:26:31Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.67,
+    "roads": 4.41,
+    "infrastructure": 79.28,
+    "downloads_wall": 79.28,
+    "features": 0.16,
+    "elevation": 121.31
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 5076,
+  "n_graph_edges": 13295,
+  "n_osm_features": 409,
+  "climate_source": "Open-Meteo",
+  "elevation": {
+    "points": 754,
+    "requests": 8,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo",
+    "status": "done"
+  },
+  "openmeteo_calls_estimate": 1015.0,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

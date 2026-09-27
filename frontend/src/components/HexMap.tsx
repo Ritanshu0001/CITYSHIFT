@@ -413,7 +413,7 @@ export function HexMap(props: HexMapProps) {
             <div className="crash-details-inner">
               <div className="crash-summary">
                 <strong>{availableCrashes?.total ?? 0}</strong>
-                <span>fatal crash records in this city</span>
+                <span>records in this city</span>
               </div>
               <div className="crash-area-key">
                 <span>Crashes per area</span>
@@ -423,7 +423,7 @@ export function HexMap(props: HexMapProps) {
                   <span><i style={{ background: CRASH_COUNT_COLORS.many.hex }} /> 4+</span>
                 </div>
               </div>
-              <p>Light rings highlight pedestrian or cyclist involvement.</p>
+              <p>Light rings mark pedestrians or cyclists.</p>
             </div>
           </div>
         </div>

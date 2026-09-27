@@ -9,8 +9,8 @@ export function Legend() {
         <span style={{ background: BAND_COLORS.green.hex }} /><span style={{ background: BAND_COLORS.yellow.hex }} /><span style={{ background: BAND_COLORS.red.hex }} />
       </div>
       <div className="legend-labels"><span>&lt; 80</span><span>80–95</span><span>≥ 95</span></div>
-      <p>Area percentile relative to {REFERENCE_LABEL}.</p>
-      <div className="legend-novel"><AlertTriangle size={15} /> Novel feature detected</div>
+      <p>How unusual each area is compared with {REFERENCE_LABEL}.</p>
+      <div className="legend-novel"><AlertTriangle size={15} /> Rare feature found</div>
     </div>
   );
 }

@@ -16,6 +16,7 @@ export default function Home() {
   const [cities, setCities] = useState<CityListItem[]>([]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [maxSlide, setMaxSlide] = useState(0);
+  const pageRef = useRef<HTMLElement | null>(null);
   const carouselRef = useRef<HTMLDivElement | null>(null);
 
   const getCarouselMetrics = (carousel: HTMLDivElement) => {
@@ -39,6 +40,24 @@ export default function Home() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const targets = Array.from(page.querySelectorAll<HTMLElement>(".landing-reveal"));
+    page.classList.add("has-reveal-motion");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.14 });
+
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, [cities.length]);
 
   useEffect(() => {
     const carousel = carouselRef.current;
@@ -155,7 +174,7 @@ export default function Home() {
   };
 
   return (
-    <main className="landing-page">
+    <main className="landing-page" ref={pageRef}>
       <nav className="site-nav">
         <BrandMark descriptor="Waymo Support system" />
         <div className="nav-actions">
@@ -179,14 +198,14 @@ export default function Home() {
         <HexFingerprint />
       </section>
 
-      <section className="proof-strip" aria-label="How CityShift works">
+      <section className="proof-strip landing-reveal" aria-label="How CityShift works">
         <div><span className="proof-icon"><MapPin /></span><p><b>Pick a city</b>Anywhere public data reaches.</p></div>
         <div><span className="proof-icon"><Radar /></span><p><b>Find the shift</b>Every area scored against {REFERENCE_LABEL}.</p></div>
         <div><span className="proof-icon"><Route /></span><p><b>Prioritize tests</b>Evidence-backed scenarios, ranked.</p></div>
       </section>
 
       <section className="grid-explainer" aria-labelledby="grid-explainer-title">
-        <div className="grid-explainer-visual">
+        <div className="grid-explainer-visual landing-reveal reveal-left">
           <Image
             src="/san-francisco-grid-map.jpg"
             alt="San Francisco covered by CityShift’s hexagonal analysis grid"
@@ -195,7 +214,7 @@ export default function Home() {
             sizes="(max-width: 980px) calc(100vw - 40px), 48vw"
           />
         </div>
-        <div className="grid-explainer-copy">
+        <div className="grid-explainer-copy landing-reveal reveal-right">
           <p className="grid-explainer-kicker">How the grid is made</p>
           <h2 id="grid-explainer-title">One city, divided into comparable areas.</h2>
           <p>
@@ -205,7 +224,7 @@ export default function Home() {
       </section>
 
       <section className="cached-section" id="saved-cities">
-        <div className="section-heading">
+        <div className="section-heading landing-reveal">
           <h2>Cities we’ve already mapped</h2>
           <p>Open a cached analysis instantly—the reliable path when live data is still processing.</p>
         </div>
@@ -213,7 +232,7 @@ export default function Home() {
         {cities.length > 0 ? (
           <>
             <div
-              className="city-carousel"
+              className="city-carousel landing-reveal"
               ref={carouselRef}
               aria-label="Mapped cities carousel"
               tabIndex={0}

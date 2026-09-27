@@ -1,0 +1,101 @@
+{
+  "slug": "moscow-id-usa",
+  "available": true,
+  "source": "NHTSA FARS",
+  "years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "preliminary_years": [
+    2024
+  ],
+  "note": "Fatal crashes only",
+  "total": 5,
+  "points": [
+    {
+      "lat": 46.732672,
+      "lng": -117.018686,
+      "year": 2021,
+      "month": 4,
+      "hour": 4,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "88288ace2bfffff"
+    },
+    {
+      "lat": 46.674281,
+      "lng": -117.022758,
+      "year": 2021,
+      "month": 11,
+      "hour": 8,
+      "fatalities": 2,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "88288ac0adfffff"
+    },
+    {
+      "lat": 46.735097,
+      "lng": -117.049003,
+      "year": 2022,
+      "month": 7,
+      "hour": 20,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "88288ace15fffff"
+    },
+    {
+      "lat": 46.663,
+      "lng": -117.014425,
+      "year": 2024,
+      "month": 11,
+      "hour": 10,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "88288ac0e5fffff"
+    },
+    {
+      "lat": 46.739014,
+      "lng": -117.057442,
+      "year": 2024,
+      "month": 12,
+      "hour": 14,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "88288ace17fffff"
+    }
+  ],
+  "by_hex": {
+    "88288ac0adfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "88288ac0e5fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "88288ace15fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "88288ace17fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "88288ace2bfffff": {
+      "count": 1,
+      "pct": 100.0
+    }
+  }
+}

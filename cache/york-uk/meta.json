@@ -1,0 +1,31 @@
+{
+  "slug": "york-uk",
+  "created_at": "2026-09-26T12:28:51Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.63,
+    "roads": 6.53,
+    "infrastructure": 16.69,
+    "elevation": 121.49,
+    "downloads_wall": 121.5,
+    "features": 0.29
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 7536,
+  "n_graph_edges": 16240,
+  "n_osm_features": 5433,
+  "climate_source": "Open-Meteo",
+  "elevation": {
+    "points": 975,
+    "requests": 10,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo"
+  },
+  "openmeteo_calls_estimate": 1105.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}
