@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+import { loadEnvConfig } from "@next/env";
+import { resolve } from "node:path";
+
+// Next initially checks frontend/. Reload from the shared repository root before
+// reading settings; forceReload bypasses that initial cached environment lookup.
+loadEnvConfig(resolve(__dirname, ".."), process.env.NODE_ENV === "development", undefined, true);
 
 const backendOrigin = process.env.CITYSHIFT_BACKEND_URL ?? "http://127.0.0.1:8000";
 

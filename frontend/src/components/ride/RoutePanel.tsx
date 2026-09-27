@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronDown, ShieldCheck, TriangleAlert } from "lucide-react";
-import { formatDistance, formatExtra, formatMinutes, plural, streetsSummary, type RideRoute, type RoutePlan } from "@/lib/ride";
+import { REFERENCE_LABEL } from "@/lib/constants";
+import { areaSummary, formatDistance, formatExtra, formatMinutes, plural, streetsSummary, type RideRoute, type RoutePlan } from "@/lib/ride";
 
 interface RoutePanelProps {
   plan: RoutePlan;
@@ -33,10 +34,11 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
                 </span>
                 <span className="ride-route-meta">
                   <span>{route.id === fastest.id ? "Quickest arrival" : formatExtra(route.extra_s)} · {formatDistance(route.distance_m)}</span>
-                  <span>{route.crash_sites.length ? `Passes ${plural(route.crash_sites.length, "risk site")}` : "No risk sites on route"}</span>
+                  <span>{plural(route.intersections, "intersection")} · {plural(route.crash_sites.length, "risk site")}</span>
                 </span>
                 <span className="ride-route-foot">
-                  {route.id === fastest.id ? "Baseline route risk" : `${Math.round(route.exposure_reduction_pct)}% lower route risk`}
+                  {route.id === fastest.id ? "Baseline route risk" : `${Math.round(route.risk_reduction_pct)}% lower route risk`}
+                  <small> · {Math.round(route.area_mix.red)}% in strong-shift areas</small>
                 </span>
               </button>
             </li>
@@ -49,14 +51,19 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
           <>
             <p className="ride-why-line is-warn">
               <TriangleAlert size={16} aria-hidden="true" />
+              <span>Fastest, but it {areaSummary(selected)}.</span>
+            </p>
+            <p className="ride-why-line">
+              <span className="ride-why-dot" aria-hidden="true" />
               <span>
-                Fastest, but it passes {plural(selected.crash_sites.length, "risk site")}
-                {selected.crash_sites.length > 0 && <>: {streetsSummary(plan, selected.crash_sites).join(" · ")}</>}.
+                {selected.crash_sites.length
+                  ? <>Passes {plural(selected.crash_sites.length, "risk site")}: {streetsSummary(plan, selected.crash_sites).join(" · ")}.</>
+                  : "Passes no recorded risk sites."}
               </span>
             </p>
             {recommended.id !== fastest.id && (
               <button type="button" className="ride-why-nudge" onClick={() => onPick(recommended)}>
-                {formatExtra(recommended.extra_s)} reduces route risk by {Math.round(recommended.exposure_reduction_pct)}% →
+                {formatExtra(recommended.extra_s)} reduces route risk by {Math.round(recommended.risk_reduction_pct)}% →
               </button>
             )}
           </>
@@ -71,11 +78,19 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
                 </span>
               </p>
             )}
+            {single ? (
+              <p className="ride-why-line">
+                <span className="ride-why-dot" aria-hidden="true" />
+                <span>No slower route is meaningfully safer. This one {areaSummary(selected)}.</span>
+              </p>
+            ) : (
+              <AreaChange route={selected} fastest={fastest} />
+            )}
             <p className="ride-why-line">
               <span className="ride-why-dot" aria-hidden="true" />
               <span>
                 {selected.crash_sites.length
-                  ? <>Still passes {plural(selected.crash_sites.length, "risk site")}: {streetsSummary(plan, selected.crash_sites).join(" · ")}.</>
+                  ? <>{single ? "Passes" : "Still passes"} {plural(selected.crash_sites.length, "risk site")}: {streetsSummary(plan, selected.crash_sites).join(" · ")}.</>
                   : "Passes no recorded risk sites."}
               </span>
             </p>
@@ -99,8 +114,10 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
       </details>
 
       <p className="ride-method">
-        Route risk: NHTSA FARS roadway-safety records, 2020–2024, weighted by how closely the route passes each risk area. ETAs are
-        free-flow estimates with a {plan.method.intersection_delay_s}-second allowance per intersection.
+        Route risk: every intersection crossed and every 100 m driven, weighted by how unlike {REFERENCE_LABEL} the area is
+        (its shift score; strong-shift areas count most). Risk sites weigh more: an NHTSA FARS fatal-crash record from 2020–2024
+        on the route counts like several strong-shift intersections, less the farther the route passes from it. ETAs are free-flow estimates with
+        a {plan.method.intersection_delay_s}-second allowance per intersection.
       </p>
 
       <div className="ride-request-dock">
@@ -110,5 +127,35 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
         </button>
       </div>
     </div>
+  );
+}
+
+/** How the route compares with the fastest one on the hex layer: a gain, or the intersections it trades for fewer risk sites. */
+function AreaChange({ route, fastest }: { route: RideRoute; fastest: RideRoute }) {
+  const fewer = fastest.intersections - route.intersections;
+  const red = Math.round(route.area_mix.red);
+  const fastestRed = Math.round(fastest.area_mix.red);
+  let text: string;
+  if (fewer > 0 && fastestRed - red >= 3) {
+    text = `Crosses ${plural(fewer, "fewer intersection")} than the fastest route, with ${red}% of the way in strong-shift areas instead of ${fastestRed}%.`;
+  } else if (fewer > 0) {
+    text = `Crosses ${plural(fewer, "fewer intersection")} than the fastest route (${route.intersections} in all).`;
+  } else if (fastestRed - red >= 3) {
+    text = `Spends less of the trip in strong-shift areas: ${red}% of the way instead of ${fastestRed}%.`;
+  } else if (fewer <= -3) {
+    return (
+      <p className="ride-why-line">
+        <span className="ride-why-dot" aria-hidden="true" />
+        <span>Trade-off: crosses {plural(-fewer, "more intersection")} than the fastest route ({route.intersections} in all).</span>
+      </p>
+    );
+  } else {
+    return null;
+  }
+  return (
+    <p className="ride-why-line is-good">
+      <ShieldCheck size={16} aria-hidden="true" />
+      <span>{text}</span>
+    </p>
   );
 }

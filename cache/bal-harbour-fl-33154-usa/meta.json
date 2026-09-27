@@ -1,0 +1,25 @@
+{
+  "slug": "bal-harbour-fl-33154-usa",
+  "created_at": "2026-09-27T05:37:05Z",
+  "timings_s": {
+    "grid": 0.01,
+    "weather": 0.76,
+    "infrastructure": 6.6,
+    "roads": 25.27,
+    "downloads_wall": 25.28,
+    "features": 0.43
+  },
+  "overpass": {
+    "roads": "https://overpass.private.coffee/api",
+    "infrastructure": "https://overpass.private.coffee/api"
+  },
+  "n_graph_nodes": 6972,
+  "n_graph_edges": 18017,
+  "n_osm_features": 8543,
+  "climate_source": "Open-Meteo",
+  "openmeteo_calls_estimate": 130.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

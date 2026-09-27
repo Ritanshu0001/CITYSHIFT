@@ -87,7 +87,7 @@ export function Arrived({ plan, route, dropoff, onReset }: ArrivedProps) {
   const isFastest = route.id === plan.fastest_id;
 
   function record(worthIt: boolean) {
-    const trades = [...readTrades(), { extra_s: route.extra_s, reduction_pct: route.exposure_reduction_pct, worth_it: worthIt }];
+    const trades = [...readTrades(), { extra_s: route.extra_s, reduction_pct: route.risk_reduction_pct, worth_it: worthIt }];
     window.localStorage.setItem(TRADES_KEY, JSON.stringify(trades.slice(-50)));
     setHistory(trades);
     setVote(worthIt);
@@ -104,7 +104,9 @@ export function Arrived({ plan, route, dropoff, onReset }: ArrivedProps) {
       <dl className="ride-stats">
         <div><dt>Ride</dt><dd>{formatMinutes(route.duration_s)}</dd></div>
         <div><dt>Vs fastest</dt><dd>{isFastest ? "—" : formatExtra(route.extra_s)}</dd></div>
-        <div><dt>Route risk</dt><dd>{isFastest ? "Baseline" : `−${Math.round(route.exposure_reduction_pct)}%`}</dd></div>
+        <div><dt>Route risk</dt><dd>{isFastest ? "Baseline" : `−${Math.round(route.risk_reduction_pct)}%`}</dd></div>
+        <div><dt>Intersections</dt><dd>{route.intersections}</dd></div>
+        <div><dt>Strong-shift areas</dt><dd>{Math.round(route.area_mix.red)}%</dd></div>
         <div><dt>Risk sites avoided</dt><dd>{route.avoided_sites.length}</dd></div>
       </dl>
 
@@ -119,7 +121,7 @@ export function Arrived({ plan, route, dropoff, onReset }: ArrivedProps) {
         <div className="ride-feedback">
           {vote === null ? (
             <>
-              <p>Was {formatExtra(route.extra_s).toLowerCase()} worth {Math.round(route.exposure_reduction_pct)}% lower route risk?</p>
+              <p>Was {formatExtra(route.extra_s).toLowerCase()} worth {Math.round(route.risk_reduction_pct)}% lower route risk?</p>
               <div>
                 <button type="button" onClick={() => record(true)}><ThumbsUp size={15} aria-hidden="true" /> Worth it</button>
                 <button type="button" onClick={() => record(false)}><ThumbsDown size={15} aria-hidden="true" /> Too slow</button>

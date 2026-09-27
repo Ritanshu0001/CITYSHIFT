@@ -2,8 +2,8 @@
 
 Free tier: fewer than 600 calls per minute, 5,000 per hour, 10,000 per day. Open-Meteo
 counts every 2 weeks of data per location as about 1 call, so one 5-year weather
-request is ~130 calls, and each elevation coordinate is 1 call. Responses are cached
-forever on disk: 2020-2024 history and terrain never change.
+request is ~130 calls. Responses are cached forever on disk: 2020-2024 history never
+changes.
 """
 from __future__ import annotations
 
@@ -23,14 +23,9 @@ from app.cancellation import checkpoint, interruptible_wait
 log = logging.getLogger(__name__)
 
 CACHE_DIR = Path(__file__).resolve().parents[2] / "openmeteo_cache"
-# Leave 20 calls of headroom under the free-tier limit. A city typically needs
-# one 130-call weather request plus 8-10 100-point elevation batches. At 500,
-# batch granularity left unused capacity in each window and forced a third
-# minute for the final partial batch; 580 completes the same work in two.
+# Leave 20 calls of headroom under the free-tier limit; a new city needs one ~130-call
+# weather request, so four cities fit in a minute.
 MINUTE_BUDGET = 580.0
-# Background requests (a finished city's elevation) leave room for one 5-year weather
-# request (~130.5 calls), so the next city's weather never waits behind them.
-FOREGROUND_RESERVE = 131.0
 
 _lock = threading.Lock()
 _window: deque[tuple[float, float]] = deque()  # (monotonic time, cost) of network calls
@@ -55,8 +50,7 @@ def run_total() -> float:
     return _run_total
 
 
-def _wait_for_budget(cost: float, cancel_event: threading.Event | None = None, background: bool = False) -> None:
-    budget = MINUTE_BUDGET - FOREGROUND_RESERVE if background else MINUTE_BUDGET
+def _wait_for_budget(cost: float, cancel_event: threading.Event | None = None) -> None:
     while True:
         checkpoint(cancel_event)
         with _lock:
@@ -64,7 +58,7 @@ def _wait_for_budget(cost: float, cancel_event: threading.Event | None = None, b
             while _window and now - _window[0][0] >= 60:
                 _window.popleft()
             used = sum(c for _, c in _window)
-            if not _window or used + cost <= budget:
+            if not _window or used + cost <= MINUTE_BUDGET:
                 _window.append((now, cost))
                 return
             sleep_for = 60 - (now - _window[0][0]) + 0.1
@@ -81,13 +75,11 @@ def _reason(resp: requests.Response) -> str:
 
 def get_json(url: str, params: dict, *, cost: float, what: str,
              validate: Callable[[dict], None] | None = None,
-             cancel_event: threading.Event | None = None,
-             background: bool = False) -> dict:
+             cancel_event: threading.Event | None = None) -> dict:
     """GET url with params, from the disk cache when possible. Raises OpenMeteoError.
 
     `validate` runs before anything is cached, so a garbled response raises instead
-    of being stored and replayed forever. `background` requests yield budget to
-    foreground ones (see FOREGROUND_RESERVE).
+    of being stored and replayed forever.
     """
     global _run_total
     checkpoint(cancel_event)
@@ -97,7 +89,7 @@ def get_json(url: str, params: dict, *, cost: float, what: str,
         log.debug("Open-Meteo %s: disk cache hit %s", what, path.name)
         return json.loads(path.read_text(encoding="utf-8"))
 
-    _wait_for_budget(cost, cancel_event, background)
+    _wait_for_budget(cost, cancel_event)
     t = time.perf_counter()
     try:
         resp = requests.get(full_url, timeout=60)

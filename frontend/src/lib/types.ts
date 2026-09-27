@@ -142,6 +142,15 @@ export interface AnalyzeResponse {
   cached: boolean;
 }
 
+export interface JobLogLine {
+  seq: number;
+  /** Seconds since the job was submitted. */
+  t: number;
+  level: "DEBUG" | "INFO" | "WARNING" | "ERROR" | "CRITICAL";
+  source: string;
+  message: string;
+}
+
 export interface JobStatus {
   job_id: string;
   slug: string;
@@ -150,6 +159,10 @@ export interface JobStatus {
   steps_done: JobStep[];
   message: string | null;
   error: string | null;
+  /** CR-019 diagnostics, printed to the browser console while a city is analyzed. */
+  elapsed_s?: number | null;
+  step_elapsed_s?: Partial<Record<JobStep, number>>;
+  logs?: JobLogLine[];
 }
 
 export interface CityListItem {

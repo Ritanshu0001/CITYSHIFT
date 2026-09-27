@@ -3,7 +3,7 @@
 import { ArrowDownUp, ArrowLeft, LoaderCircle, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MAPS_API_KEY } from "@/lib/constants";
+import { BAND_COLORS, MAPS_API_KEY } from "@/lib/constants";
 import {
   cityStatus, cumulative, distanceAlong, getRideCities, planRoutes, prepareCity, PRESET_TRIPS, RideError,
   type LatLng, type Place, type RideCity, type RoutePlan, type RoutingState,
@@ -104,6 +104,11 @@ export function SafeJourney() {
     planRoutes(city.slug, origin, destination)
       .then((next) => {
         if (!live) return;
+        // A backend started before the hex-first routing change answers without area data.
+        if (!next.areas) {
+          setResult({ trip, error: "The ride service is running older routing code. Restart the backend and try again." });
+          return;
+        }
         setResult({ trip, plan: next });
         setPickedId(null);
         // Relabelling keeps the coordinates, so the trip key (and this plan) stays valid.
@@ -206,7 +211,7 @@ export function SafeJourney() {
   if (!MAPS_API_KEY) {
     return (
       <main className="ride-app ride-app-empty">
-        <p>Safe Journey needs a Google Maps key. Set <code>GOOGLE_MAPS_KEY</code> in <code>frontend/.env.local</code> and restart the dev server.</p>
+        <p>Safe Journey needs a Google Maps key. Set <code>GOOGLE_MAPS_KEY</code> in the root <code>.env</code> and restart the dev server.</p>
       </main>
     );
   }
@@ -293,14 +298,14 @@ export function SafeJourney() {
             {routing.status === "building" && (
               <p className="ride-status">
                 <LoaderCircle size={16} className="spin" aria-hidden="true" />
-                Loading {city.name.split(",")[0]} streets and risk context. First visit takes up to a minute.
+                Loading {city.name.split(",")[0]} streets, area scores and risk sites. First visit takes up to a minute.
               </p>
             )}
             {routing.status === "error" && <p className="ride-error" role="alert">Routing unavailable: {routing.error}</p>}
             {planning && (
               <p className="ride-status">
                 <LoaderCircle size={16} className="spin" aria-hidden="true" />
-                Weighing routes against five years of roadway risk data…
+                Weighing intersections, area shift and five years of roadway risk data…
               </p>
             )}
             {planError && <p className="ride-error" role="alert">{planError}</p>}
@@ -329,6 +334,12 @@ export function SafeJourney() {
         <div className={`ride-legend ${selected?.label === "Fastest" ? "is-fastest" : selected?.label === "Balanced" ? "is-balanced" : "is-safest"}`} aria-hidden="true">
           <span><i className="is-route" /> Your route</span>
           {phase === "plan" && plan.routes.length > 1 && <span><i className="is-alt" /> Other options</span>}
+          <span>
+            <span className="ride-legend-areas">
+              {(["green", "yellow", "red"] as const).map((band) => <i key={band} style={{ background: BAND_COLORS[band].hex }} />)}
+            </span>
+            Area shift, low to strong
+          </span>
           <span><i className="is-on" /> Risk site near route</span>
           <span><i className="is-avoided" /> Risk site avoided</span>
         </div>

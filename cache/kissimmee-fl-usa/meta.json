@@ -1,0 +1,25 @@
+{
+  "slug": "kissimmee-fl-usa",
+  "created_at": "2026-09-27T05:45:26Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 1.14,
+    "infrastructure": 7.86,
+    "roads": 23.82,
+    "downloads_wall": 23.83,
+    "features": 0.39
+  },
+  "overpass": {
+    "roads": "https://overpass.private.coffee/api",
+    "infrastructure": "https://overpass.private.coffee/api"
+  },
+  "n_graph_nodes": 6629,
+  "n_graph_edges": 15807,
+  "n_osm_features": 4320,
+  "climate_source": "Open-Meteo",
+  "openmeteo_calls_estimate": 130.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

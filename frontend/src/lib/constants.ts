@@ -29,7 +29,7 @@ export const JOB_STEPS: JobStep[] = [
 export const JOB_STEP_LABELS: Record<JobStep, string> = {
   roads: "Pulling road network",
   infrastructure: "Reading infrastructure and places",
-  weather: "Pulling weather and elevation",
+  weather: "Pulling weather history",
   scoring: `Scoring against ${REFERENCE_LABEL}`,
   scenarios: "Building candidate scenarios",
 };

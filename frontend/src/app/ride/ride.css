@@ -122,6 +122,7 @@
 .ride-route-time { font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
 .ride-route-meta { color: var(--r-muted); display: flex; font-size: 12px; gap: 10px; justify-content: space-between; }
 .ride-route-foot { color: var(--r-ink-2); font-size: 12px; font-weight: 650; }
+.ride-route-foot small { color: var(--r-muted); font-size: 12px; font-weight: 500; }
 .ride-route.is-fastest .ride-route-name { color: var(--r-red-ink); }
 .ride-route.is-balanced .ride-route-name { color: var(--r-blue-ink); }
 .ride-route.is-safest .ride-route-name { color: var(--r-green-ink); }
@@ -205,6 +206,8 @@
 .ride-legend.is-balanced { --r-active-route: var(--r-blue); }
 .ride-legend.is-safest { --r-active-route: var(--r-green); }
 .ride-legend .is-route { background: color-mix(in srgb, var(--r-active-route) 82%, #26344e); border: 1px solid #fff; border-radius: 3px; box-shadow: 0 0 0 1px rgba(16,20,38,.2); height: 4px; width: 20px; }
+.ride-legend .ride-legend-areas { display: flex; gap: 2px; margin: 0 1px; }
+.ride-legend .ride-legend-areas i { border-radius: 2px; height: 10px; opacity: .72; width: 6px; }
 .ride-legend .is-alt { background: #8d97aa; border-radius: 3px; height: 3px; opacity: .66; width: 18px; }
 .ride-legend .is-on, .ride-legend .is-avoided { background-position: center; background-repeat: no-repeat; background-size: contain; height: 17px; margin: 0 2px; width: 14px; }
 .ride-legend .is-on { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 27'%3E%3Cpath d='M12 2.4 21 6.1v7.7c0 6.2-3.6 11.2-9 14.2-5.4-3-9-8-9-14.2V6.1L12 2.4Z' fill='none' stroke='%23ef7d32' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M12 8.3v8' stroke='%23ef7d32' stroke-width='2.3' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='20.5' r='1.3' fill='%23ef7d32'/%3E%3C/svg%3E"); }

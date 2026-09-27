@@ -346,3 +346,70 @@ top-3 reasons with z >= min_z (default 2) or its novel flags], get_hex(h3), get_
 get_crash_summary(h3?), compare_feature(name).
 Limits: last 10 messages + compact summary (< ~3k tokens) + ui_state; <= 3 tool rounds; 15 s; low temperature.
 Status: agreed P1 + P3
+
+## CR-019  (P1 + P3)  Job diagnostics in GET /jobs/{id}, printed to the browser console
+Why: a slow or failed new city showed only a spinner; the step timings and the reason
+(Overpass pause, 429, fallback, timeout) were only in the backend terminal.
+Decision: GET /jobs/{id} adds three fields; existing fields are unchanged.
+  elapsed_s       float   seconds since the job was submitted (frozen when it ends)
+  step_elapsed_s  {step: float}  wall-clock time per JOB_STEPS entry, the running step so far
+  logs            [{"seq": int, "t": float, "level": str, "source": str, "message": str}]
+                  every app.* log line the job caused, from any of its threads (last 500);
+                  t is seconds since submit; OSMnx network messages (pauses, sizes, retries,
+                  cache hits) are forwarded as "<download> via <server>: ...".
+The city page prints new lines to the DevTools console as it polls, notes when a step has
+been quiet for 15 s, and ends with a console.table of step times.
+Status: implemented (P1 + P3)
+
+## CR-020  (P1 + P3)  Stop downloading elevation from Open-Meteo
+Why: terrain_slope_pct has been unscored since CR-014, and the Why panel's terrain context
+comes from live Google Elevation (frontend/src/lib/terrain.ts). The backend download cost
+~900 Open-Meteo calls per new city (the 5-year weather pull is ~130), so the hourly limit
+of 5,000 allowed about 4 new cities an hour, and each city paused a minute for the budget.
+Decision: the pipeline no longer fetches elevation (app/data/elevation.py removed).
+features.csv keeps all 22 columns so every reader and the model are unchanged:
+terrain_slope_pct is blank for cities analyzed from 2026-09-27; cached cities keep their
+Open-Meteo values. meta.json drops its "elevation" block. The briefing drops the Copernicus
+source line; step label "Pulling weather and elevation" -> "Pulling weather history".
+Not changed (P2): HEX_FEATURES, UNSCORED_FEATURES, the steep_grade rule (already quiet).
+Dropping the column entirely is a separate schema change if P2 wants it.
+Status: implemented (P1 + P3)
+
+## CR-021  (P1)  Pre-cache the 34 saved cities
+Why: every city on the saved list should open from cache instead of a 1-3 minute analysis.
+12 were already cached; the other 22 were not.
+Decision: backend/data/saved_cities.json lists all 34 as {name, lat, lng, country_code},
+named in Google Places format so a UI search lands on the same slug. precache.py gets
+`--cities FILE` to run that list instead of the built-in demo cities (one README line).
+Pipeline, scoring and the 7 files per city are unchanged.
+Needs CR-020: without elevation a new city costs ~130 Open-Meteo calls, so the 22 need
+~2,900, under the 10,000-a-day free tier. A tree without CR-020 costs ~900 a city (~19,800).
+Expect: terrain_slope_pct blank for the 22 (CR-020). Munich and Singapore get crashes.json
+with available: false (FARS is US-only).
+Overpass on 2026-09-27 (phone hotspot): all three servers came and went within minutes.
+overpass-api.de gave HTTP 429 or timed out its status check; private.coffee and maps.mail.ru
+each served some downloads and timed out on others. The working-tree osm.py fails over on
+its own. The limit is the problem: ATTEMPT_TIMEOUT_S (150 s, osm.py) is too short for large
+cities' road queries on the mirrors. Dallas, Denver and Detroit timed out on all three
+servers; the smaller Baltimore and Charlotte passed. Raise it for the run only, no edit:
+Run from backend/ with the venv active (check `pgrep -f precache.py` first so two runs
+never overlap):
+  python -c "import runpy, sys; import app.data.osm as o; o.ATTEMPT_TIMEOUT_S = 300; \
+  sys.argv = ['scripts/precache.py', '--cities', 'data/saved_cities.json']; \
+  runpy.run_path('scripts/precache.py', run_name='__main__')"
+(the plain `python scripts/precache.py --cities data/saved_cities.json` keeps 150 s)
+Cities that already have result.json are skipped, so a rerun resumes. It prints one ok or
+FAIL line per city; retry one with --only <slug>. If Open-Meteo runs out it prints STOP
+and lists the cities it did not try.
+Done when every slug in saved_cities.json has 7 files in cache/<slug>/.
+Commit only: the 22 new cache/<slug>/ folders, backend/data/saved_cities.json,
+backend/scripts/precache.py, and README.md's --cities line (git add -p: the other README
+hunks are CR-020 and the Overpass failover). Leave out the untracked caches that are not on
+the list; they are UI searches: buffalo-wy-82834-usa, charleston-sc-usa, dunbar-wv-25064-usa,
+frisco-tx-usa, irving-tx-usa, katy-tx-usa, paris-tx-usa, plano-tx-usa, titusville-fl-usa.
+Commit message format: "Add cached cities: Baltimore, Charlotte, ...".
+Status: in progress, stopped 2026-09-27 00:56 for handoff; nothing is running.
+14 of 34 complete (Baltimore and Charlotte added); 20 left, none started (no partial files):
+dallas, denver, detroit, houston, las-vegas, minneapolis, munich, nashville, new-orleans,
+orlando, philadelphia, pittsburgh, portland, sacramento, san-antonio, seattle, singapore,
+st-louis, tampa, washington-dc. The 300 s run was not tested to the end.

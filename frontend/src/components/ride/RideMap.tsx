@@ -1,7 +1,9 @@
 "use client";
 
 import { Map, RenderingType, useMap } from "@vis.gl/react-google-maps";
+import { cellToBoundary } from "h3-js";
 import { useEffect, useMemo, useRef } from "react";
+import { BAND_COLORS } from "@/lib/constants";
 import { cumulative, describeRisk, pointAlong, type LatLng, type Place, type RideRoute, type RoutePlan } from "@/lib/ride";
 
 // Native Google polylines and markers rather than deck.gl: routes are polylines anyway, and the
@@ -176,6 +178,29 @@ function Overlays({ center, radiusKm, pickup, dropoff, plan, selectedId, onSelec
     });
     return () => circle.setMap(null);
   }, [map, center, radiusKm]);
+
+  // Hex layer, under everything: the shift-score areas the selected route passes through, which
+  // weight its intersections. Risk sites (the crash layer) sit on top.
+  useEffect(() => {
+    if (!map || !plan || !selected) return;
+    const polygons = selected.hexes.flatMap((cell) => {
+      const area = plan.areas[cell];
+      if (!area) return [];
+      const color = BAND_COLORS[area.band].hex;
+      return [new google.maps.Polygon({
+        map,
+        paths: cellToBoundary(cell).map(([lat, lng]) => ({ lat, lng })),
+        clickable: false,
+        fillColor: color,
+        fillOpacity: area.band === "red" ? 0.16 : 0.12,
+        strokeColor: color,
+        strokeOpacity: 0.45,
+        strokeWeight: 1,
+        zIndex: 1,
+      })];
+    });
+    return () => polygons.forEach((polygon) => polygon.setMap(null));
+  }, [map, plan, selected]);
 
   // Route options: one restrained active line, with quieter alternates underneath.
   useEffect(() => {

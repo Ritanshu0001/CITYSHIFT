@@ -1,0 +1,32 @@
+{
+  "slug": "paris-tx-usa",
+  "created_at": "2026-09-27T03:15:40Z",
+  "timings_s": {
+    "grid": 0.01,
+    "weather": 0.85,
+    "infrastructure": 3.15,
+    "roads": 74.9,
+    "downloads_wall": 74.91,
+    "features": 0.11,
+    "elevation": 121.31
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 2008,
+  "n_graph_edges": 5465,
+  "n_osm_features": 175,
+  "climate_source": "Open-Meteo",
+  "elevation": {
+    "points": 805,
+    "requests": 9,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo",
+    "status": "done"
+  },
+  "openmeteo_calls_estimate": 935.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

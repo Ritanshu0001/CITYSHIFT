@@ -1,0 +1,32 @@
+{
+  "slug": "charleston-sc-usa",
+  "created_at": "2026-09-27T02:29:07Z",
+  "timings_s": {
+    "grid": 0.05,
+    "weather": 1.8,
+    "infrastructure": 8.77,
+    "roads": 16.92,
+    "downloads_wall": 17.06,
+    "features": 0.33,
+    "elevation": 122.15
+  },
+  "overpass": {
+    "roads": "https://overpass-api.de/api",
+    "infrastructure": "https://overpass-api.de/api"
+  },
+  "n_graph_nodes": 6009,
+  "n_graph_edges": 15123,
+  "n_osm_features": 3759,
+  "climate_source": "Open-Meteo",
+  "elevation": {
+    "points": 969,
+    "requests": 10,
+    "source": "Copernicus DEM GLO-90 via Open-Meteo",
+    "status": "done"
+  },
+  "openmeteo_calls_estimate": 1099.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

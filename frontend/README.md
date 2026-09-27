@@ -9,13 +9,15 @@ Node 20 is required.
 ```bash
 nvm use
 npm ci
-cp .env.local.example .env.local
+# For a new checkout, create ../.env from ../.env.example and fill in the keys.
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The live FastAPI service at port 8000 is the default. Set mock mode to `1` only when working without the backend. Add a Google key for the contract's production map, Places, and Street View path.
 
 ## Environment
+
+Use the shared `.env` in the repository root (`../.env` from this directory). Both apps load it automatically; restart the servers after editing it. Keep the file out of git.
 
 ```dotenv
 GOOGLE_MAPS_KEY=

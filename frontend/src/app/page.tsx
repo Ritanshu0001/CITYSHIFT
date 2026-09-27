@@ -188,11 +188,12 @@ export default function Home() {
           <h1>Every city has a different <em>driving fingerprint.</em></h1>
           <p className="hero-lede">
             Enter any city. CityShift finds where its roads, weather, and street life depart from {REFERENCE_LABEL}—then turns the gaps into candidate test scenarios.
+            {" "}CityShift can help Waymo understand local driving patterns and prioritize testing before launching in a new city.
           </p>
           <SearchBox hero />
           <div className="hero-note">
             <Database size={15} />
-            Data from OpenStreetMap, Open-Meteo, and Copernicus DEM.
+            Data from OpenStreetMap and Open-Meteo.
           </div>
         </div>
         <HexFingerprint />

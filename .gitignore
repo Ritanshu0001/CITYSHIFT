@@ -3,6 +3,9 @@
 __pycache__/
 *.pyc
 
+# Local backend server logs.
+backend/*.log
+
 # OSMnx raw HTTP cache (large). The app cache in cache/ IS committed on purpose.
 osmnx_cache/
 backend/osmnx_cache/

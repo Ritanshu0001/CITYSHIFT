@@ -37,13 +37,13 @@ git remote -v
 cd /Users/muhammad/Downloads/cityshift/frontend
 nvm use
 npm ci
-cp .env.local.example .env.local
+# For a new checkout, create ../.env from ../.env.example and fill in the keys.
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-The live stack is the default. Configure `.env.local` like this:
+The live stack is the default. Configure the shared repository-root `.env` (`../.env` from this directory) like this:
 
 ```dotenv
 GOOGLE_MAPS_KEY=your_key_here
@@ -52,7 +52,7 @@ NEXT_PUBLIC_USE_MOCK=0
 CITYSHIFT_BACKEND_URL=http://127.0.0.1:8000
 ```
 
-The same-origin `/api/backend` rewrite avoids browser CORS differences between `localhost` and `127.0.0.1`; `CITYSHIFT_BACKEND_URL` controls the server-side target. The Google key must have Maps JavaScript API, Places API (New), and Geocoding API enabled. `.env.local` is ignored and must never be committed.
+The same-origin `/api/backend` rewrite avoids browser CORS differences between `localhost` and `127.0.0.1`; `CITYSHIFT_BACKEND_URL` controls the server-side target. The Google key must have Maps JavaScript API, Places API (New), and Geocoding API enabled. The root `.env` is ignored and must never be committed. Restart both servers after editing it.
 
 ## What is implemented
 

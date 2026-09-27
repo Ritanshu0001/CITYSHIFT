@@ -77,9 +77,9 @@ HEX_FEATURES = [
 ]
 assert len(HEX_FEATURES) == 17
 
-# Written to features.csv but never scored (CR-014): terrain slope is collected
-# (CR-011, Copernicus DEM GLO-90 via Open-Meteo) and kept for display, but the
-# 90 m surface model reads dense towers as slope, so it stays out of the model.
+# Never scored (CR-014): the 90 m surface model read dense towers as slope. No longer
+# collected (CR-020): the UI shows live Google elevation instead, so cities analyzed
+# from 2026-09-27 leave this column blank; older files keep their Open-Meteo values.
 UNSCORED_FEATURES = ["terrain_slope_pct"]
 
 # Column order is unchanged from CR-011, so existing features.csv files stay valid.
@@ -195,6 +195,14 @@ class AnalyzeResponse(BaseModel):
     cached: bool
 
 
+class JobLogLine(BaseModel):
+    seq: int
+    t: float  # seconds since the job was submitted
+    level: str
+    source: str
+    message: str
+
+
 class JobStatus(BaseModel):
     job_id: str
     slug: str
@@ -203,6 +211,10 @@ class JobStatus(BaseModel):
     steps_done: list[str]
     message: str | None
     error: str | None
+    # CR-019 diagnostics, for the browser console
+    elapsed_s: float | None = None
+    step_elapsed_s: dict[str, float] = {}
+    logs: list[JobLogLine] = []
 
 
 class CityListItem(BaseModel):

@@ -1,0 +1,165 @@
+{
+  "slug": "fellsmere-fl-usa",
+  "available": true,
+  "source": "NHTSA FARS",
+  "years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "preliminary_years": [
+    2024
+  ],
+  "note": "Fatal crashes only",
+  "total": 9,
+  "points": [
+    {
+      "lat": 27.755636,
+      "lng": -80.5514,
+      "year": 2020,
+      "month": 5,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "8844a8019bfffff"
+    },
+    {
+      "lat": 27.734708,
+      "lng": -80.544058,
+      "year": 2020,
+      "month": 10,
+      "hour": 15,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "8844a801d5fffff"
+    },
+    {
+      "lat": 27.761214,
+      "lng": -80.614681,
+      "year": 2021,
+      "month": 10,
+      "hour": 7,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "8844a8009bfffff"
+    },
+    {
+      "lat": 27.79935,
+      "lng": -80.549069,
+      "year": 2022,
+      "month": 12,
+      "hour": 11,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "8844a80e07fffff"
+    },
+    {
+      "lat": 27.767586,
+      "lng": -80.559408,
+      "year": 2023,
+      "month": 6,
+      "hour": 2,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "8844a80e4dfffff"
+    },
+    {
+      "lat": 27.823011,
+      "lng": -80.555211,
+      "year": 2023,
+      "month": 12,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "8844a80e33fffff"
+    },
+    {
+      "lat": 27.738119,
+      "lng": -80.536819,
+      "year": 2024,
+      "month": 4,
+      "hour": 6,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "8844a80189fffff"
+    },
+    {
+      "lat": 27.724283,
+      "lng": -80.545469,
+      "year": 2024,
+      "month": 7,
+      "hour": 2,
+      "fatalities": 4,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "8844a801cbfffff"
+    },
+    {
+      "lat": 27.765881,
+      "lng": -80.551361,
+      "year": 2024,
+      "month": 8,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "8844a80193fffff"
+    }
+  ],
+  "by_hex": {
+    "8844a8009bfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a80189fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a80193fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a8019bfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a801cbfffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a801d5fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a80e07fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a80e33fffff": {
+      "count": 1,
+      "pct": 100.0
+    },
+    "8844a80e4dfffff": {
+      "count": 1,
+      "pct": 100.0
+    }
+  }
+}

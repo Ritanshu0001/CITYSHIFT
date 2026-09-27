@@ -14,6 +14,7 @@ import { ScenarioCards } from "@/components/ScenarioCards";
 import { WhyPanel } from "@/components/WhyPanel";
 import { ApiError, briefingUrl, clearActiveJob, getCity, getCrashes, getJob } from "@/lib/api";
 import { MAPS_API_KEY, POLL_MS, REFERENCE_LABEL } from "@/lib/constants";
+import { createJobConsole } from "@/lib/jobConsole";
 import { getLiveTerrain, type LiveTerrain } from "@/lib/terrain";
 import type { ChatAction, CityHex, CityResult, CrashesResponse, JobStatus, Scenario, UiState } from "@/lib/types";
 
@@ -66,12 +67,27 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
     let active = true;
 
     async function load() {
+      let expiredJob = false;
       if (jobId) {
         if (active) setPhase("progress");
+        const jobConsole = createJobConsole(slug, jobId);
         while (active) {
           try {
-            const nextJob = await getJob(jobId);
+            let nextJob: JobStatus;
+            try {
+              nextJob = await getJob(jobId);
+            } catch (caught) {
+              if (!active) return;
+              if (!(caught instanceof ApiError) || caught.status !== 404) throw caught;
+              // Job IDs live in backend memory; saved city results survive restarts.
+              clearActiveJob(jobId);
+              expiredJob = true;
+              setJob(null);
+              setPhase("loading");
+              break;
+            }
             if (!active) return;
+            jobConsole.update(nextJob);
             setJob(nextJob);
             if (nextJob.status === "error" || nextJob.status === "cancelled") {
               clearActiveJob(nextJob.job_id);
@@ -79,14 +95,12 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
             }
             if (nextJob.status === "done") {
               clearActiveJob(nextJob.job_id);
-              const city = await getCity(slug);
-              if (!active) return;
-              setResult(city);
-              setPhase("result");
+              router.replace(`/city/${encodeURIComponent(slug)}`, { scroll: false });
               return;
             }
           } catch (pollError) {
             if (active) {
+              jobConsole.pollFailed(pollError);
               setMessage(pollError instanceof Error ? pollError.message : "Lost contact with the analysis job.");
               setPhase("error");
             }
@@ -94,7 +108,7 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
           }
           await wait(POLL_MS);
         }
-        return;
+        if (!expiredJob) return;
       }
 
       try {
@@ -102,9 +116,11 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
         if (!active) return;
         setResult(city);
         setPhase("result");
+        if (expiredJob) router.replace(`/city/${encodeURIComponent(slug)}`, { scroll: false });
       } catch (caught) {
         if (!active) return;
         if (caught instanceof ApiError && caught.status === 404) {
+          if (expiredJob) setMessage("This analysis session expired, possibly because the server restarted before it finished. Search for the city again to restart the analysis.");
           setPhase("missing");
           return;
         }
@@ -117,7 +133,7 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
     return () => {
       active = false;
     };
-  }, [jobId, slug]);
+  }, [jobId, router, slug]);
 
   useEffect(() => {
     if (phase !== "result" || result?.summary.slug !== slug) return;
@@ -241,7 +257,7 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
         <CircleHelp size={36} />
         <p className="eyebrow"><span>404</span> Not analyzed</p>
         <h1>This city isn’t in the atlas yet.</h1>
-        <p>Start from search so CityShift can create a job and build the city’s driving fingerprint.</p>
+        <p>{message || "Start from search so CityShift can create a job and build the city’s driving fingerprint."}</p>
         <Link href="/"><Search size={17} /> Search for a city</Link>
       </main>
     );

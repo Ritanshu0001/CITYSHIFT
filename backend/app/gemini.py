@@ -1,21 +1,15 @@
-"""Gemini client (CR-018). The key stays server-side: read from backend/.env, never logged or returned."""
+"""Gemini client (CR-018). The key stays server-side: read from the root .env, never logged or returned."""
 from __future__ import annotations
 
 import functools
 import logging
 import os
-from pathlib import Path
-
-from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
 log = logging.getLogger(__name__)
 
-ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
-load_dotenv(ENV_PATH)
-
-DEFAULT_MODEL = "gemini-3.5-flash-lite"  # team choice; GEMINI_MODEL in backend/.env overrides it
+DEFAULT_MODEL = "gemini-3.5-flash-lite"  # team choice; GEMINI_MODEL in the root .env overrides it
 TEMPERATURE = 0.2
 TIMEOUT_MS = 15_000
 
@@ -59,7 +53,7 @@ def generate(contents: list, *, system: str, tools: list | None = None, force_te
     global _thinking_supported
     model = model_name()
     if not model or not api_key():
-        raise RuntimeError("Gemini is not configured (GEMINI_API_KEY in backend/.env)")
+        raise RuntimeError("Gemini is not configured (GEMINI_API_KEY in the root .env)")
 
     def config() -> types.GenerateContentConfig:
         return types.GenerateContentConfig(

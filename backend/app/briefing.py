@@ -29,8 +29,6 @@ SOURCES = [
      "note": "roads, signals, crossings, transit, places"},
     {"name": "Open-Meteo Historical Weather API", "licence": "CC BY 4.0",
      "note": "daily precipitation and snowfall, 2020-2024"},
-    {"name": "Copernicus DEM GLO-90 via Open-Meteo", "licence": "Copernicus DEM licence (free use with attribution)",
-     "note": "terrain slope; collected but not scored"},
     {"name": "NHTSA FARS", "licence": "US public domain",
      "note": "fatal crashes 2020-2024 (2024 preliminary); US cities only"},
 ]
@@ -160,8 +158,7 @@ def build_briefing(slug: str) -> dict:
         "limitations": [
             "Crash data is NHTSA FARS: fatal crashes only, US cities only, 2024 preliminary. "
             "Counts are compared within a city, never across cities.",
-            "Terrain slope is collected but not scored: the 90 m Copernicus surface model reads tall "
-            "buildings as slope.",
+            "Terrain is not scored; the app shows live Google elevation for context only.",
             f"OpenStreetMap completeness varies by city; here {summary['osm_completeness']:.0%} of road "
             "segments carry a speed limit or lane count.",
             "CityShift measures infrastructure and climate from public data, not driver behaviour or "

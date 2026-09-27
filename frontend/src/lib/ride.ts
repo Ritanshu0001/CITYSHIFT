@@ -27,19 +27,33 @@ export interface RouteStep {
   distance_m: number;
 }
 
+export type AreaBand = "green" | "yellow" | "red";
+
 export interface RideRoute {
   id: string;
   label: "Fastest" | "Balanced" | "Safest" | "Fastest & safest";
   lam: number;
   duration_s: number;
   distance_m: number;
-  exposure: number;
-  exposure_reduction_pct: number;
+  /** Route risk in units of one intersection in a strong-shift area: the hex layer plus the crash layer. */
+  risk: number;
+  risk_reduction_pct: number;
+  risk_parts: { intersections: number; distance: number; crashes: number };
+  intersections: number;
+  /** Percent of the distance driven in each shift band. */
+  area_mix: Record<AreaBand, number>;
+  /** Scored H3 cells the route passes through (keys of RoutePlan.areas). */
+  hexes: string[];
   extra_s: number;
   crash_sites: number[];
   avoided_sites: number[];
   path: [number, number][];
   steps: RouteStep[];
+}
+
+export interface RouteArea {
+  shift_score: number;
+  band: AreaBand;
 }
 
 export interface CrashSite extends LatLng {
@@ -62,7 +76,17 @@ export interface RoutePlan {
   safest_id: string;
   recommended_id: string;
   crashes: Record<string, CrashSite>;
-  method: { source: string; kernel_sigma_m: number; near_route_m: number; intersection_delay_s: number };
+  areas: Record<string, RouteArea>;
+  method: {
+    area_source: string;
+    crash_source: string;
+    intersection_risk: number;
+    area_risk_per_100m: number;
+    crash_weight: number;
+    kernel_sigma_m: number;
+    near_route_m: number;
+    intersection_delay_s: number;
+  };
 }
 
 export class RideError extends Error {
@@ -181,6 +205,11 @@ export function formatDistance(meters: number) {
 
 export function plural(n: number, word: string) {
   return `${n} ${word}${n === 1 ? "" : "s"}`;
+}
+
+/** "crosses 52 intersections, 64% of the way in strong-shift areas": the hex layer in words. */
+export function areaSummary(route: RideRoute) {
+  return `crosses ${plural(route.intersections, "intersection")}, ${Math.round(route.area_mix.red)}% of the way in strong-shift areas`;
 }
 
 /** "FDR Drive ×7 · South Street" from a list of risk-site indices. */

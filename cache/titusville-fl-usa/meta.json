@@ -1,0 +1,25 @@
+{
+  "slug": "titusville-fl-usa",
+  "created_at": "2026-09-27T03:58:33Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.01,
+    "roads": 8.33,
+    "infrastructure": 14.87,
+    "downloads_wall": 14.87,
+    "features": 0.19
+  },
+  "overpass": {
+    "roads": "https://overpass.private.coffee/api",
+    "infrastructure": "https://overpass.private.coffee/api"
+  },
+  "n_graph_nodes": 2974,
+  "n_graph_edges": 7487,
+  "n_osm_features": 1897,
+  "climate_source": "Open-Meteo",
+  "openmeteo_calls_estimate": 0.0,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

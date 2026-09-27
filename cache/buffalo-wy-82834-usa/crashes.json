@@ -1,0 +1,37 @@
+{
+  "slug": "buffalo-wy-82834-usa",
+  "available": true,
+  "source": "NHTSA FARS",
+  "years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "preliminary_years": [
+    2024
+  ],
+  "note": "Fatal crashes only",
+  "total": 1,
+  "points": [
+    {
+      "lat": 44.341278,
+      "lng": -106.696639,
+      "year": 2021,
+      "month": 1,
+      "hour": 7,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "8827996513fffff"
+    }
+  ],
+  "by_hex": {
+    "8827996513fffff": {
+      "count": 1,
+      "pct": 100.0
+    }
+  }
+}
