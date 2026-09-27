@@ -6,48 +6,17 @@ import { formatDistance, formatExtra, formatMinutes, plural, streetsSummary, typ
 interface RoutePanelProps {
   plan: RoutePlan;
   selected: RideRoute;
-  budget: number;
-  onBudget: (seconds: number) => void;
   onPick: (route: RideRoute) => void;
   onRequest: () => void;
 }
 
-export function RoutePanel({ plan, selected, budget, onBudget, onPick, onRequest }: RoutePanelProps) {
+export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProps) {
   const fastest = plan.routes[0];
-  const safest = plan.routes.at(-1)!;
   const recommended = plan.routes.find((r) => r.id === plan.recommended_id) ?? fastest;
-  const maxBudget = Math.max(300, Math.ceil(safest.extra_s / 60) * 60);
   const single = plan.routes.length === 1;
 
   return (
     <div className="ride-options">
-      {!single && (
-        <section className="ride-trade" aria-labelledby="ride-trade-label">
-          <div className="ride-trade-head">
-            <span id="ride-trade-label">Extra time you&apos;ll trade for safety</span>
-            <strong>{budget < 30 ? "None" : `Up to +${Math.round(budget / 60)} min`}</strong>
-          </div>
-          <div className="ride-trade-track">
-            <input
-              type="range"
-              min={0}
-              max={maxBudget}
-              step={30}
-              value={Math.min(budget, maxBudget)}
-              aria-labelledby="ride-trade-label"
-              aria-valuetext={`${Math.round(budget / 60)} extra minutes: ${selected.label}, ${selected.exposure_reduction_pct}% less crash exposure`}
-              onChange={(event) => onBudget(Number(event.target.value))}
-            />
-            <div className="ride-trade-ticks" aria-hidden="true">
-              {plan.routes.map((r) => (
-                <i key={r.id} className={r.id === selected.id ? "is-on" : ""} style={{ left: `${(r.extra_s / maxBudget) * 100}%` }} />
-              ))}
-            </div>
-          </div>
-          <div className="ride-trade-scale" aria-hidden="true"><span>Fastest</span><span>Safest</span></div>
-        </section>
-      )}
-
       <ul className="ride-routes" aria-label="Route options">
         {plan.routes.map((route) => {
           const relative = Math.max(0, 100 - route.exposure_reduction_pct);

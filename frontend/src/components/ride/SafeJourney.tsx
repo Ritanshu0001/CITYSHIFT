@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAPS_API_KEY } from "@/lib/constants";
 import {
-  cityStatus, cumulative, distanceAlong, getRideCities, planRoutes, prepareCity, PRESET_TRIPS, RideError, routeForBudget,
+  cityStatus, cumulative, distanceAlong, getRideCities, planRoutes, prepareCity, PRESET_TRIPS, RideError,
   type LatLng, type Place, type RideCity, type RoutePlan, type RoutingState,
 } from "@/lib/ride";
 import { PlaceField } from "./PlaceField";
@@ -38,7 +38,6 @@ export function SafeJourney() {
   const [dropoff, setDropoff] = useState<Place | null>(null);
   const [activeField, setActiveField] = useState<Field>("pickup");
   const [result, setResult] = useState<{ trip: string; plan?: RoutePlan; error?: string } | null>(null);
-  const [budget, setBudget] = useState(0);
   const [pickedId, setPickedId] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>("plan");
   const [progress, setProgress] = useState(0);
@@ -106,7 +105,6 @@ export function SafeJourney() {
       .then((next) => {
         if (!live) return;
         setResult({ trip, plan: next });
-        setBudget(next.default_budget_s);
         setPickedId(null);
         // Relabelling keeps the coordinates, so the trip key (and this plan) stays valid.
         setPickup((p) => nameDroppedPin(p, next.origin_street));
@@ -122,8 +120,8 @@ export function SafeJourney() {
 
   const selected = useMemo(() => {
     if (!plan) return null;
-    return plan.routes.find((r) => r.id === pickedId) ?? routeForBudget(plan, budget);
-  }, [plan, pickedId, budget]);
+    return plan.routes.find((r) => r.id === (pickedId ?? plan.recommended_id)) ?? plan.routes[0];
+  }, [plan, pickedId]);
 
   // Once riding, the map shows only the chosen route. Memoized: the ride re-renders every frame.
   const mapPlan = useMemo(
@@ -305,16 +303,7 @@ export function SafeJourney() {
             {planError && <p className="ride-error" role="alert">{planError}</p>}
 
             {plan && selected && (
-              <RoutePanel plan={plan} selected={selected} budget={budget}
-                onBudget={(s) => {
-                  setBudget(s);
-                  setPickedId(null);
-                }}
-                onPick={(route) => {
-                  setPickedId(route.id);
-                  setBudget(route.extra_s);
-                }}
-                onRequest={startRide} />
+              <RoutePanel plan={plan} selected={selected} onPick={(route) => setPickedId(route.id)} onRequest={startRide} />
             )}
           </>
         )}

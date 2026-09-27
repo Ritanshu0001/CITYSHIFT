@@ -29,7 +29,7 @@ export interface RouteStep {
 
 export interface RideRoute {
   id: string;
-  label: "Fastest" | "Safe Journey" | "Safest" | "Balanced" | "Fastest & safest";
+  label: "Fastest" | "Balanced" | "Safest" | "Fastest & safest";
   lam: number;
   duration_s: number;
   distance_m: number;
@@ -61,7 +61,6 @@ export interface RoutePlan {
   fastest_id: string;
   safest_id: string;
   recommended_id: string;
-  default_budget_s: number;
   crashes: Record<string, CrashSite>;
   method: { source: string; kernel_sigma_m: number; near_route_m: number; intersection_delay_s: number };
 }
@@ -103,11 +102,6 @@ export const planRoutes = (slug: string, origin: LatLng, destination: LatLng) =>
     method: "POST",
     body: JSON.stringify({ origin: { lat: origin.lat, lng: origin.lng }, destination: { lat: destination.lat, lng: destination.lng } }),
   });
-
-/** The safest route whose extra time fits the rider's budget. Routes arrive fastest-first, safest-last. */
-export function routeForBudget(plan: RoutePlan, budgetS: number): RideRoute {
-  return plan.routes.filter((r) => r.extra_s <= budgetS).at(-1) ?? plan.routes[0];
-}
 
 // Curated trips inside each city's service radius, for a one-tap demo.
 export const PRESET_TRIPS: Record<string, { name: string; from: Place; to: Place }[]> = {

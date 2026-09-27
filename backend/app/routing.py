@@ -8,7 +8,8 @@ and a route minimises
 
 for a sweep of lam (seconds a rider pays per unit of exposure). lam = 0 is the usual
 fastest route; larger lam buys lower exposure with extra minutes. The distinct,
-non-dominated routes across the sweep are the rider's time-for-safety trade-off.
+non-dominated routes across the sweep are trimmed to three options for the rider:
+fastest, balanced and safest.
 
 Exposure: each crash spreads a Gaussian (SIGMA_M) over nearby streets, weighted by
 fatalities. A segment's exposure is that field integrated along the segment (mean of
@@ -287,6 +288,15 @@ def _frontier(candidates: list[dict]) -> list[dict]:
     return kept
 
 
+def _balanced(routes: list[dict], recommended: dict) -> dict:
+    """The middle option: the recommended route if it sits between fastest and safest, else the one halfway in exposure."""
+    middle = routes[1:-1]
+    if any(r is recommended for r in middle):
+        return recommended
+    target = (routes[0]["exposure"] + routes[-1]["exposure"]) / 2
+    return min(middle, key=lambda r: abs(r["exposure"] - target))
+
+
 def _node_street(G: nx.MultiDiGraph, n) -> str | None:
     """The most common street name on the segments meeting at a node."""
     names = [a["street"] for _, _, a in G.out_edges(n, data=True)] + [a["street"] for _, _, a in G.in_edges(n, data=True)]
@@ -319,6 +329,8 @@ def plan(rg: RoutingGraph, origin: tuple[float, float], destination: tuple[float
     fastest_sites = set(fastest["crash_sites"])
     budget_s = max(DEFAULT_BUDGET_MIN_S, DEFAULT_BUDGET_SHARE * fastest["duration_s"])
     recommended = [r for r in routes if r["duration_s"] - fastest["duration_s"] <= budget_s][-1]
+    if len(routes) > 3:
+        routes = [fastest, _balanced(routes, recommended), safest]
 
     for i, r in enumerate(routes):
         r["id"] = f"r{i}"
@@ -333,8 +345,6 @@ def plan(rg: RoutingGraph, origin: tuple[float, float], destination: tuple[float
             r["label"] = "Fastest & safest"
         elif r is fastest:
             r["label"] = "Fastest"
-        elif r is recommended:
-            r["label"] = "Safe Journey"
         elif r is safest:
             r["label"] = "Safest"
         else:
@@ -353,7 +363,6 @@ def plan(rg: RoutingGraph, origin: tuple[float, float], destination: tuple[float
         "fastest_id": fastest["id"],
         "safest_id": safest["id"],
         "recommended_id": recommended["id"],
-        "default_budget_s": round(budget_s),
         "crashes": crashes,
         "method": {
             "source": "NHTSA FARS fatal crashes, 2020-2024",

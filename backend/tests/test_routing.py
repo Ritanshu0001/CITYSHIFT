@@ -64,7 +64,7 @@ def test_exposure_concentrates_on_streets_near_the_crash(rg):
     assert rg.crashes[0]["street"] in {"Row 0 St", "Col 2 Ave"}
 
 
-def test_fastest_goes_through_the_crash_and_safe_journey_detours(rg):
+def test_fastest_goes_through_the_crash_and_safest_detours(rg):
     plan = routing.plan(rg, latlng(0, 0), latlng(0, 4), radius_m=5_000)
     routes = {r["id"]: r for r in plan["routes"]}
     fastest, safe = routes[plan["fastest_id"]], routes[plan["recommended_id"]]
@@ -73,7 +73,7 @@ def test_fastest_goes_through_the_crash_and_safe_journey_detours(rg):
     assert fastest["crash_sites"] == [0]
     assert fastest["distance_m"] == 800
 
-    assert safe["label"] == "Safe Journey"
+    assert safe["label"] == "Safest"
     assert safe["crash_sites"] == [] and safe["avoided_sites"] == [0]
     assert safe["distance_m"] == 1200
     assert safe["extra_s"] > 0
@@ -86,6 +86,23 @@ def test_frontier_trades_time_for_exposure_monotonically(rg):
     for slower, faster in zip(routes[1:], routes):
         assert slower["duration_s"] >= faster["duration_s"]
         assert slower["exposure"] < faster["exposure"]
+
+
+def test_long_frontier_trims_to_fastest_balanced_safest(rg, monkeypatch):
+    def five(candidates):
+        base = min(candidates, key=lambda r: r["duration_s"])
+        return [{**base, "duration_s": base["duration_s"] + 60 * i, "exposure": base["exposure"] * (1 - 0.2 * i)}
+                for i in range(5)]
+    monkeypatch.setattr(routing, "_frontier", five)
+    plan = routing.plan(rg, latlng(0, 0), latlng(0, 4), radius_m=5_000)
+    assert [r["label"] for r in plan["routes"]] == ["Fastest", "Balanced", "Safest"]
+    assert plan["recommended_id"] in {r["id"] for r in plan["routes"]}
+
+
+def test_balanced_is_recommended_route_or_halfway_in_exposure():
+    routes = [{"exposure": e} for e in (10.0, 8.0, 5.5, 2.0, 0.0)]
+    assert routing._balanced(routes, routes[1]) is routes[1]
+    assert routing._balanced(routes, routes[-1]) is routes[2]
 
 
 def test_steps_turn_the_right_way(rg):
