@@ -4,6 +4,7 @@ import { GoogleMapsOverlay } from "@deck.gl/google-maps";
 import { PolygonLayer, ScatterplotLayer } from "@deck.gl/layers";
 import { APILoadingStatus, Map, RenderingType, useApiLoadingStatus, useMap } from "@vis.gl/react-google-maps";
 import { cellToBoundary } from "h3-js";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BAND_COLORS, CRASH_COUNT_COLORS, MAPS_API_KEY } from "@/lib/constants";
 import type { Center, CityHex, CrashPoint, CrashesResponse } from "@/lib/types";
@@ -366,7 +367,8 @@ export function HexMap(props: HexMapProps) {
   const googleUnavailable = Boolean(MAPS_API_KEY) && (
     !online || apiStatus === APILoadingStatus.FAILED || apiStatus === APILoadingStatus.AUTH_FAILURE
   );
-  const crashLayerAvailable = googleReady && Boolean(props.crashes?.available && props.crashes.points.length);
+  const availableCrashes = props.crashes?.available ? props.crashes : null;
+  const crashLayerAvailable = googleReady && Boolean(availableCrashes?.points.length);
 
   return (
     <div className="map-wrap">
@@ -388,17 +390,43 @@ export function HexMap(props: HexMapProps) {
         <FallbackMap {...props} offline={!online || googleUnavailable || Boolean(MAPS_API_KEY)} />
       )}
       {crashLayerAvailable && props.onToggleCrashes && (
-        <button
-          type="button"
-          className={`crash-toggle${props.showCrashes ? " is-active" : ""}`}
-          aria-pressed={Boolean(props.showCrashes)}
-          onClick={() => {
-            setCrashHover(null);
-            props.onToggleCrashes?.();
-          }}
-        >
-          <span aria-hidden="true" /> Fatal crashes (NHTSA FARS 2020–24) <b>{props.showCrashes ? "ON" : "OFF"}</b>
-        </button>
+        <div className={`crash-control${props.showCrashes ? " is-open" : ""}`}>
+          <button
+            type="button"
+            className="crash-toggle"
+            aria-expanded={Boolean(props.showCrashes)}
+            aria-controls="crash-layer-details"
+            onClick={() => {
+              setCrashHover(null);
+              props.onToggleCrashes?.();
+            }}
+          >
+            <span className="crash-toggle-dot" aria-hidden="true" />
+            <span className="crash-toggle-copy">
+              <strong>Fatal crashes</strong>
+              <small>NHTSA FARS · 2020–24</small>
+            </span>
+            <b>{props.showCrashes ? "On" : "Off"}</b>
+            <ChevronDown className="crash-toggle-chevron" size={17} aria-hidden="true" />
+          </button>
+          <div id="crash-layer-details" className="crash-details" aria-hidden={!props.showCrashes}>
+            <div className="crash-details-inner">
+              <div className="crash-summary">
+                <strong>{availableCrashes?.total ?? 0}</strong>
+                <span>fatal crash records in this city</span>
+              </div>
+              <div className="crash-area-key">
+                <span>Crashes per area</span>
+                <div>
+                  <span><i style={{ background: CRASH_COUNT_COLORS.one.hex }} /> 1</span>
+                  <span><i style={{ background: CRASH_COUNT_COLORS.few.hex }} /> 2–3</span>
+                  <span><i style={{ background: CRASH_COUNT_COLORS.many.hex }} /> 4+</span>
+                </div>
+              </div>
+              <p>Light rings highlight pedestrian or cyclist involvement.</p>
+            </div>
+          </div>
+        </div>
       )}
       {props.showCrashes && crashHover && (
         <div className="crash-tooltip" style={{ left: crashHover.x + 12, top: crashHover.y + 12 }} role="status">
@@ -409,7 +437,7 @@ export function HexMap(props: HexMapProps) {
           <span>{crashHover.point.dark ? "Dark conditions" : "Daylight"}</span>
         </div>
       )}
-      <Legend showCrashes={Boolean(props.showCrashes && crashLayerAvailable)} />
+      <Legend />
     </div>
   );
 }

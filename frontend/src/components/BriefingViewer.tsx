@@ -69,7 +69,7 @@ export function BriefingViewer({ cityName, slug, onDownload }: BriefingViewerPro
         aria-haspopup="dialog"
       >
         <FileText size={17} />
-        View briefing
+        Get report
       </button>
 
       {open && (

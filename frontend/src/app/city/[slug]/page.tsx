@@ -280,7 +280,10 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
         <div className="summary-metric"><small>Mapped areas</small><b>{summary.n_hexes}</b></div>
         <div className="summary-metric summary-alert"><small>Strong shift</small><b>{summary.pct_red.toFixed(1)}%</b><span>of mapped areas</span></div>
         <div className="summary-actions">
-          <BriefingViewer cityName={summary.city} slug={slug} onDownload={downloadBriefing} />
+          <div className="report-callout">
+            <span>Want to train your own model <b aria-hidden="true">→</b></span>
+            <BriefingViewer cityName={summary.city} slug={slug} onDownload={downloadBriefing} />
+          </div>
         </div>
       </section>
 
