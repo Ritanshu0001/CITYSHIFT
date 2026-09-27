@@ -1158,7 +1158,7 @@ body { background: var(--white); }
   box-shadow: 0 32px 90px rgba(3,20,36,.35);
   display: grid;
   grid-template-rows: auto minmax(0,1fr);
-  max-height: min(86vh, 860px);
+  max-height: min(calc(100dvh - 48px), 860px);
   max-width: 940px;
   overflow: hidden;
   width: 100%;
@@ -1192,15 +1192,15 @@ body { background: var(--white); }
 }
 .briefing-viewer-actions button:hover { background: #fff; color: var(--blue-deep); }
 .briefing-viewer-actions .briefing-close { justify-content: center; padding: 0; width: 38px; }
-.briefing-viewer-body { min-height: 260px; overflow-y: auto; overscroll-behavior: contain; padding: 42px clamp(28px,6vw,76px) 58px; }
+.briefing-viewer-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 38px clamp(28px,5vw,64px) 52px; }
 .briefing-loading { align-items: center; color: var(--ink-soft); display: flex; gap: 10px; justify-content: center; min-height: 260px; }
 .briefing-loading svg { animation: briefing-spin .9s linear infinite; color: var(--blue); }
 .briefing-error { background: #fff0f2; border: 1px solid #ffc6cc; border-radius: 14px; color: #92283a; margin: 0; padding: 16px 18px; }
-.briefing-markdown { color: var(--ink-soft); font-size: 15px; line-height: 1.72; }
+.briefing-markdown { color: var(--ink-soft); font-size: 15px; line-height: 1.72; margin: 0 auto; max-width: 760px; }
 .briefing-markdown h1,
 .briefing-markdown h2,
 .briefing-markdown h3 { color: var(--ink); font-family: var(--font-display); letter-spacing: -.035em; line-height: 1.12; }
-.briefing-markdown h1 { font-size: clamp(34px,5vw,52px); margin: 0 0 30px; }
+.briefing-markdown h1 { font-size: clamp(30px,4vw,44px); margin: 0 0 26px; }
 .briefing-markdown h2 { border-top: 1px solid var(--line); font-size: 26px; margin: 38px 0 14px; padding-top: 28px; }
 .briefing-markdown h3 { font-size: 19px; margin: 26px 0 10px; }
 .briefing-markdown p { margin: 0 0 16px; }
@@ -1226,7 +1226,7 @@ body { background: var(--white); }
   .analysis-actions { gap: 7px; }
   .analysis-actions .ride-access { padding: 9px 12px; }
   .briefing-overlay { align-items: stretch; padding: 10px; }
-  .briefing-viewer { border-radius: 20px; max-height: none; }
+  .briefing-viewer { border-radius: 20px; max-height: calc(100dvh - 20px); }
   .briefing-viewer-header { align-items: flex-start; flex-direction: column; gap: 14px; padding: 20px; }
   .briefing-viewer-actions { width: 100%; }
   .briefing-viewer-actions button { flex: 1; justify-content: center; }

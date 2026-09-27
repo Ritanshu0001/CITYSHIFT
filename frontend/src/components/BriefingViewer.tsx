@@ -2,6 +2,7 @@
 
 import { Download, FileJson, FileText, LoaderCircle, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import ReactMarkdown from "react-markdown";
 import { briefingUrl } from "@/lib/api";
 
@@ -72,7 +73,7 @@ export function BriefingViewer({ cityName, slug, onDownload }: BriefingViewerPro
         Get report
       </button>
 
-      {open && (
+      {open && typeof document !== "undefined" && createPortal(
         <div
           className="briefing-overlay"
           onMouseDown={(event) => {
@@ -114,7 +115,8 @@ export function BriefingViewer({ cityName, slug, onDownload }: BriefingViewerPro
               {content && <article className="briefing-markdown"><ReactMarkdown>{content}</ReactMarkdown></article>}
             </div>
           </section>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
