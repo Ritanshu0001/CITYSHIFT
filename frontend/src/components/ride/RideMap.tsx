@@ -169,6 +169,13 @@ function Overlays({ center, radiusKm, pickup, dropoff, plan, selectedId, onSelec
   const map = useMap();
   const selected = plan?.routes.find((r) => r.id === selectedId) ?? null;
 
+  // A cached-city selection must move the existing Google map, even if the provider reuses its map instance.
+  useEffect(() => {
+    if (!map) return;
+    map.setCenter(center);
+    map.setZoom(12);
+  }, [map, center]);
+
   // Service area: the radius the routing graph covers.
   useEffect(() => {
     if (!map) return;

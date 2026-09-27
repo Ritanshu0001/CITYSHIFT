@@ -1,8 +1,74 @@
 # CityShift
 
-Enter any city. CityShift shows where its driving environment differs from Waymo's established cities (Phoenix, San Francisco, Los Angeles, Austin, Atlanta) and turns those differences into prioritized test scenarios, using only public data.
+Enter any city. CityShift shows where its driving environment differs from selected benchmark environments in Phoenix, San Francisco, Los Angeles, Austin, and Atlanta, then turns those differences into prioritized test scenarios using public data.
 
 *Waymax tests the scenario. CityShift finds the scenario worth testing.*
+
+[Read the full project overview (PDF)](output/pdf/CityShift_Project_Overview.pdf)
+
+## Project overview
+
+CityShift is a decision-support tool for early research, simulation planning, and new-city preparation. It combines public road, infrastructure, activity, weather, terrain, and crash data into a repeatable view of local driving differences.
+
+The project answers one practical question: **What is different about driving here, where does it happen, and what should be tested first?**
+
+### How a city analysis works
+
+1. **Search:** Select a city through place search.
+2. **Divide:** Split an 8 km radius into H3 resolution-8 hexagons, about 0.74 km2 each.
+3. **Measure:** Convert public datasets into consistent road, infrastructure, activity, and climate metrics.
+4. **Compare:** Compare each usable hex with 1,153 pooled reference hexes from the five benchmark cities.
+5. **Prioritize:** Turn unusual conditions into ranked candidate scenarios with locations and supporting evidence.
+
+The reference cities are project-selected benchmark environments, not an official statement of Waymo's current operating footprint.
+
+### What CityShift measures
+
+| Area | Signals |
+|------|---------|
+| Road network | Intersection density, road density, arterial share, motorway share, one-way share |
+| Traffic control | Signal density and crosswalk density |
+| Mobility | Bike-lane density and transit-stop density |
+| Local activity | School, nightlife, and tourism density |
+| Infrastructure | Bridges, movable bridges, tunnels, roundabouts, and stadiums |
+| Climate and context | Rain, heavy rain, snow, terrain slope, driving side, average lanes, and map-data completeness |
+
+Terrain slope and average lane count are shown as context but do not currently affect the Shift score. Weather is measured at city level rather than per hex.
+
+### How to read a Shift score
+
+A Shift score describes **difference, not danger**. Each mapped hex includes its three strongest differences, with the local value, benchmark median, statistical distance, and benchmark percentile.
+
+| Score | Map label | Meaning |
+|------:|-----------|---------|
+| Below 80 | Within baseline | Similar to the benchmark distribution |
+| 80 to 94.9 | Notable shift | Meaningfully different and worth reviewing |
+| 95 or higher | Strong shift | More unusual than at least 95% of reference areas |
+
+Rare features that cannot be scored reliably are marked as novel. Scenario priority grows with both the strength of a difference and the number of affected hexes, helping distinguish isolated conditions from patterns that may deserve broader testing.
+
+### What the product provides
+
+- An interactive, color-coded H3 map with exact affected locations.
+- A Why panel that explains the evidence behind a selected hex.
+- City-to-benchmark comparisons and ranked scenario cards.
+- Separate US fatal-crash context from NHTSA FARS.
+- Downloadable city briefings and evidence-grounded chat.
+- Safe Journey, a rider-facing route prototype with fastest, balanced, and lower-exposure options.
+
+Safe Journey is designed around clear choices and visible tradeoffs, including the needs of older adults who may prefer a more predictable route. Historical crash exposure is not a prediction that a crash will occur, and a lower-exposure route is not guaranteed to be safer. The feature supports transparency and rider comfort; it does not replace current road conditions, accessibility needs, emergency guidance, or validated safety systems.
+
+### Intended use and limits
+
+CityShift can narrow the search space for new-market screening, simulation-suite creation, regression testing, mapping and data collection, on-road test planning, and safety-review preparation. Candidate scenarios still require expert validation before they inform safety decisions or deployment.
+
+Important limitations:
+
+- A high Shift score means different, not automatically dangerous; a low score does not prove an area is safe.
+- Public map data may be incomplete or outdated.
+- Fatal-crash context is US-only and is not normalized by population or traffic volume.
+- The analysis covers an 8 km radius around the selected city center.
+- CityShift does not replace Waymo's internal maps, telemetry, simulation, validation, or operational judgment.
 
 ## Start here
 

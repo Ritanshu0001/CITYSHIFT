@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   description: "Pick the fastest, balanced, or safest route using historical roadway risk.",
 };
 
-export default function RidePage() {
-  return <SafeJourney />;
+export default async function RidePage({ searchParams }: PageProps<"/ride">) {
+  const city = (await searchParams).city;
+  const initialSlug = typeof city === "string" ? city : city?.[0];
+
+  return <SafeJourney initialSlug={initialSlug} />;
 }

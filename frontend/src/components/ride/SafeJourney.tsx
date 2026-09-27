@@ -29,10 +29,10 @@ function nameDroppedPin(place: Place | null, street: string | null): Place | nul
   return place && place.label === DROPPED_PIN && street ? { ...place, label: `Near ${street}` } : place;
 }
 
-export function SafeJourney() {
+export function SafeJourney({ initialSlug = DEFAULT_CITY }: { initialSlug?: string }) {
   const [cities, setCities] = useState<RideCity[] | null>(null);
   const [citiesError, setCitiesError] = useState<string | null>(null);
-  const [slug, setSlug] = useState(DEFAULT_CITY);
+  const [slug, setSlug] = useState(initialSlug);
   const [routing, setRouting] = useState<{ status: RoutingState; error: string | null }>({ status: "idle", error: null });
   const [pickup, setPickup] = useState<Place | null>(null);
   const [dropoff, setDropoff] = useState<Place | null>(null);
@@ -49,7 +49,10 @@ export function SafeJourney() {
     getRideCities()
       .then((list) => {
         setCities(list);
-        if (list.length && !list.some((c) => c.slug === DEFAULT_CITY)) setSlug(list[0].slug);
+        setSlug((current) => {
+          if (list.some((candidate) => candidate.slug === current)) return current;
+          return list.find((candidate) => candidate.slug === DEFAULT_CITY)?.slug ?? list[0]?.slug ?? current;
+        });
       })
       .catch((caught) => setCitiesError(caught instanceof Error ? caught.message : "Could not load cities"));
   }, []);
@@ -152,6 +155,8 @@ export function SafeJourney() {
     setDropoff(null);
     setActiveField("pickup");
     setRouting({ status: "idle", error: null });
+    setResult(null);
+    setPickedId(null);
   }
 
   // ---- the ride ------------------------------------------------------------------------

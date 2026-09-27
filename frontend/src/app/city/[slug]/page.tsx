@@ -282,7 +282,7 @@ function CityPageContent({ slug, jobId }: CityPageContentProps) {
       <header className="analysis-nav">
         <BrandMark />
         <div className="analysis-actions">
-          <Link href="/ride" className="ride-access"><Route size={16} /> Plan a ride</Link>
+          <Link href={`/ride?city=${encodeURIComponent(slug)}`} className="ride-access"><Route size={16} /> Plan a ride</Link>
           <Link href="/" className="new-search"><Search size={15} /> <span>New city</span></Link>
         </div>
       </header>
