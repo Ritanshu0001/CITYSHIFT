@@ -375,7 +375,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, [role="button"]:focu
 .progress-cancelled svg { color: var(--blue); flex: 0 0 auto; }
 .progress-cancelled b { font-size: 10px; }
 .progress-cancelled p { color: var(--ink-soft); font-size: 10px; line-height: 1.45; margin: 3px 0 0; }
-.progress-footnote { color: var(--ink-soft); font-family: var(--font-mono); font-size: 7px; letter-spacing: .05em; margin: 18px 0 0; text-align: center; text-transform: uppercase; }
+.progress-footnote { color: var(--ink-soft); font-family: var(--font-body); font-size: 10.5px; font-weight: 650; line-height: 1.45; margin: 18px 0 0; text-align: center; }
 .progress-card .back-link { border: 1px solid var(--ink); justify-self: start; margin-top: 17px; padding: 10px; }
 .state-page { flex-direction: column; text-align: center; }
 .state-page > svg { color: var(--orange); }

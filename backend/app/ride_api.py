@@ -70,7 +70,7 @@ def _build(slug: str) -> routing.RoutingGraph:
     city = _city(slug)
     crashes = _crash_points(slug, city)
     if not crashes.get("available"):
-        raise RuntimeError(crashes.get("reason") or "No crash data for this city")
+        raise RuntimeError("No roadway risk data is available for this city")
     t = time.perf_counter()
     G, _ = drive_graph(city["lat"], city["lng"])
     G = ox.add_edge_speeds(G, fallback=40)

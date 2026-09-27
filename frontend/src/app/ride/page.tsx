@@ -4,7 +4,7 @@ import "./ride.css";
 
 export const metadata: Metadata = {
   title: "Safe Journey — risk-aware Waymo rides",
-  description: "Pick the fastest, balanced, or safest route by historical fatal-crash exposure.",
+  description: "Pick the fastest, balanced, or safest route using historical roadway risk.",
 };
 
 export default function RidePage() {

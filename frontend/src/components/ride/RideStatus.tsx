@@ -2,7 +2,7 @@
 
 import { CircleCheck, Navigation, ShieldCheck, ThumbsDown, ThumbsUp } from "lucide-react";
 import { useState } from "react";
-import { describeCrash, formatDistance, formatExtra, formatMinutes, plural, streetsSummary, type CrashSite, type Place, type RideRoute, type RoutePlan } from "@/lib/ride";
+import { describeRisk, formatDistance, formatExtra, formatMinutes, plural, streetsSummary, type CrashSite, type Place, type RideRoute, type RoutePlan } from "@/lib/ride";
 
 export interface PassedSite {
   index: number;
@@ -44,12 +44,12 @@ export function RideProgress({ plan, route, fraction, stepIndex, passed, dropoff
 
       {passed ? (
         <p className="ride-live-note is-warn" key={passed.index}>
-          Passing a historic crash site{passed.site.street ? ` on ${passed.site.street}` : ""} · {describeCrash(passed.site)}
+          Entering a recorded risk area{passed.site.street ? ` on ${passed.site.street}` : ""} · {describeRisk(passed.site)}
         </p>
       ) : route.avoided_sites.length > 0 ? (
         <p className="ride-live-note is-good">
           <ShieldCheck size={15} aria-hidden="true" />
-          Steering around {plural(route.avoided_sites.length, "fatal-crash site")}: {streetsSummary(plan, route.avoided_sites, 2).join(" · ")}
+          Steering around {plural(route.avoided_sites.length, "risk site")}: {streetsSummary(plan, route.avoided_sites, 2).join(" · ")}
         </p>
       ) : null}
 
@@ -104,14 +104,14 @@ export function Arrived({ plan, route, dropoff, onReset }: ArrivedProps) {
       <dl className="ride-stats">
         <div><dt>Ride</dt><dd>{formatMinutes(route.duration_s)}</dd></div>
         <div><dt>Vs fastest</dt><dd>{isFastest ? "—" : formatExtra(route.extra_s)}</dd></div>
-        <div><dt>Crash exposure</dt><dd>{isFastest ? "Baseline" : `−${Math.round(route.exposure_reduction_pct)}%`}</dd></div>
-        <div><dt>Sites avoided</dt><dd>{route.avoided_sites.length}</dd></div>
+        <div><dt>Route risk</dt><dd>{isFastest ? "Baseline" : `−${Math.round(route.exposure_reduction_pct)}%`}</dd></div>
+        <div><dt>Risk sites avoided</dt><dd>{route.avoided_sites.length}</dd></div>
       </dl>
 
       {!isFastest && route.avoided_sites.length > 0 && (
         <p className="ride-arrived-note">
           Your ride skipped {streetsSummary(plan, route.avoided_sites).join(" · ")}, where the fastest route passes
-          fatal crashes recorded from 2020 to 2024.
+          recorded risk areas from 2020 to 2024.
         </p>
       )}
 
@@ -119,7 +119,7 @@ export function Arrived({ plan, route, dropoff, onReset }: ArrivedProps) {
         <div className="ride-feedback">
           {vote === null ? (
             <>
-              <p>Was {formatExtra(route.extra_s).toLowerCase()} worth {Math.round(route.exposure_reduction_pct)}% less crash exposure?</p>
+              <p>Was {formatExtra(route.extra_s).toLowerCase()} worth {Math.round(route.exposure_reduction_pct)}% lower route risk?</p>
               <div>
                 <button type="button" onClick={() => record(true)}><ThumbsUp size={15} aria-hidden="true" /> Worth it</button>
                 <button type="button" onClick={() => record(false)}><ThumbsDown size={15} aria-hidden="true" /> Too slow</button>

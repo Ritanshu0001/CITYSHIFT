@@ -53,7 +53,11 @@ export function ProgressScreen({ cityName, job }: { cityName: string; job: JobSt
           </div>
         )}
         {(hasError || isCancelled) && <Link className="back-link" href="/"><ArrowLeft size={16} /> Back to search</Link>}
-        {!hasError && !isCancelled && <p className="progress-footnote">{isQueued ? "This tab will update automatically" : "Keep this tab open · processing live public data"}</p>}
+        {!hasError && !isCancelled && (
+          <p className="progress-footnote">
+            {isQueued ? "This page will update automatically." : "A new city could take up to 2 minutes."}
+          </p>
+        )}
       </div>
     </main>
   );

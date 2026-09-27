@@ -8,10 +8,14 @@
   --r-line: #e6e9f0;
   --r-soft: #f5f7fb;
   --r-blue: #0b72ff;
+  --r-blue-ink: #0b5fd8;
+  --r-green: #00a86b;
+  --r-green-ink: #087f57;
   --r-teal: #00b39f;
   --r-teal-ink: #00806f;
   --r-amber: #f8bf47;
   --r-red: #ff5262;
+  --r-red-ink: #c83d4d;
   background: #eef1f6;
   color: var(--r-ink);
   font-family: var(--font-body);
@@ -43,6 +47,8 @@
 }
 
 .ride-brand { align-items: center; border-bottom: 1px solid #edf0f5; display: flex; gap: 10px; padding-bottom: 14px; }
+.ride-back { align-items: center; background: #fff; border: 1px solid #dfe4ee; border-radius: 50%; color: var(--r-ink-2); display: inline-flex; flex: none; height: 32px; justify-content: center; transition: background .15s, border-color .15s, color .15s; width: 32px; }
+.ride-back:hover { background: var(--r-soft); border-color: #c7cfdd; color: var(--r-ink); }
 .ride-logo { background: linear-gradient(135deg, var(--r-blue), #00c2ad); border-radius: 11px; color: #fff; display: grid; flex: none; height: 34px; place-items: center; width: 34px; }
 .ride-brand-text { display: grid; line-height: 1.2; }
 .ride-brand-text strong { font-size: 16px; font-weight: 780; letter-spacing: -.02em; }
@@ -106,17 +112,22 @@
 .ride-options { display: grid; gap: 14px; margin-top: 18px; }
 
 .ride-routes { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
-.ride-route { background: #fff; border: 1.5px solid var(--r-line); border-radius: 16px; color: inherit; cursor: pointer; display: grid; gap: 6px; padding: 12px 14px; text-align: left; transition: border-color .15s, box-shadow .15s; width: 100%; }
-.ride-route:hover { border-color: #c3cde0; }
-.ride-route.is-selected { border-color: var(--r-blue); box-shadow: 0 0 0 3px rgba(11, 114, 255, .12); }
+.ride-route { background: #fff; border: 1.5px solid var(--r-line); border-radius: 16px; color: inherit; cursor: pointer; display: grid; gap: 6px; padding: 12px 14px; text-align: left; transition: background .15s, border-color .15s, box-shadow .15s; width: 100%; }
+.ride-route:hover { border-color: #c3cde0; box-shadow: 0 3px 10px rgba(16, 20, 38, .05); }
+.ride-route:focus-visible { outline: 2px solid rgba(15, 20, 40, .28); outline-offset: 2px; }
+.ride-route.is-selected { background: #fbfdff; border-color: var(--r-blue); box-shadow: 0 0 0 3px rgba(15, 20, 40, .06); }
 .ride-route-top { align-items: baseline; display: flex; justify-content: space-between; }
 .ride-route-name { align-items: center; display: flex; font-size: 14.5px; font-weight: 760; gap: 8px; }
 .ride-route-name em { background: #dff7f3; border-radius: 999px; color: var(--r-teal-ink); font-size: 10px; font-style: normal; font-weight: 750; letter-spacing: .05em; padding: 3px 8px; text-transform: uppercase; }
 .ride-route-time { font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
 .ride-route-meta { color: var(--r-muted); display: flex; font-size: 12px; gap: 10px; justify-content: space-between; }
-.ride-exposure { background: #eef1f6; border-radius: 999px; display: block; height: 6px; overflow: hidden; }
-.ride-exposure i { background: color-mix(in srgb, var(--r-red) calc(var(--level) * 100%), var(--r-teal)); border-radius: 999px; display: block; height: 100%; }
 .ride-route-foot { color: var(--r-ink-2); font-size: 12px; font-weight: 650; }
+.ride-route.is-fastest .ride-route-name { color: var(--r-red-ink); }
+.ride-route.is-balanced .ride-route-name { color: var(--r-blue-ink); }
+.ride-route.is-safest .ride-route-name { color: var(--r-green-ink); }
+.ride-route.is-fastest.is-selected { border-color: var(--r-red); }
+.ride-route.is-balanced.is-selected { border-color: var(--r-blue); }
+.ride-route.is-safest.is-selected { border-color: var(--r-green); }
 
 .ride-why { color: var(--r-ink-2); display: grid; font-size: 13px; gap: 8px; line-height: 1.45; }
 .ride-why-line { display: grid; gap: 8px; grid-template-columns: 18px 1fr; margin: 0; }
@@ -189,10 +200,15 @@
 .ride-legend { background: rgba(255, 255, 255, .95); border-radius: 12px; bottom: 24px; box-shadow: 0 6px 18px rgba(16, 20, 38, .14); color: var(--r-ink-2); display: grid; font-size: 11.5px; gap: 5px; padding: 9px 12px; position: absolute; right: 64px; z-index: 4; }
 .ride-legend span { align-items: center; display: flex; gap: 8px; }
 .ride-legend i { display: inline-block; flex: none; }
-.ride-legend .is-route { background: var(--r-blue); border-radius: 3px; box-shadow: 0 0 0 1.5px #0a3f93; height: 5px; width: 18px; }
-.ride-legend .is-alt { background: #a9b1c3; border-radius: 3px; height: 5px; width: 18px; }
-.ride-legend .is-on { background: var(--r-amber); border: 2px solid var(--r-ink); border-radius: 50%; height: 11px; margin: 0 3.5px; width: 11px; }
-.ride-legend .is-avoided { background: rgba(255, 82, 98, .18); border: 2px solid var(--r-red); border-radius: 50%; height: 11px; margin: 0 3.5px; width: 11px; }
+.ride-legend { --r-active-route: var(--r-blue); }
+.ride-legend.is-fastest { --r-active-route: var(--r-red); }
+.ride-legend.is-balanced { --r-active-route: var(--r-blue); }
+.ride-legend.is-safest { --r-active-route: var(--r-green); }
+.ride-legend .is-route { background: color-mix(in srgb, var(--r-active-route) 82%, #26344e); border: 1px solid #fff; border-radius: 3px; box-shadow: 0 0 0 1px rgba(16,20,38,.2); height: 4px; width: 20px; }
+.ride-legend .is-alt { background: #8d97aa; border-radius: 3px; height: 3px; opacity: .66; width: 18px; }
+.ride-legend .is-on, .ride-legend .is-avoided { background-position: center; background-repeat: no-repeat; background-size: contain; height: 17px; margin: 0 2px; width: 14px; }
+.ride-legend .is-on { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 27'%3E%3Cpath d='M12 2.4 21 6.1v7.7c0 6.2-3.6 11.2-9 14.2-5.4-3-9-8-9-14.2V6.1L12 2.4Z' fill='none' stroke='%23ef7d32' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M12 8.3v8' stroke='%23ef7d32' stroke-width='2.3' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='20.5' r='1.3' fill='%23ef7d32'/%3E%3C/svg%3E"); }
+.ride-legend .is-avoided { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 27'%3E%3Cpath d='M12 2.4 21 6.1v7.7c0 6.2-3.6 11.2-9 14.2-5.4-3-9-8-9-14.2V6.1L12 2.4Z' fill='none' stroke='%23c96a73' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M12 8.3v8' stroke='%23c96a73' stroke-width='2.3' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='20.5' r='1.3' fill='%23c96a73'/%3E%3C/svg%3E"); opacity: .66; }
 
 /* ---- phones: the panel becomes a bottom sheet ---- */
 @media (max-width: 760px) {

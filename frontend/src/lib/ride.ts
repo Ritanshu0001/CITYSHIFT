@@ -183,7 +183,7 @@ export function plural(n: number, word: string) {
   return `${n} ${word}${n === 1 ? "" : "s"}`;
 }
 
-/** "FDR Drive ×7 · South Street" from a list of crash-site indices. */
+/** "FDR Drive ×7 · South Street" from a list of risk-site indices. */
 export function streetsSummary(plan: RoutePlan, sites: number[], limit = 3) {
   const counts = new Map<string, number>();
   for (const i of sites) {
@@ -196,8 +196,8 @@ export function streetsSummary(plan: RoutePlan, sites: number[], limit = 3) {
   return rest ? [...shown, `${rest} more`] : shown;
 }
 
-export function describeCrash(site: CrashSite) {
+export function describeRisk(site: CrashSite) {
   const month = new Date(2000, site.month - 1, 1).toLocaleString("en-US", { month: "short" });
   const who = site.pedestrian ? "pedestrian" : site.cyclist ? "cyclist" : "vehicle";
-  return `${month} ${site.year} · ${site.fatalities} ${site.fatalities === 1 ? "fatality" : "fatalities"} · ${who}`;
+  return `${month} ${site.year} · ${who} record`;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownUp, LoaderCircle, ShieldCheck } from "lucide-react";
+import { ArrowDownUp, ArrowLeft, LoaderCircle, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MAPS_API_KEY } from "@/lib/constants";
@@ -232,6 +232,9 @@ export function SafeJourney() {
 
       <aside className="ride-panel" aria-label="Plan a Safe Journey ride">
         <header className="ride-brand">
+          <Link href="/" className="ride-back" aria-label="Back to main page" title="Back to main page">
+            <ArrowLeft size={16} aria-hidden="true" />
+          </Link>
           <span className="ride-logo"><ShieldCheck size={18} aria-hidden="true" /></span>
           <span className="ride-brand-text">
             <strong>Safe Journey</strong>
@@ -290,14 +293,14 @@ export function SafeJourney() {
             {routing.status === "building" && (
               <p className="ride-status">
                 <LoaderCircle size={16} className="spin" aria-hidden="true" />
-                Loading {city.name.split(",")[0]} streets and crash history. First visit takes up to a minute.
+                Loading {city.name.split(",")[0]} streets and risk context. First visit takes up to a minute.
               </p>
             )}
             {routing.status === "error" && <p className="ride-error" role="alert">Routing unavailable: {routing.error}</p>}
             {planning && (
               <p className="ride-status">
                 <LoaderCircle size={16} className="spin" aria-hidden="true" />
-                Weighing routes against five years of fatal-crash records…
+                Weighing routes against five years of roadway risk data…
               </p>
             )}
             {planError && <p className="ride-error" role="alert">{planError}</p>}
@@ -323,11 +326,11 @@ export function SafeJourney() {
       </aside>
 
       {phase !== "arrived" && plan && (
-        <div className="ride-legend" aria-hidden="true">
+        <div className={`ride-legend ${selected?.label === "Fastest" ? "is-fastest" : selected?.label === "Balanced" ? "is-balanced" : "is-safest"}`} aria-hidden="true">
           <span><i className="is-route" /> Your route</span>
           {phase === "plan" && plan.routes.length > 1 && <span><i className="is-alt" /> Other options</span>}
-          <span><i className="is-on" /> Crash site on route</span>
-          <span><i className="is-avoided" /> Crash site avoided</span>
+          <span><i className="is-on" /> Risk site near route</span>
+          <span><i className="is-avoided" /> Risk site avoided</span>
         </div>
       )}
     </main>

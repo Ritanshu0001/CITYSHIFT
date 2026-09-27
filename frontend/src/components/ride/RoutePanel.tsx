@@ -19,10 +19,10 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
     <div className="ride-options">
       <ul className="ride-routes" aria-label="Route options">
         {plan.routes.map((route) => {
-          const relative = Math.max(0, 100 - route.exposure_reduction_pct);
+          const tone = route.label === "Fastest" ? "is-fastest" : route.label === "Balanced" ? "is-balanced" : "is-safest";
           return (
             <li key={route.id}>
-              <button type="button" className={`ride-route${route.id === selected.id ? " is-selected" : ""}`}
+              <button type="button" className={`ride-route ${tone}${route.id === selected.id ? " is-selected" : ""}`}
                 aria-pressed={route.id === selected.id} onClick={() => onPick(route)}>
                 <span className="ride-route-top">
                   <span className="ride-route-name">
@@ -33,13 +33,10 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
                 </span>
                 <span className="ride-route-meta">
                   <span>{route.id === fastest.id ? "Quickest arrival" : formatExtra(route.extra_s)} · {formatDistance(route.distance_m)}</span>
-                  <span>{route.crash_sites.length ? `Passes ${plural(route.crash_sites.length, "crash site")}` : "No crash sites passed"}</span>
-                </span>
-                <span className="ride-exposure" aria-hidden="true">
-                  <i style={{ width: `${Math.max(3, relative)}%`, ["--level" as string]: relative / 100 }} />
+                  <span>{route.crash_sites.length ? `Passes ${plural(route.crash_sites.length, "risk site")}` : "No risk sites on route"}</span>
                 </span>
                 <span className="ride-route-foot">
-                  {route.id === fastest.id ? "Baseline crash exposure" : `${Math.round(route.exposure_reduction_pct)}% less crash exposure`}
+                  {route.id === fastest.id ? "Baseline route risk" : `${Math.round(route.exposure_reduction_pct)}% lower route risk`}
                 </span>
               </button>
             </li>
@@ -53,13 +50,13 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
             <p className="ride-why-line is-warn">
               <TriangleAlert size={16} aria-hidden="true" />
               <span>
-                Fastest, but it passes {plural(selected.crash_sites.length, "fatal-crash site")}
+                Fastest, but it passes {plural(selected.crash_sites.length, "risk site")}
                 {selected.crash_sites.length > 0 && <>: {streetsSummary(plan, selected.crash_sites).join(" · ")}</>}.
               </span>
             </p>
             {recommended.id !== fastest.id && (
               <button type="button" className="ride-why-nudge" onClick={() => onPick(recommended)}>
-                {formatExtra(recommended.extra_s)} cuts crash exposure by {Math.round(recommended.exposure_reduction_pct)}% →
+                {formatExtra(recommended.extra_s)} reduces route risk by {Math.round(recommended.exposure_reduction_pct)}% →
               </button>
             )}
           </>
@@ -69,7 +66,7 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
               <p className="ride-why-line is-good">
                 <ShieldCheck size={16} aria-hidden="true" />
                 <span>
-                  Steers around {plural(selected.avoided_sites.length, "fatal-crash site")} on the fastest route:{" "}
+                  Steers around {plural(selected.avoided_sites.length, "risk site")} on the fastest route:{" "}
                   {streetsSummary(plan, selected.avoided_sites).join(" · ")}.
                 </span>
               </p>
@@ -78,8 +75,8 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
               <span className="ride-why-dot" aria-hidden="true" />
               <span>
                 {selected.crash_sites.length
-                  ? <>Still passes {plural(selected.crash_sites.length, "site")}: {streetsSummary(plan, selected.crash_sites).join(" · ")}.</>
-                  : "Passes no recorded fatal-crash sites."}
+                  ? <>Still passes {plural(selected.crash_sites.length, "risk site")}: {streetsSummary(plan, selected.crash_sites).join(" · ")}.</>
+                  : "Passes no recorded risk sites."}
               </span>
             </p>
           </>
@@ -102,7 +99,7 @@ export function RoutePanel({ plan, selected, onPick, onRequest }: RoutePanelProp
       </details>
 
       <p className="ride-method">
-        Crash exposure: {plan.method.source}, weighted by how closely the route passes each one. ETAs are
+        Route risk: NHTSA FARS roadway-safety records, 2020–2024, weighted by how closely the route passes each risk area. ETAs are
         free-flow estimates with a {plan.method.intersection_delay_s}-second allowance per intersection.
       </p>
 
