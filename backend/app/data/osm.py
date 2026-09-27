@@ -43,20 +43,18 @@ TAGS = {
 }
 
 DEFAULT_OVERPASS_URL = ox.settings.overpass_url
-FALLBACK_OVERPASS_URL = "https://gall.openstreetmap.de/api"
-OVERPASS_URLS = (DEFAULT_OVERPASS_URL, FALLBACK_OVERPASS_URL,
-                 "https://lambert.openstreetmap.de/api")
-# These were public global mirrors and can still appear in saved-city metadata or
-# existing OSMnx cache keys. They are no longer current defaults, but cached road
-# responses from them remain valid and should stay reusable without networking.
-_LEGACY_OVERPASS_URLS = (
-    "https://overpass.private.coffee/api",
+FALLBACK_OVERPASS_URL = "https://overpass.private.coffee/api"
+OVERPASS_URLS = (
+    DEFAULT_OVERPASS_URL,
+    FALLBACK_OVERPASS_URL,
     "https://maps.mail.ru/osm/tools/overpass/api",
+    "https://gall.openstreetmap.de/api",
+    "https://lambert.openstreetmap.de/api",
 )
 # The round-robin endpoint performs the normal slot check. Direct-host fallbacks
-# skip it so a broken /status route cannot prevent an interpreter request; HTTP
-# 429 still moves immediately to the next host.
-_NO_SLOT_LIMIT = {FALLBACK_OVERPASS_URL, OVERPASS_URLS[2]}
+# and independent mirrors skip it so a broken /status route cannot prevent an
+# interpreter request; HTTP 429 still moves immediately to the next host.
+_NO_SLOT_LIMIT = set(OVERPASS_URLS[1:])
 
 # Before every request OSMnx pins the Overpass hostname to one IP from gethostbyname.
 # overpass-api.de round-robins two machines; on 2026-09-26 one refused connections and
@@ -273,7 +271,7 @@ def _cached_road_response(data, attempt: _Attempt):
         f"[out:json][timeout:180];{body}",
         f"[out:json][timeout:180][maxsize:536870912];{body}",
     ))
-    servers = dict.fromkeys((attempt.server, *_servers(), *_LEGACY_OVERPASS_URLS))
+    servers = dict.fromkeys((attempt.server, *_servers()))
     for server in servers:
         for candidate in queries:
             url = requests.Request("GET", server.rstrip("/") + "/interpreter",

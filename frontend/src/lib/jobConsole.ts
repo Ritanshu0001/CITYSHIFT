@@ -4,7 +4,7 @@ import type { JobLogLine, JobStatus } from "./types";
 const TAG_STYLE = "color:#fff;background:#1f6fff;border-radius:3px;padding:1px 5px;font-weight:600";
 const STALL_NOTICE_S = 15;
 
-function say(method: "log" | "warn" | "error", text: string, ...extra: unknown[]) {
+function say(method: "log" | "warn", text: string, ...extra: unknown[]) {
   console[method](`%cCityShift%c ${text}`, TAG_STYLE, "", ...extra);
 }
 
@@ -26,7 +26,9 @@ export function createJobConsole(slug: string, jobId: string) {
 
   function print(line: JobLogLine) {
     const text = `+${line.t.toFixed(1)}s ${line.source}: ${tidy(line.message)}`;
-    if (line.level === "ERROR" || line.level === "CRITICAL") say("error", text);
+    // Job failures are expected operational results and already have an in-app
+    // error state. console.error would make Next.js show its developer overlay.
+    if (line.level === "ERROR" || line.level === "CRITICAL") say("warn", `ERROR ${text}`);
     else if (line.level === "WARNING") say("warn", text);
     else say("log", text);
   }
@@ -36,7 +38,7 @@ export function createJobConsole(slug: string, jobId: string) {
     const step = job.step ? JOB_STEP_LABELS[job.step] : null;
     if (job.status === "done") say("log", `${slug} ready${total}`);
     else if (job.status === "cancelled") say("warn", `${slug} cancelled${total}: ${job.message ?? "replaced by a newer search"}`);
-    else say("error", `${slug} failed${step ? ` during "${step}"` : ""}${total}: ${job.error ?? "unknown error"}`);
+    else say("warn", `${slug} failed${step ? ` during "${step}"` : ""}${total}: ${job.error ?? "unknown error"}`);
 
     const rows: Record<string, { seconds: number }> = {};
     for (const s of JOB_STEPS) {
@@ -44,7 +46,7 @@ export function createJobConsole(slug: string, jobId: string) {
       if (seconds != null) rows[JOB_STEP_LABELS[s]] = { seconds: Math.round(seconds * 10) / 10 };
     }
     if (Object.keys(rows).length) {
-      say("log", "Step times (wall clock; roads, infrastructure and weather download in parallel, "
+      say("log", "Step times (wall clock; weather may overlap the road download, "
         + "so each download's own time is in its \"done in\" line above):");
       console.table(rows);
     }

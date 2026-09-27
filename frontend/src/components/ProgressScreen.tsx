@@ -7,6 +7,7 @@ export function ProgressScreen({ cityName, job }: { cityName: string; job: JobSt
   const hasError = job?.status === "error";
   const isCancelled = job?.status === "cancelled";
   const isQueued = job?.status === "queued";
+  const osmUnavailable = job?.error?.includes("OpenStreetMap download failed") ?? false;
   return (
     <main className="progress-page">
       <div className="progress-card">
@@ -15,6 +16,10 @@ export function ProgressScreen({ cityName, job }: { cityName: string; job: JobSt
         <p className="progress-lede">
           {isCancelled
             ? "A newer city search took priority, so this city was removed from the queue."
+            : hasError
+              ? osmUnavailable
+                ? "The public map-data services are not responding, so CityShift could not build this city yet."
+                : "The analysis could not complete this request."
             : isQueued
               ? "The analysis will start automatically as soon as the current city finishes."
               : `Building a comparable 8 km driving fingerprint against ${REFERENCE_LABEL}.`}
@@ -44,7 +49,12 @@ export function ProgressScreen({ cityName, job }: { cityName: string; job: JobSt
 
         {hasError && (
           <div className="progress-error" role="alert">
-            <OctagonAlert size={20} /><div><b>Couldn’t finish this city</b><p>{job?.error ?? "The analysis pipeline returned an error."}</p></div>
+            <OctagonAlert size={20} /><div>
+              <b>{osmUnavailable ? "OpenStreetMap is temporarily unavailable" : "Couldn’t finish this city"}</b>
+              <p>{osmUnavailable
+                ? "None of the public map-data servers could be reached. Please try this city again shortly."
+                : job?.error ?? "The analysis pipeline returned an error."}</p>
+            </div>
           </div>
         )}
         {isCancelled && (

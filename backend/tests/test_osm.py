@@ -133,7 +133,7 @@ def test_all_servers_failing_raises_readable_error():
     def fn():
         raise ConnectionError(f"{_server()} refused")
 
-    with pytest.raises(osm.OSMError, match="all 3 Overpass servers") as info:
+    with pytest.raises(osm.OSMError, match=f"all {len(osm.OVERPASS_URLS)} Overpass servers") as info:
         osm._with_fallback("roads", fn)
     assert all(server in str(info.value) for server in osm.OVERPASS_URLS)
 
@@ -160,7 +160,7 @@ def test_third_server_recovers_when_first_two_fail():
         return "graph"
 
     assert osm._with_fallback("roads", fn) == ("graph", THIRD)
-    assert servers == list(osm.OVERPASS_URLS)
+    assert servers == list(osm.OVERPASS_URLS[:3])
 
 
 def test_preferred_server_goes_first_then_the_usual_order():
@@ -192,10 +192,10 @@ def test_all_hung_servers_have_a_deadline(monkeypatch):
 
     started = time.monotonic()
     try:
-        with pytest.raises(osm.OSMError, match="all 3 Overpass servers"):
+        with pytest.raises(osm.OSMError, match=f"all {len(osm.OVERPASS_URLS)} Overpass servers"):
             osm._with_fallback("roads", fn)
         assert time.monotonic() - started < 1
-        assert len(attempts) == 3
+        assert len(attempts) == len(osm.OVERPASS_URLS)
         assert all(a.abandoned.is_set() for a in attempts)
     finally:
         release.set()
