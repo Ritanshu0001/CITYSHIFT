@@ -43,11 +43,19 @@ TAGS = {
 }
 
 DEFAULT_OVERPASS_URL = ox.settings.overpass_url
-FALLBACK_OVERPASS_URL = "https://overpass.private.coffee/api"
+FALLBACK_OVERPASS_URL = "https://gall.openstreetmap.de/api"
 OVERPASS_URLS = (DEFAULT_OVERPASS_URL, FALLBACK_OVERPASS_URL,
-                "https://maps.mail.ru/osm/tools/overpass/api")
-# These mirrors do not use Overpass's slot management. Their /status responses
-# can otherwise cause OSMnx to poll forever while waiting for a slot count.
+                 "https://lambert.openstreetmap.de/api")
+# These were public global mirrors and can still appear in saved-city metadata or
+# existing OSMnx cache keys. They are no longer current defaults, but cached road
+# responses from them remain valid and should stay reusable without networking.
+_LEGACY_OVERPASS_URLS = (
+    "https://overpass.private.coffee/api",
+    "https://maps.mail.ru/osm/tools/overpass/api",
+)
+# The round-robin endpoint performs the normal slot check. Direct-host fallbacks
+# skip it so a broken /status route cannot prevent an interpreter request; HTTP
+# 429 still moves immediately to the next host.
 _NO_SLOT_LIMIT = {FALLBACK_OVERPASS_URL, OVERPASS_URLS[2]}
 
 # Before every request OSMnx pins the Overpass hostname to one IP from gethostbyname.
@@ -72,7 +80,10 @@ CONNECT_TIMEOUT_S = 5
 STATUS_TIMEOUT_S = 10
 HTTP_ATTEMPTS = 3
 RETRY_PAUSE_S = 5
-RATE_LIMIT_PAUSE_S = 30
+# Allow a little transport overhead beyond the timeout declared in an Overpass
+# query. A server that never replies must not hold an interactive analysis for the
+# full five-minute attempt deadline.
+RESPONSE_GRACE_S = 15
 
 T = TypeVar("T")
 
@@ -98,6 +109,7 @@ class _Attempt:
         self.started = time.perf_counter()
         self.answered = threading.Event()  # an Overpass response arrived; the rest is local work
         self.abandoned = threading.Event()
+        self.response_deadline: float | None = None
         self.outcome: str | None = None
 
 
@@ -143,6 +155,9 @@ class _OverpassHTTP:
     def post(self, url, **kwargs):
         attempt = getattr(_current, "attempt", None)
         requested_timeout = kwargs.get("timeout", ox.settings.requests_timeout)
+        query = str(kwargs.get("data", {}).get("data", ""))
+        match = re.search(r"\[timeout:(\d+)\]", query)
+        query_timeout = int(match.group(1)) if match else requested_timeout
         for number in range(HTTP_ATTEMPTS):
             read_timeout = requested_timeout
             if attempt is not None:
@@ -150,9 +165,17 @@ class _OverpassHTTP:
                 if attempt.abandoned.is_set() or remaining <= 0:
                     raise _Abandoned(attempt.server)
                 read_timeout = min(read_timeout, remaining)
+                attempt.response_deadline = min(
+                    attempt.started + ATTEMPT_TIMEOUT_S,
+                    time.perf_counter() + query_timeout + RESPONSE_GRACE_S,
+                )
             kwargs["timeout"] = (CONNECT_TIMEOUT_S, read_timeout)
             response = requests.post(url, **kwargs)
-            if response.status_code not in {429, 502, 503, 504} or number == HTTP_ATTEMPTS - 1:
+            # A 429 means this server has no capacity for us. Trying another
+            # server now is both faster and gentler than repeating the same query.
+            if response.status_code == 429:
+                break
+            if response.status_code not in {502, 503, 504} or number == HTTP_ATTEMPTS - 1:
                 break
             pause = _retry_pause(response, number)
             if attempt is not None and time.perf_counter() - attempt.started + pause >= ATTEMPT_TIMEOUT_S:
@@ -177,7 +200,7 @@ class _OverpassHTTP:
 
 
 def _retry_pause(response: requests.Response, number: int) -> float:
-    pause = RATE_LIMIT_PAUSE_S if response.status_code == 429 else RETRY_PAUSE_S * (number + 1)
+    pause = RETRY_PAUSE_S * (number + 1)
     retry_after = response.headers.get("Retry-After")
     if retry_after:
         try:
@@ -250,7 +273,7 @@ def _cached_road_response(data, attempt: _Attempt):
         f"[out:json][timeout:180];{body}",
         f"[out:json][timeout:180][maxsize:536870912];{body}",
     ))
-    servers = dict.fromkeys((attempt.server, *_servers()))
+    servers = dict.fromkeys((attempt.server, *_servers(), *_LEGACY_OVERPASS_URLS))
     for server in servers:
         for candidate in queries:
             url = requests.Request("GET", server.rstrip("/") + "/interpreter",
@@ -275,6 +298,7 @@ def _tracked_overpass_request(data):
         raise _Abandoned(attempt.server)
     if attempt is not None:
         attempt.answered.clear()
+        attempt.response_deadline = time.perf_counter() + STATUS_TIMEOUT_S + CONNECT_TIMEOUT_S
     try:
         response = _cached_road_response(data, attempt) if attempt is not None else None
         if response is None:
@@ -288,6 +312,7 @@ def _tracked_overpass_request(data):
     if attempt is not None:
         if attempt.abandoned.is_set():
             raise _Abandoned(attempt.server)
+        attempt.response_deadline = None
         attempt.answered.set()
     return response
 
@@ -355,10 +380,15 @@ def _with_fallback(what: str, fn: Callable[[], T], prefer: str | None = None) ->
     while True:
         now = time.perf_counter()
         for attempt in attempts:
-            if attempt.outcome is None and now - attempt.started >= ATTEMPT_TIMEOUT_S:
+            response_timed_out = (attempt.response_deadline is not None
+                                  and now >= attempt.response_deadline
+                                  and not attempt.answered.is_set())
+            if attempt.outcome is None and (now - attempt.started >= ATTEMPT_TIMEOUT_S
+                                            or response_timed_out):
                 attempt.outcome = "timeout"
                 attempt.abandoned.set()
-                errors.append(f"{attempt.server} did not answer within {ATTEMPT_TIMEOUT_S} s")
+                limit = (round(now - attempt.started) if response_timed_out else ATTEMPT_TIMEOUT_S)
+                errors.append(f"{attempt.server} did not answer within {limit} s")
                 log.warning("%s: %s", what, errors[-1])
         running = [a for a in attempts if a.outcome is None]
         if next_server is not None and len(running) < 2 and (
@@ -376,7 +406,9 @@ def _with_fallback(what: str, fn: Callable[[], T], prefer: str | None = None) ->
             raise OSMError(f"OpenStreetMap download failed on all {len(attempts)} Overpass servers. "
                            f"Please retry shortly or configure CITYSHIFT_OVERPASS_URLS. {'; '.join(errors)}")
         # Poll the response events too: a subdivided query may begin another download.
-        wake = min(now + 0.2, *(a.started + ATTEMPT_TIMEOUT_S for a in running))
+        deadlines = [a.started + ATTEMPT_TIMEOUT_S for a in running]
+        deadlines.extend(a.response_deadline for a in running if a.response_deadline is not None)
+        wake = min(now + 0.2, *deadlines)
         try:
             attempt, ok, value = finished.get(timeout=max(0.0, wake - now))
         except queue.Empty:
@@ -432,10 +464,10 @@ def _drive_graph_from_point(lat: float, lng: float) -> nx.MultiDiGraph:
         attempt.overrides.pop("overpass_settings", None)
 
 
-def osm_features(lat: float, lng: float) -> tuple[gpd.GeoDataFrame, str]:
+def osm_features(lat: float, lng: float, prefer: str | None = None) -> tuple[gpd.GeoDataFrame, str]:
     """All TAGS features within DIST_M. An area with none of them returns an empty frame."""
     try:
-        return _with_fallback("infrastructure", lambda: _features_from_point(lat, lng))
+        return _with_fallback("infrastructure", lambda: _features_from_point(lat, lng), prefer)
     except InsufficientResponseError:
         log.warning("no OSM features matched TAGS near (%s, %s)", lat, lng)
         return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326"), ox.settings.overpass_url

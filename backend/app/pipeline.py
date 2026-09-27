@@ -117,7 +117,8 @@ def build_city_data(
 
     step = "roads"
     t_wall = time.perf_counter()
-    # The three downloads are independent: run them together, report progress in JOB_STEPS order.
+    # Weather is independent and can run beside OSM. Keep the two Overpass queries
+    # sequential: public servers reject concurrent requests from one client with 429.
     pool = ThreadPoolExecutor(max_workers=3, thread_name_prefix="fetch")
     try:
         checkpoint(cancel_event)
@@ -126,17 +127,18 @@ def build_city_data(
         progress("roads")
         if climate:
             log.info("[%s] weather: reusing climate from city.json (%s)", slug, _climate_text(climate))
-        log.info("[%s] downloading roads, infrastructure%s in parallel", slug, "" if climate else ", weather")
+        log.info("[%s] downloading roads%s; infrastructure follows on the same Overpass server",
+                 slug, "" if climate else " and weather in parallel")
         roads_f = pool.submit(joblog.in_context(timed), "roads", drive_graph, lat, lng, describe=lambda r: (
             f"{r[0].number_of_nodes():,} nodes, {r[0].number_of_edges():,} edges from {r[1]}"))
-        feats_f = pool.submit(joblog.in_context(timed), "infrastructure", osm_features, lat, lng,
-                              describe=lambda r: f"{len(r[0]):,} tagged OSM features from {r[1]}")
         weather_f = None if climate else pool.submit(joblog.in_context(timed), "weather", climate_for, lat, lng,
                                                      cancel_event, describe=_climate_text)
         G, roads_server = fetch_result(roads_f)
 
         step = "infrastructure"
         progress("infrastructure")
+        feats_f = pool.submit(joblog.in_context(timed), "infrastructure", osm_features, lat, lng, roads_server,
+                              describe=lambda r: f"{len(r[0]):,} tagged OSM features from {r[1]}")
         feats, feats_server = fetch_result(feats_f)
 
         step = "weather"

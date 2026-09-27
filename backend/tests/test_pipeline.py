@@ -42,7 +42,8 @@ def fake_downloads(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     monkeypatch.setattr(cache, "CACHE_ROOT", tmp_path)
     monkeypatch.setattr(pipeline, "drive_graph", lambda lat, lng: (_star_graph(), "test-overpass"))
     monkeypatch.setattr(pipeline, "osm_features",
-                        lambda lat, lng: (gpd.GeoDataFrame(geometry=[], crs="EPSG:4326"), "test-overpass"))
+                        lambda lat, lng, prefer=None: (
+                            gpd.GeoDataFrame(geometry=[], crs="EPSG:4326"), prefer or "test-overpass"))
     monkeypatch.setattr(pipeline, "climate_for", lambda lat, lng, cancel_event=None: dict(CLIMATE))
 
 
@@ -75,3 +76,25 @@ def test_known_climate_skips_the_weather_download(fake_downloads, monkeypatch):
     _, city, meta = pipeline.build_city_data(NAME, LAT, LNG, "GB", climate=dict(CLIMATE))
     assert meta["climate_source"] == "reused from city.json"
     assert city["rain_days_per_year"] == CLIMATE["rain_days_per_year"]
+
+
+def test_infrastructure_starts_after_roads_and_reuses_its_server(fake_downloads, monkeypatch):
+    events = []
+
+    def roads(lat, lng):
+        events.extend(["roads-start", "roads-finish"])
+        return _star_graph(), "working-overpass"
+
+    def infrastructure(lat, lng, prefer=None):
+        events.append(("infrastructure-start", prefer))
+        return gpd.GeoDataFrame(geometry=[], crs="EPSG:4326"), prefer
+
+    monkeypatch.setattr(pipeline, "drive_graph", roads)
+    monkeypatch.setattr(pipeline, "osm_features", infrastructure)
+    pipeline.build_city_data(NAME, LAT, LNG, "GB")
+
+    assert events == [
+        "roads-start",
+        "roads-finish",
+        ("infrastructure-start", "working-overpass"),
+    ]

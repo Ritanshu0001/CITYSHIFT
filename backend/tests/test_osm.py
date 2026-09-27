@@ -33,7 +33,7 @@ def fast_limits(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(osm, "HEDGE_AFTER_S", 0.2)
     monkeypatch.setattr(osm, "ATTEMPT_TIMEOUT_S", 3)
     monkeypatch.setattr(osm, "RETRY_PAUSE_S", 0.01)
-    monkeypatch.setattr(osm, "RATE_LIMIT_PAUSE_S", 0.01)
+    monkeypatch.setattr(osm, "RESPONSE_GRACE_S", 0.01)
     monkeypatch.setattr(osm, "_overpass_request", lambda data: {"elements": []})
 
 
@@ -201,6 +201,29 @@ def test_all_hung_servers_have_a_deadline(monkeypatch):
         release.set()
 
 
+def test_silent_response_deadline_starts_the_next_server(monkeypatch):
+    monkeypatch.setenv("CITYSHIFT_OVERPASS_URLS", f"{FALLBACK},{THIRD}")
+    release = threading.Event()
+    first_attempt = []
+
+    def fn():
+        attempt = osm._current.attempt
+        if attempt.server == FALLBACK:
+            first_attempt.append(attempt)
+            attempt.response_deadline = time.perf_counter() + 0.03
+            release.wait(1)
+            raise osm._Abandoned(attempt.server)
+        return "graph"
+
+    try:
+        started = time.monotonic()
+        assert osm._with_fallback("roads", fn) == ("graph", THIRD)
+        assert time.monotonic() - started < osm.HEDGE_AFTER_S
+        assert first_attempt[0].abandoned.is_set()
+    finally:
+        release.set()
+
+
 def test_configured_servers_replace_defaults_and_are_deduplicated(monkeypatch):
     monkeypatch.setenv("CITYSHIFT_OVERPASS_URLS",
                        " https://custom.example/api/interpreter/, https://custom.example/api, ")
@@ -253,7 +276,7 @@ def test_status_connection_failure_falls_back_without_sixty_second_sleep(monkeyp
     assert calls == [DEFAULT + "/status", FALLBACK + "/interpreter"]
 
 
-@pytest.mark.parametrize("status", [429, 504, 503])
+@pytest.mark.parametrize("status", [504, 503, 502])
 def test_http_errors_have_bounded_retries_before_next_server(monkeypatch, status):
     monkeypatch.setenv("CITYSHIFT_OVERPASS_URLS", f"{FALLBACK},{THIRD}")
     monkeypatch.setattr(osm, "_overpass_request", OSMNX_REQUEST)
@@ -268,6 +291,22 @@ def test_http_errors_have_bounded_retries_before_next_server(monkeypatch, status
     assert osm._with_fallback("roads", lambda: _overpass._overpass_request({"data": "test"})) == (
         {"elements": []}, THIRD)
     assert calls == [FALLBACK + "/interpreter"] * osm.HTTP_ATTEMPTS + [THIRD + "/interpreter"]
+
+
+def test_rate_limit_fails_over_without_retrying_the_same_server(monkeypatch):
+    monkeypatch.setenv("CITYSHIFT_OVERPASS_URLS", f"{FALLBACK},{THIRD}")
+    monkeypatch.setattr(osm, "_overpass_request", OSMNX_REQUEST)
+    monkeypatch.setattr(ox.settings, "use_cache", False)
+    calls = []
+
+    def post(url, **kwargs):
+        calls.append(url)
+        return _response(429 if url.startswith(FALLBACK) else 200)
+
+    monkeypatch.setattr(requests, "post", post)
+    assert osm._with_fallback("roads", lambda: _overpass._overpass_request({"data": "test"})) == (
+        {"elements": []}, THIRD)
+    assert calls == [FALLBACK + "/interpreter", THIRD + "/interpreter"]
 
 
 @pytest.mark.parametrize("body", [
@@ -325,7 +364,7 @@ def test_temporary_gateway_timeout_recovers_on_same_server(monkeypatch):
         {"elements": []}, FALLBACK)
 
 
-def test_retry_after_beyond_deadline_does_not_send_another_request(monkeypatch):
+def test_rate_limit_does_not_wait_for_retry_after(monkeypatch):
     monkeypatch.setenv("CITYSHIFT_OVERPASS_URLS", FALLBACK)
     monkeypatch.setattr(osm, "_overpass_request", OSMNX_REQUEST)
     monkeypatch.setattr(ox.settings, "use_cache", False)
