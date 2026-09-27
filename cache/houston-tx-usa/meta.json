@@ -1,21 +1,21 @@
 {
-  "slug": "charlotte-nc-usa",
-  "created_at": "2026-09-27T04:44:22Z",
+  "slug": "houston-tx-usa",
+  "created_at": "2026-09-27T05:11:57Z",
   "timings_s": {
     "grid": 0.0,
-    "weather": 0.0,
-    "roads": 40.57,
-    "infrastructure": 118.44,
-    "downloads_wall": 118.44,
-    "features": 0.74
+    "weather": 0.01,
+    "infrastructure": 23.67,
+    "roads": 26.62,
+    "downloads_wall": 26.64,
+    "features": 1.23
   },
   "overpass": {
     "roads": "https://overpass.private.coffee/api",
     "infrastructure": "https://overpass.private.coffee/api"
   },
-  "n_graph_nodes": 11293,
-  "n_graph_edges": 27794,
-  "n_osm_features": 18006,
+  "n_graph_nodes": 18115,
+  "n_graph_edges": 49068,
+  "n_osm_features": 19186,
   "climate_source": "Open-Meteo",
   "openmeteo_calls_estimate": 0.0,
   "versions": {

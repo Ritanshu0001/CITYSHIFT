@@ -5,12 +5,14 @@
     python scripts/precache.py --data-only --refresh-data  # rebuild data even if it exists; reuses climate
     python scripts/precache.py --rescore    # re-score cached features after a model/rule change (offline)
     python scripts/precache.py --only tokyo-japan london-uk
+    python scripts/precache.py --cities data/saved_cities.json   # a JSON list of {name, lat, lng, country_code}
 
 Names follow Google Places' formatted address so a search from the UI hits the same slug.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 import time
@@ -90,6 +92,8 @@ def main() -> None:
                     help="with --data-only: rebuild features.csv, city.json, meta.json even if they exist "
                          "(OSM from osmnx_cache; climate reused from city.json)")
     ap.add_argument("--only", nargs="*", metavar="SLUG", help="run just these slugs")
+    ap.add_argument("--cities", type=Path, metavar="FILE",
+                    help="JSON list of {name, lat, lng, country_code} to run instead of the demo cities")
     args = ap.parse_args()
     if args.rescore and args.data_only:
         ap.error("--rescore and --data-only are opposites; pick one")
@@ -98,7 +102,11 @@ def main() -> None:
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     failed = 0
-    todo = [c for c in CITIES if not args.only or cache.slugify(c[0]) in args.only]
+    cities = CITIES
+    if args.cities:
+        rows = json.loads(args.cities.read_text(encoding="utf-8"))
+        cities = [(r["name"], r["lat"], r["lng"], r["country_code"]) for r in rows]
+    todo = [c for c in cities if not args.only or cache.slugify(c[0]) in args.only]
     for index, (name, lat, lng, cc) in enumerate(todo):
         slug = cache.slugify(name)
         if args.rescore:

@@ -1,0 +1,306 @@
+[
+  {
+    "name": "Atlanta, GA, USA",
+    "lat": 33.749,
+    "lng": -84.388,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Austin, TX, USA",
+    "lat": 30.2672,
+    "lng": -97.7431,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Baltimore, MD, USA",
+    "lat": 39.29038,
+    "lng": -76.61219,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Baltimore%2C+Maryland&countryCode=US&count=10&language=en",
+    "geonames_id": 4347778,
+    "matched_name": "Baltimore",
+    "matched_region": "Maryland"
+  },
+  {
+    "name": "Boston, MA, USA",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Charlotte, NC, USA",
+    "lat": 35.22709,
+    "lng": -80.84313,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Charlotte%2C+North+Carolina&countryCode=US&count=10&language=en",
+    "geonames_id": 4460243,
+    "matched_name": "Charlotte",
+    "matched_region": "North Carolina"
+  },
+  {
+    "name": "Chicago, IL, USA",
+    "lat": 41.8781,
+    "lng": -87.6298,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Dallas, TX, USA",
+    "lat": 32.78306,
+    "lng": -96.80667,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Dallas%2C+Texas&countryCode=US&count=10&language=en",
+    "geonames_id": 4684888,
+    "matched_name": "Dallas",
+    "matched_region": "Texas"
+  },
+  {
+    "name": "Denver, CO, USA",
+    "lat": 39.73915,
+    "lng": -104.9847,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Denver%2C+Colorado&countryCode=US&count=10&language=en",
+    "geonames_id": 5419384,
+    "matched_name": "Denver",
+    "matched_region": "Colorado"
+  },
+  {
+    "name": "Detroit, MI, USA",
+    "lat": 42.33143,
+    "lng": -83.04575,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Detroit%2C+Michigan&countryCode=US&count=10&language=en",
+    "geonames_id": 4990729,
+    "matched_name": "Detroit",
+    "matched_region": "Michigan"
+  },
+  {
+    "name": "Houston, TX, USA",
+    "lat": 29.76328,
+    "lng": -95.36327,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Houston%2C+Texas&countryCode=US&count=10&language=en",
+    "geonames_id": 4699066,
+    "matched_name": "Houston",
+    "matched_region": "Texas"
+  },
+  {
+    "name": "Las Vegas, NV, USA",
+    "lat": 36.17497,
+    "lng": -115.13722,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Las+Vegas%2C+Nevada&countryCode=US&count=10&language=en",
+    "geonames_id": 5506956,
+    "matched_name": "Las Vegas",
+    "matched_region": "Nevada"
+  },
+  {
+    "name": "London, UK",
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "country_code": "GB",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Los Angeles, CA, USA",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Miami, FL, USA",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Minneapolis, MN, USA",
+    "lat": 44.97997,
+    "lng": -93.26384,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Minneapolis%2C+Minnesota&countryCode=US&count=10&language=en",
+    "geonames_id": 5037649,
+    "matched_name": "Minneapolis",
+    "matched_region": "Minnesota"
+  },
+  {
+    "name": "Munich, Germany",
+    "lat": 48.13743,
+    "lng": 11.57549,
+    "country_code": "DE",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Munich%2C+Germany&countryCode=DE&count=10&language=en",
+    "geonames_id": 2867714,
+    "matched_name": "Munich",
+    "matched_region": "Bavaria"
+  },
+  {
+    "name": "Nashville, TN, USA",
+    "lat": 36.16589,
+    "lng": -86.78444,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Nashville%2C+Tennessee&countryCode=US&count=10&language=en",
+    "geonames_id": 4644585,
+    "matched_name": "Nashville",
+    "matched_region": "Tennessee"
+  },
+  {
+    "name": "New Orleans, LA, USA",
+    "lat": 29.95465,
+    "lng": -90.07507,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=New+Orleans%2C+Louisiana&countryCode=US&count=10&language=en",
+    "geonames_id": 4335045,
+    "matched_name": "New Orleans",
+    "matched_region": "Louisiana"
+  },
+  {
+    "name": "New York, NY, USA",
+    "lat": 40.7128,
+    "lng": -74.006,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Orlando, FL, USA",
+    "lat": 28.53834,
+    "lng": -81.37924,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Orlando%2C+Florida&countryCode=US&count=10&language=en",
+    "geonames_id": 4167147,
+    "matched_name": "Orlando",
+    "matched_region": "Florida"
+  },
+  {
+    "name": "Philadelphia, PA, USA",
+    "lat": 39.95238,
+    "lng": -75.16362,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Philadelphia%2C+Pennsylvania&countryCode=US&count=10&language=en",
+    "geonames_id": 4560349,
+    "matched_name": "Philadelphia",
+    "matched_region": "Pennsylvania"
+  },
+  {
+    "name": "Phoenix, AZ, USA",
+    "lat": 33.4484,
+    "lng": -112.074,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Pittsburgh, PA, USA",
+    "lat": 40.44062,
+    "lng": -79.99589,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Pittsburgh%2C+Pennsylvania&countryCode=US&count=10&language=en",
+    "geonames_id": 5206379,
+    "matched_name": "Pittsburgh",
+    "matched_region": "Pennsylvania"
+  },
+  {
+    "name": "Portland, OR, USA",
+    "lat": 45.52345,
+    "lng": -122.67621,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Portland%2C+Oregon&countryCode=US&count=10&language=en",
+    "geonames_id": 5746545,
+    "matched_name": "Portland",
+    "matched_region": "Oregon"
+  },
+  {
+    "name": "Sacramento, CA, USA",
+    "lat": 38.58157,
+    "lng": -121.4944,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Sacramento%2C+California&countryCode=US&count=10&language=en",
+    "geonames_id": 5389489,
+    "matched_name": "Sacramento",
+    "matched_region": "California"
+  },
+  {
+    "name": "San Antonio, TX, USA",
+    "lat": 29.42412,
+    "lng": -98.49363,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=San+Antonio%2C+Texas&countryCode=US&count=10&language=en",
+    "geonames_id": 4726206,
+    "matched_name": "San Antonio",
+    "matched_region": "Texas"
+  },
+  {
+    "name": "San Diego, CA, USA",
+    "lat": 32.7157,
+    "lng": -117.1611,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "San Francisco, CA, USA",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "country_code": "US",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Seattle, WA, USA",
+    "lat": 47.60621,
+    "lng": -122.33207,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Seattle%2C+Washington&countryCode=US&count=10&language=en",
+    "geonames_id": 5809844,
+    "matched_name": "Seattle",
+    "matched_region": "Washington"
+  },
+  {
+    "name": "Singapore",
+    "lat": 1.28967,
+    "lng": 103.85007,
+    "country_code": "SG",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Singapore&countryCode=SG&count=10&language=en",
+    "geonames_id": 1880252,
+    "matched_name": "Singapore",
+    "matched_region": null
+  },
+  {
+    "name": "St. Louis, MO, USA",
+    "lat": 38.62727,
+    "lng": -90.19789,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=St.+Louis%2C+Missouri&countryCode=US&count=10&language=en",
+    "geonames_id": 4407066,
+    "matched_name": "St Louis",
+    "matched_region": "Missouri"
+  },
+  {
+    "name": "Tampa, FL, USA",
+    "lat": 27.94752,
+    "lng": -82.45843,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Tampa%2C+Florida&countryCode=US&count=10&language=en",
+    "geonames_id": 4174757,
+    "matched_name": "Tampa",
+    "matched_region": "Florida"
+  },
+  {
+    "name": "Tokyo, Japan",
+    "lat": 35.6762,
+    "lng": 139.6503,
+    "country_code": "JP",
+    "coordinate_source": "existing city cache"
+  },
+  {
+    "name": "Washington, DC, USA",
+    "lat": 38.89511,
+    "lng": -77.03637,
+    "country_code": "US",
+    "coordinate_source": "https://geocoding-api.open-meteo.com/v1/search?name=Washington%2C+District+of+Columbia&countryCode=US&count=10&language=en",
+    "geonames_id": 4140963,
+    "matched_name": "Washington D.C.",
+    "matched_region": "District of Columbia"
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "slug": "sacramento-ca-usa",
+  "created_at": "2026-09-27T05:21:57Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.75,
+    "roads": 16.74,
+    "infrastructure": 153.53,
+    "downloads_wall": 153.53,
+    "features": 0.86
+  },
+  "overpass": {
+    "roads": "https://overpass.private.coffee/api",
+    "infrastructure": "https://overpass.private.coffee/api"
+  },
+  "n_graph_nodes": 11432,
+  "n_graph_edges": 29945,
+  "n_osm_features": 13225,
+  "climate_source": "Open-Meteo",
+  "openmeteo_calls_estimate": 130.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

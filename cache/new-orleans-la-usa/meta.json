@@ -1,0 +1,25 @@
+{
+  "slug": "new-orleans-la-usa",
+  "created_at": "2026-09-27T05:15:48Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.86,
+    "roads": 15.56,
+    "infrastructure": 151.97,
+    "downloads_wall": 151.97,
+    "features": 1.21
+  },
+  "overpass": {
+    "roads": "https://overpass.private.coffee/api",
+    "infrastructure": "https://overpass.private.coffee/api"
+  },
+  "n_graph_nodes": 17446,
+  "n_graph_edges": 45686,
+  "n_osm_features": 9692,
+  "climate_source": "Open-Meteo",
+  "openmeteo_calls_estimate": 130.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

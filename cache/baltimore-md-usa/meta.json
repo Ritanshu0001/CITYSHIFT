@@ -1,0 +1,25 @@
+{
+  "slug": "baltimore-md-usa",
+  "created_at": "2026-09-27T04:42:22Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.0,
+    "infrastructure": 104.96,
+    "roads": 149.98,
+    "downloads_wall": 149.99,
+    "features": 1.01
+  },
+  "overpass": {
+    "roads": "https://maps.mail.ru/osm/tools/overpass/api",
+    "infrastructure": "https://maps.mail.ru/osm/tools/overpass/api"
+  },
+  "n_graph_nodes": 13471,
+  "n_graph_edges": 34187,
+  "n_osm_features": 20771,
+  "climate_source": "Open-Meteo",
+  "openmeteo_calls_estimate": 0.0,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

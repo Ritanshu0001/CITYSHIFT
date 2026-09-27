@@ -31,6 +31,7 @@ uvicorn app.main:app --port 8000                                                
 python scripts/run_city.py "Phoenix, AZ, USA" 33.4484 -112.0740 --country US      # features for one city
 python scripts/precache.py              # all demo cities; add --data-only before P2's model exists
 python scripts/precache.py --rescore    # after a model/scenario change: re-score cached cities, offline
+python scripts/precache.py --cities data/saved_cities.json   # the saved city list instead of the demo cities
 ```
 
 Smoke test (API running):

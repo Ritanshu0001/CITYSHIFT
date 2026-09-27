@@ -1,0 +1,25 @@
+{
+  "slug": "washington-dc-usa",
+  "created_at": "2026-09-27T05:34:12Z",
+  "timings_s": {
+    "grid": 0.0,
+    "weather": 0.7,
+    "infrastructure": 50.19,
+    "roads": 54.26,
+    "downloads_wall": 54.28,
+    "features": 1.84
+  },
+  "overpass": {
+    "roads": "https://overpass.private.coffee/api",
+    "infrastructure": "https://overpass.private.coffee/api"
+  },
+  "n_graph_nodes": 15833,
+  "n_graph_edges": 40730,
+  "n_osm_features": 45187,
+  "climate_source": "Open-Meteo",
+  "openmeteo_calls_estimate": 130.5,
+  "versions": {
+    "osmnx": "2.1.1",
+    "h3": "4.5.0"
+  }
+}

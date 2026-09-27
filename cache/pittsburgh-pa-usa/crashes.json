@@ -1,0 +1,1729 @@
+{
+  "slug": "pittsburgh-pa-usa",
+  "available": true,
+  "source": "NHTSA FARS",
+  "years": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "preliminary_years": [
+    2024
+  ],
+  "note": "Fatal crashes only",
+  "total": 116,
+  "points": [
+    {
+      "lat": 40.440989,
+      "lng": -80.07265,
+      "year": 2020,
+      "month": 2,
+      "hour": 11,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847a09fffff"
+    },
+    {
+      "lat": 40.442544,
+      "lng": -80.024008,
+      "year": 2020,
+      "month": 4,
+      "hour": 1,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847161fffff"
+    },
+    {
+      "lat": 40.456439,
+      "lng": -80.029122,
+      "year": 2020,
+      "month": 1,
+      "hour": 7,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444bbfffff"
+    },
+    {
+      "lat": 40.5043,
+      "lng": -80.028117,
+      "year": 2020,
+      "month": 3,
+      "hour": 17,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a844413fffff"
+    },
+    {
+      "lat": 40.439217,
+      "lng": -79.956608,
+      "year": 2020,
+      "month": 3,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847333fffff"
+    },
+    {
+      "lat": 40.483056,
+      "lng": -80.048808,
+      "year": 2020,
+      "month": 6,
+      "hour": 17,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8444a9fffff"
+    },
+    {
+      "lat": 40.446794,
+      "lng": -79.950578,
+      "year": 2020,
+      "month": 9,
+      "hour": 9,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847339fffff"
+    },
+    {
+      "lat": 40.435086,
+      "lng": -79.981767,
+      "year": 2020,
+      "month": 8,
+      "hour": 11,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84715dfffff"
+    },
+    {
+      "lat": 40.421667,
+      "lng": -79.979386,
+      "year": 2020,
+      "month": 10,
+      "hour": 7,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847157fffff"
+    },
+    {
+      "lat": 40.420603,
+      "lng": -80.006178,
+      "year": 2020,
+      "month": 6,
+      "hour": 1,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847101fffff"
+    },
+    {
+      "lat": 40.461306,
+      "lng": -80.031636,
+      "year": 2020,
+      "month": 6,
+      "hour": 16,
+      "fatalities": 3,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8444b9fffff"
+    },
+    {
+      "lat": 40.475511,
+      "lng": -80.058242,
+      "year": 2020,
+      "month": 11,
+      "hour": 3,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444a1fffff"
+    },
+    {
+      "lat": 40.441367,
+      "lng": -79.963458,
+      "year": 2020,
+      "month": 9,
+      "hour": 15,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847331fffff"
+    },
+    {
+      "lat": 40.450414,
+      "lng": -79.997786,
+      "year": 2020,
+      "month": 10,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84714dfffff"
+    },
+    {
+      "lat": 40.434483,
+      "lng": -79.989792,
+      "year": 2020,
+      "month": 1,
+      "hour": 9,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847143fffff"
+    },
+    {
+      "lat": 40.416819,
+      "lng": -80.017447,
+      "year": 2020,
+      "month": 7,
+      "hour": 6,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84712bfffff"
+    },
+    {
+      "lat": 40.453267,
+      "lng": -79.962867,
+      "year": 2020,
+      "month": 7,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84733dfffff"
+    },
+    {
+      "lat": 40.442231,
+      "lng": -79.957881,
+      "year": 2020,
+      "month": 1,
+      "hour": 12,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847331fffff"
+    },
+    {
+      "lat": 40.417367,
+      "lng": -80.032931,
+      "year": 2020,
+      "month": 2,
+      "hour": 7,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847121fffff"
+    },
+    {
+      "lat": 40.441856,
+      "lng": -80.057128,
+      "year": 2020,
+      "month": 11,
+      "hour": 18,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847a5dfffff"
+    },
+    {
+      "lat": 40.469467,
+      "lng": -80.008442,
+      "year": 2020,
+      "month": 10,
+      "hour": 22,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444d7fffff"
+    },
+    {
+      "lat": 40.420503,
+      "lng": -80.049406,
+      "year": 2020,
+      "month": 11,
+      "hour": 22,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847125fffff"
+    },
+    {
+      "lat": 40.456567,
+      "lng": -79.990247,
+      "year": 2021,
+      "month": 1,
+      "hour": 7,
+      "fatalities": 2,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847327fffff"
+    },
+    {
+      "lat": 40.428736,
+      "lng": -79.987503,
+      "year": 2021,
+      "month": 3,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847155fffff"
+    },
+    {
+      "lat": 40.426464,
+      "lng": -80.021083,
+      "year": 2021,
+      "month": 2,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847129fffff"
+    },
+    {
+      "lat": 40.462972,
+      "lng": -79.998917,
+      "year": 2021,
+      "month": 4,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a844499fffff"
+    },
+    {
+      "lat": 40.442225,
+      "lng": -80.004108,
+      "year": 2021,
+      "month": 3,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847145fffff"
+    },
+    {
+      "lat": 40.448239,
+      "lng": -79.986872,
+      "year": 2021,
+      "month": 4,
+      "hour": 8,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847149fffff"
+    },
+    {
+      "lat": 40.410717,
+      "lng": -80.0147,
+      "year": 2021,
+      "month": 4,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84713dfffff"
+    },
+    {
+      "lat": 40.415611,
+      "lng": -80.013544,
+      "year": 2021,
+      "month": 4,
+      "hour": 18,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847107fffff"
+    },
+    {
+      "lat": 40.448889,
+      "lng": -80.018247,
+      "year": 2021,
+      "month": 6,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a844497fffff"
+    },
+    {
+      "lat": 40.430536,
+      "lng": -80.026733,
+      "year": 2021,
+      "month": 6,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847167fffff"
+    },
+    {
+      "lat": 40.406133,
+      "lng": -79.912969,
+      "year": 2021,
+      "month": 7,
+      "hour": 10,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84700bfffff"
+    },
+    {
+      "lat": 40.420047,
+      "lng": -80.033847,
+      "year": 2021,
+      "month": 8,
+      "hour": 15,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847121fffff"
+    },
+    {
+      "lat": 40.456278,
+      "lng": -80.029958,
+      "year": 2021,
+      "month": 8,
+      "hour": 4,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444bbfffff"
+    },
+    {
+      "lat": 40.456547,
+      "lng": -80.064633,
+      "year": 2021,
+      "month": 9,
+      "hour": 20,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847a49fffff"
+    },
+    {
+      "lat": 40.478828,
+      "lng": -80.043119,
+      "year": 2021,
+      "month": 9,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a844485fffff"
+    },
+    {
+      "lat": 40.470747,
+      "lng": -79.924039,
+      "year": 2021,
+      "month": 11,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": true,
+      "dark": true,
+      "h3": "882a84735dfffff"
+    },
+    {
+      "lat": 40.382197,
+      "lng": -79.995981,
+      "year": 2021,
+      "month": 10,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8471e1fffff"
+    },
+    {
+      "lat": 40.445494,
+      "lng": -80.016958,
+      "year": 2021,
+      "month": 10,
+      "hour": 22,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847169fffff"
+    },
+    {
+      "lat": 40.434894,
+      "lng": -79.982253,
+      "year": 2022,
+      "month": 1,
+      "hour": 22,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84715dfffff"
+    },
+    {
+      "lat": 40.371472,
+      "lng": -79.981881,
+      "year": 2022,
+      "month": 2,
+      "hour": 7,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847181fffff"
+    },
+    {
+      "lat": 40.442403,
+      "lng": -80.000161,
+      "year": 2022,
+      "month": 1,
+      "hour": 6,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847145fffff"
+    },
+    {
+      "lat": 40.446039,
+      "lng": -80.027208,
+      "year": 2022,
+      "month": 3,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84716dfffff"
+    },
+    {
+      "lat": 40.433656,
+      "lng": -79.963206,
+      "year": 2022,
+      "month": 5,
+      "hour": 2,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847333fffff"
+    },
+    {
+      "lat": 40.408908,
+      "lng": -79.964175,
+      "year": 2022,
+      "month": 4,
+      "hour": 10,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847025fffff"
+    },
+    {
+      "lat": 40.505653,
+      "lng": -80.00835,
+      "year": 2022,
+      "month": 4,
+      "hour": 20,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8446a7fffff"
+    },
+    {
+      "lat": 40.442742,
+      "lng": -80.009053,
+      "year": 2022,
+      "month": 5,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847169fffff"
+    },
+    {
+      "lat": 40.411072,
+      "lng": -80.006158,
+      "year": 2022,
+      "month": 3,
+      "hour": 10,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847139fffff"
+    },
+    {
+      "lat": 40.412461,
+      "lng": -79.977064,
+      "year": 2022,
+      "month": 5,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847119fffff"
+    },
+    {
+      "lat": 40.428403,
+      "lng": -79.955458,
+      "year": 2022,
+      "month": 6,
+      "hour": 2,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847065fffff"
+    },
+    {
+      "lat": 40.406086,
+      "lng": -79.933094,
+      "year": 2022,
+      "month": 7,
+      "hour": 20,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": true,
+      "dark": false,
+      "h3": "882a847007fffff"
+    },
+    {
+      "lat": 40.467861,
+      "lng": -79.996058,
+      "year": 2022,
+      "month": 7,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8444d3fffff"
+    },
+    {
+      "lat": 40.443558,
+      "lng": -80.009119,
+      "year": 2022,
+      "month": 5,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847169fffff"
+    },
+    {
+      "lat": 40.449247,
+      "lng": -80.017083,
+      "year": 2022,
+      "month": 8,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a844497fffff"
+    },
+    {
+      "lat": 40.429231,
+      "lng": -79.941817,
+      "year": 2022,
+      "month": 10,
+      "hour": 6,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847061fffff"
+    },
+    {
+      "lat": 40.467133,
+      "lng": -79.928569,
+      "year": 2022,
+      "month": 3,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847355fffff"
+    },
+    {
+      "lat": 40.501958,
+      "lng": -79.946883,
+      "year": 2022,
+      "month": 3,
+      "hour": 6,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84469bfffff"
+    },
+    {
+      "lat": 40.435892,
+      "lng": -79.970733,
+      "year": 2022,
+      "month": 10,
+      "hour": 3,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847337fffff"
+    },
+    {
+      "lat": 40.447447,
+      "lng": -79.942419,
+      "year": 2022,
+      "month": 11,
+      "hour": 22,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847315fffff"
+    },
+    {
+      "lat": 40.450356,
+      "lng": -79.980142,
+      "year": 2022,
+      "month": 7,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847323fffff"
+    },
+    {
+      "lat": 40.462144,
+      "lng": -80.032125,
+      "year": 2022,
+      "month": 11,
+      "hour": 6,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8444b9fffff"
+    },
+    {
+      "lat": 40.407464,
+      "lng": -80.018233,
+      "year": 2022,
+      "month": 11,
+      "hour": 12,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84713dfffff"
+    },
+    {
+      "lat": 40.421528,
+      "lng": -79.958822,
+      "year": 2022,
+      "month": 11,
+      "hour": 20,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84715bfffff"
+    },
+    {
+      "lat": 40.473989,
+      "lng": -80.071844,
+      "year": 2022,
+      "month": 8,
+      "hour": 13,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8444a5fffff"
+    },
+    {
+      "lat": 40.434631,
+      "lng": -79.954667,
+      "year": 2022,
+      "month": 8,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847333fffff"
+    },
+    {
+      "lat": 40.436017,
+      "lng": -79.974661,
+      "year": 2022,
+      "month": 12,
+      "hour": 3,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847337fffff"
+    },
+    {
+      "lat": 40.477219,
+      "lng": -80.048128,
+      "year": 2022,
+      "month": 12,
+      "hour": 17,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444a9fffff"
+    },
+    {
+      "lat": 40.408144,
+      "lng": -79.9436,
+      "year": 2022,
+      "month": 12,
+      "hour": 13,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84702bfffff"
+    },
+    {
+      "lat": 40.391028,
+      "lng": -79.996675,
+      "year": 2022,
+      "month": 9,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8471edfffff"
+    },
+    {
+      "lat": 40.475931,
+      "lng": -80.056633,
+      "year": 2022,
+      "month": 12,
+      "hour": 13,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8444a1fffff"
+    },
+    {
+      "lat": 40.435158,
+      "lng": -79.973433,
+      "year": 2023,
+      "month": 1,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847337fffff"
+    },
+    {
+      "lat": 40.442625,
+      "lng": -80.024083,
+      "year": 2023,
+      "month": 1,
+      "hour": 2,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847161fffff"
+    },
+    {
+      "lat": 40.444417,
+      "lng": -79.917761,
+      "year": 2023,
+      "month": 2,
+      "hour": 15,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84731bfffff"
+    },
+    {
+      "lat": 40.396264,
+      "lng": -79.925247,
+      "year": 2023,
+      "month": 3,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847039fffff"
+    },
+    {
+      "lat": 40.452022,
+      "lng": -79.996511,
+      "year": 2023,
+      "month": 5,
+      "hour": 13,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84714dfffff"
+    },
+    {
+      "lat": 40.472028,
+      "lng": -80.015447,
+      "year": 2023,
+      "month": 5,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84448bfffff"
+    },
+    {
+      "lat": 40.485639,
+      "lng": -80.052906,
+      "year": 2023,
+      "month": 6,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444e7fffff"
+    },
+    {
+      "lat": 40.475561,
+      "lng": -80.065017,
+      "year": 2023,
+      "month": 4,
+      "hour": 14,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8444a5fffff"
+    },
+    {
+      "lat": 40.429106,
+      "lng": -79.999361,
+      "year": 2023,
+      "month": 4,
+      "hour": 15,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847109fffff"
+    },
+    {
+      "lat": 40.4132,
+      "lng": -80.065069,
+      "year": 2023,
+      "month": 8,
+      "hour": 23,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847a17fffff"
+    },
+    {
+      "lat": 40.460222,
+      "lng": -79.921222,
+      "year": 2023,
+      "month": 3,
+      "hour": 1,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847353fffff"
+    },
+    {
+      "lat": 40.462969,
+      "lng": -80.033458,
+      "year": 2023,
+      "month": 8,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": true,
+      "dark": true,
+      "h3": "882a8444b9fffff"
+    },
+    {
+      "lat": 40.386944,
+      "lng": -79.981806,
+      "year": 2023,
+      "month": 8,
+      "hour": 1,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8471c5fffff"
+    },
+    {
+      "lat": 40.435789,
+      "lng": -79.972192,
+      "year": 2023,
+      "month": 8,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847337fffff"
+    },
+    {
+      "lat": 40.416111,
+      "lng": -80.014333,
+      "year": 2023,
+      "month": 9,
+      "hour": 9,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847107fffff"
+    },
+    {
+      "lat": 40.389267,
+      "lng": -79.985444,
+      "year": 2023,
+      "month": 9,
+      "hour": 15,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a8471e9fffff"
+    },
+    {
+      "lat": 40.4432,
+      "lng": -79.961569,
+      "year": 2023,
+      "month": 11,
+      "hour": 9,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847331fffff"
+    },
+    {
+      "lat": 40.443056,
+      "lng": -80.060472,
+      "year": 2023,
+      "month": 10,
+      "hour": 17,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847a5dfffff"
+    },
+    {
+      "lat": 40.421022,
+      "lng": -79.927492,
+      "year": 2023,
+      "month": 12,
+      "hour": 11,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847047fffff"
+    },
+    {
+      "lat": 40.420094,
+      "lng": -79.957881,
+      "year": 2024,
+      "month": 1,
+      "hour": 13,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847067fffff"
+    },
+    {
+      "lat": 40.451367,
+      "lng": -79.982094,
+      "year": 2024,
+      "month": 1,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847323fffff"
+    },
+    {
+      "lat": 40.435056,
+      "lng": -79.983028,
+      "year": 2024,
+      "month": 2,
+      "hour": 18,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847143fffff"
+    },
+    {
+      "lat": 40.444192,
+      "lng": -80.028186,
+      "year": 2024,
+      "month": 3,
+      "hour": 2,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84716dfffff"
+    },
+    {
+      "lat": 40.478169,
+      "lng": -80.00775,
+      "year": 2024,
+      "month": 4,
+      "hour": 2,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444d5fffff"
+    },
+    {
+      "lat": 40.406389,
+      "lng": -79.953861,
+      "year": 2024,
+      "month": 3,
+      "hour": 12,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847021fffff"
+    },
+    {
+      "lat": 40.435361,
+      "lng": -79.984472,
+      "year": 2024,
+      "month": 3,
+      "hour": 1,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847143fffff"
+    },
+    {
+      "lat": 40.405994,
+      "lng": -79.991606,
+      "year": 2024,
+      "month": 4,
+      "hour": 5,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847115fffff"
+    },
+    {
+      "lat": 40.435456,
+      "lng": -79.9844,
+      "year": 2024,
+      "month": 5,
+      "hour": 21,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847143fffff"
+    },
+    {
+      "lat": 40.448956,
+      "lng": -80.025589,
+      "year": 2024,
+      "month": 1,
+      "hour": 3,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84716dfffff"
+    },
+    {
+      "lat": 40.441361,
+      "lng": -80.004167,
+      "year": 2024,
+      "month": 3,
+      "hour": 10,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": true,
+      "dark": false,
+      "h3": "882a847145fffff"
+    },
+    {
+      "lat": 40.437067,
+      "lng": -79.99835,
+      "year": 2024,
+      "month": 7,
+      "hour": 8,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847147fffff"
+    },
+    {
+      "lat": 40.420119,
+      "lng": -80.015331,
+      "year": 2024,
+      "month": 7,
+      "hour": 20,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847105fffff"
+    },
+    {
+      "lat": 40.436772,
+      "lng": -79.981478,
+      "year": 2024,
+      "month": 3,
+      "hour": null,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a84714bfffff"
+    },
+    {
+      "lat": 40.435208,
+      "lng": -79.999031,
+      "year": 2024,
+      "month": 8,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847147fffff"
+    },
+    {
+      "lat": 40.396278,
+      "lng": -80.032278,
+      "year": 2024,
+      "month": 8,
+      "hour": 13,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847acbfffff"
+    },
+    {
+      "lat": 40.446108,
+      "lng": -80.052072,
+      "year": 2024,
+      "month": 7,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847a5dfffff"
+    },
+    {
+      "lat": 40.395719,
+      "lng": -80.033217,
+      "year": 2024,
+      "month": 9,
+      "hour": 22,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847acbfffff"
+    },
+    {
+      "lat": 40.436078,
+      "lng": -79.970008,
+      "year": 2024,
+      "month": 9,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847337fffff"
+    },
+    {
+      "lat": 40.4487,
+      "lng": -79.910156,
+      "year": 2024,
+      "month": 10,
+      "hour": 8,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847225fffff"
+    },
+    {
+      "lat": 40.454631,
+      "lng": -79.99415,
+      "year": 2024,
+      "month": 10,
+      "hour": 0,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a84449bfffff"
+    },
+    {
+      "lat": 40.505225,
+      "lng": -80.0088,
+      "year": 2024,
+      "month": 10,
+      "hour": 19,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444c9fffff"
+    },
+    {
+      "lat": 40.456803,
+      "lng": -80.030225,
+      "year": 2024,
+      "month": 11,
+      "hour": 1,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a8444bbfffff"
+    },
+    {
+      "lat": 40.3755,
+      "lng": -79.969056,
+      "year": 2024,
+      "month": 11,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a847189fffff"
+    },
+    {
+      "lat": 40.441944,
+      "lng": -79.962833,
+      "year": 2024,
+      "month": 12,
+      "hour": 5,
+      "fatalities": 1,
+      "pedestrian": true,
+      "cyclist": false,
+      "dark": true,
+      "h3": "882a847331fffff"
+    },
+    {
+      "lat": 40.465,
+      "lng": -80.027111,
+      "year": 2024,
+      "month": 12,
+      "hour": 16,
+      "fatalities": 1,
+      "pedestrian": false,
+      "cyclist": false,
+      "dark": false,
+      "h3": "882a844483fffff"
+    }
+  ],
+  "by_hex": {
+    "882a844413fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a844483fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a844485fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84448bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a844497fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a844499fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84449bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8444a1fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a8444a5fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a8444a9fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a8444b9fffff": {
+      "count": 3,
+      "pct": 98.9
+    },
+    "882a8444bbfffff": {
+      "count": 3,
+      "pct": 98.9
+    },
+    "882a8444c9fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8444d3fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8444d5fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8444d7fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8444e7fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84469bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8446a7fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847007fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84700bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847021fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847025fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84702bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847039fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847047fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847061fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847065fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847067fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847101fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847105fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847107fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847109fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847115fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847119fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847121fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847125fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847129fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84712bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847139fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84713dfffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847143fffff": {
+      "count": 4,
+      "pct": 99.6
+    },
+    "882a847145fffff": {
+      "count": 3,
+      "pct": 98.9
+    },
+    "882a847147fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847149fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84714bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84714dfffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847155fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847157fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84715bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84715dfffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847161fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847167fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847169fffff": {
+      "count": 3,
+      "pct": 98.9
+    },
+    "882a84716dfffff": {
+      "count": 3,
+      "pct": 98.9
+    },
+    "882a847181fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847189fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8471c5fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8471e1fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8471e9fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a8471edfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847225fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847315fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84731bfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847323fffff": {
+      "count": 2,
+      "pct": 96.4
+    },
+    "882a847327fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847331fffff": {
+      "count": 4,
+      "pct": 99.6
+    },
+    "882a847333fffff": {
+      "count": 3,
+      "pct": 98.9
+    },
+    "882a847337fffff": {
+      "count": 5,
+      "pct": 100.0
+    },
+    "882a847339fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84733dfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847353fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847355fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a84735dfffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847a09fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847a17fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847a49fffff": {
+      "count": 1,
+      "pct": 91.6
+    },
+    "882a847a5dfffff": {
+      "count": 3,
+      "pct": 98.9
+    },
+    "882a847acbfffff": {
+      "count": 2,
+      "pct": 96.4
+    }
+  }
+}
